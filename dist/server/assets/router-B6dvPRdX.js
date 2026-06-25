@@ -2931,22 +2931,88 @@ overflow: hidden;
 }
 
 @media (min-width: 992px) {
-  .renyi-ind02--en .ind02-box .titbox .renyi-product-category-heading,
-  .renyi-ind02--ru .ind02-box .titbox .renyi-product-category-heading,
-  .renyi-ind02--es .ind02-box .titbox .renyi-product-category-heading {
-    display: block;
-    max-width: 100%;
-    white-space: normal;
-  }
+.renyi-ind02--en .ind02-box .titbox,
+.renyi-ind02--ru .ind02-box .titbox,
+.renyi-ind02--es .ind02-box .titbox {
+box-sizing: border-box;
+padding-right: 3.85rem !important;
+}
+
+.renyi-ind02--en .ind02-box .titbox .renyi-product-category-heading,
+.renyi-ind02--ru .ind02-box .titbox .renyi-product-category-heading,
+.renyi-ind02--es .ind02-box .titbox .renyi-product-category-heading {
+display: block;
+max-width: 5.85rem;
+line-height: 1.14;
+text-wrap: balance;
+white-space: normal;
+word-break: normal;
+overflow-wrap: normal;
+}
+
+.renyi-ind02--en .ind02-box .titbox .txt,
+.renyi-ind02--ru .ind02-box .titbox .txt,
+.renyi-ind02--es .ind02-box .titbox .txt {
+max-width: 5.85rem;
+line-height: 1.55;
+white-space: normal;
+overflow-wrap: break-word;
+}
+
+.renyi-ind02--en .ind02-btn-box,
+.renyi-ind02--ru .ind02-btn-box,
+.renyi-ind02--es .ind02-btn-box {
+width: 3.42rem;
+}
+
+.renyi-ind02--en .ind02-btn-box a,
+.renyi-ind02--ru .ind02-btn-box a,
+.renyi-ind02--es .ind02-btn-box a {
+box-sizing: border-box;
+width: 100%;
+line-height: 1.25;
+white-space: normal;
+}
 }
 
 @media (min-width: 992px) and (max-width: 1320px) {
-  .renyi-ind02--en .ind02-box .titbox .renyi-product-category-heading,
-  .renyi-ind02--ru .ind02-box .titbox .renyi-product-category-heading,
-  .renyi-ind02--es .ind02-box .titbox .renyi-product-category-heading {
-    max-width: 100%;
-    white-space: normal;
-  }
+.renyi-ind02--en .ind02-box .titbox,
+.renyi-ind02--ru .ind02-box .titbox,
+.renyi-ind02--es .ind02-box .titbox {
+padding-right: 3rem !important;
+padding-left: 0.38rem !important;
+}
+
+.renyi-ind02--en .ind02-box .titbox .renyi-product-category-heading,
+.renyi-ind02--ru .ind02-box .titbox .renyi-product-category-heading,
+.renyi-ind02--es .ind02-box .titbox .renyi-product-category-heading {
+max-width: 3.05rem;
+font-size: 0.3rem;
+line-height: 1.12;
+white-space: normal;
+}
+
+.renyi-ind02--en .ind02-box .titbox .txt,
+.renyi-ind02--ru .ind02-box .titbox .txt,
+.renyi-ind02--es .ind02-box .titbox .txt {
+max-width: 3.05rem;
+font-size: 0.14rem;
+line-height: 1.45;
+}
+
+.renyi-ind02--en .ind02-btn-box,
+.renyi-ind02--ru .ind02-btn-box,
+.renyi-ind02--es .ind02-btn-box {
+width: 2.65rem;
+}
+
+.renyi-ind02--en .ind02-btn-box a,
+.renyi-ind02--ru .ind02-btn-box a,
+.renyi-ind02--es .ind02-btn-box a {
+padding-right: 0.18rem;
+padding-left: 0.18rem;
+font-size: 0.14rem;
+}
 }
 
 body .header-box .top-block .renyi-header-action-icon {
@@ -3292,7 +3358,7 @@ const restoreCss = '/* Restore overrides from valid pre-6/23 Codex threads. */\n
 const queryClient = new QueryClient();
 const lazyServerLink = (runtime) => (ctx) => observable((observer) => {
   let sub;
-  import("./link-19bOv08r.js").then(
+  import("./link-BFopvt7U.js").then(
     ({ serverLink }) => sub = serverLink(runtime)(ctx).subscribe(observer),
     (err) => observer.error(err)
   );
@@ -24007,11 +24073,11 @@ function RootDocument() {
     ] })
   ] });
 }
-const $$splitComponentImporter$1 = () => import("./_-B3N0mTzk.js");
+const $$splitComponentImporter$1 = () => import("./_-BIYD6Tkv.js");
 const Route$3 = createFileRoute("/$")({
   component: lazyRouteComponent($$splitComponentImporter$1, "component")
 });
-const $$splitComponentImporter = () => import("./index-CjYqX5SB.js");
+const $$splitComponentImporter = () => import("./index-CinkuHzY.js");
 const Route$2 = createFileRoute("/")({
   component: lazyRouteComponent($$splitComponentImporter, "component")
 });

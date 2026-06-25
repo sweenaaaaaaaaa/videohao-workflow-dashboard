@@ -1,6 +1,6 @@
 import { unstable_localLink } from "@trpc/client";
 import superjson from "superjson";
-import { b as appRouter, c as createTRPCContext } from "./router-odDWxw-3.js";
+import { b as appRouter, c as createTRPCContext } from "./router-B6dvPRdX.js";
 import { g as getRequestHeaders } from "../server.js";
 import "@tanstack/react-router";
 import "react/jsx-runtime";

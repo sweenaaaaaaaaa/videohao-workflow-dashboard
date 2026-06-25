@@ -1,6 +1,6 @@
 import { jsx } from "react/jsx-runtime";
-import { S as SiteMirrorPage } from "./site-mirror-page-Y3enDsE9.js";
-import "./router-odDWxw-3.js";
+import { S as SiteMirrorPage } from "./site-mirror-page-WeGIPSba.js";
+import "./router-B6dvPRdX.js";
 import "@tanstack/react-router";
 import "@tanstack/react-query";
 import "@trpc/client";

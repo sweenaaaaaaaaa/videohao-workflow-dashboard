@@ -1,5 +1,5 @@
 import { jsx } from "react/jsx-runtime";
-import { a as getSitePage, N as NotFound, p as patchRenyiHtml } from "./router-odDWxw-3.js";
+import { a as getSitePage, N as NotFound, p as patchRenyiHtml } from "./router-B6dvPRdX.js";
 function SiteMirrorPage(props) {
   const page = getSitePage(props.path);
   if (!page) {

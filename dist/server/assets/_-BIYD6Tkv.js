@@ -1,7 +1,7 @@
 import { jsx } from "react/jsx-runtime";
 import { useEffect } from "react";
-import { R as Route, g as getRenyiCanonicalNewsPath } from "./router-odDWxw-3.js";
-import { S as SiteMirrorPage } from "./site-mirror-page-Y3enDsE9.js";
+import { R as Route, g as getRenyiCanonicalNewsPath } from "./router-B6dvPRdX.js";
+import { S as SiteMirrorPage } from "./site-mirror-page-WeGIPSba.js";
 import "@tanstack/react-router";
 import "@tanstack/react-query";
 import "@trpc/client";
