@@ -1,0 +1,58 @@
+.swiper-slide,
+.swiper-wrapper {  
+height: 100%;  
+position: relative;  
+transform-style: preserve-3d;  
+width: 100%;
+}
+.swiper-pagination,
+.swiper-wrapper {  
+-webkit-transform: translate3d(0, 0, 0);
+}
+.swiper-container {  
+margin: 0 auto;  
+position: relative;  
+overflow: hidden;  
+z-index: 1;
+}
+.swiper-wrapper {  
+z-index: 1;  
+display: flex;  
+-webkit-transition-property: -webkit-transform;  
+-moz-transition-property: -moz-transform;  
+-o-transition-property: -o-transform;  
+-ms-transition-property: -ms-transform;  
+transition-property: transform;  
+-moz-transform: translate3d(0, 0, 0);  
+-o-transform: translate(0, 0);  
+-ms-transform: translate3d(0, 0, 0);  
+transform: translate3d(0, 0, 0);  
+-webkit-box-sizing: content-box;  
+-moz-box-sizing: content-box;  
+box-sizing: content-box;
+}
+.swiper-slide,
+.swiper-wrapper {  
+-ms-transform-style: preserve-3d;  
+-moz-transform-style: preserve-3d;  
+-webkit-transform-style: preserve-3d;
+}
+.swiper-slide {  
+-webkit-flex-shrink: 0;  
+-ms-flex: 0 0 auto;  
+flex-shrink: 0;
+}
+.swiper-button-next,
+.swiper-button-prev {  
+position: absolute;  
+top: 50%;  
+width: 27px;  
+height: 44px;  
+margin-top: -22px;  
+cursor: pointer;  
+-moz-background-size: 27px 44px;  
+-webkit-background-size: 27px 44px;  
+background-size: 27px 44px;  
+background-position: center;  
+background-repeat: no-repeat;
+}
