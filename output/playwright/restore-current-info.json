@@ -1,0 +1,111 @@
+{
+  "slides": [
+    {
+      "text": "您的浏览器不支持 video 标签。",
+      "display": "block",
+      "visibility": "visible",
+      "opacity": "1",
+      "bg": "rgb(0, 0, 0)",
+      "rect": {
+        "x": 0,
+        "y": -1500,
+        "w": 1440,
+        "h": 732
+      },
+      "attrs": {
+        "class": "swiper-slide swiper-slide-active",
+        "style": "width: 1440px;"
+      }
+    },
+    {
+      "text": "企业文化 格物 | 致知 | 诚意 | 正心 Quality first · Service first · Honest operation",
+      "display": "block",
+      "visibility": "visible",
+      "opacity": "1",
+      "bg": "rgba(0, 0, 0, 0)",
+      "rect": {
+        "x": 1440,
+        "y": -1500,
+        "w": 1440,
+        "h": 732
+      },
+      "attrs": {
+        "class": "swiper-slide renyi-culture-banner-slide swiper-slide-next",
+        "style": "background-image: none; width: 1440px;"
+      }
+    }
+  ],
+  "news": [
+    {
+      "text": "精铸基石，智联全球 新闻中心 同步捕捉中国与全球矿山装备、工程机械、资本市场与制造业升级动态，为出口型 B2B 客户提供可检索、可分发的行业信息入口。 12 Apr / 2026 全球地下矿山项目持续关注天井钻机与竖井装备 随着深部开采、竖井建设和跨区域矿山投资推进，具备远程控制、全液压驱动和稳定扩孔能力的专用装备正在成为海外项目方关注重点。 28 Mar / 2026 海外工程机械客户更重视交付",
+      "display": "block",
+      "visibility": "visible",
+      "opacity": "1",
+      "bg": "rgb(255, 255, 255)",
+      "rect": {
+        "x": 0,
+        "y": 1221,
+        "w": 1440,
+        "h": 1397
+      },
+      "attrs": {
+        "class": "renyi-news-center bg-white text-slate-900",
+        "aria-labelledby": "renyi-news-title"
+      }
+    },
+    {
+      "text": "精铸基石，智联全球 新闻中心 同步捕捉中国与全球矿山装备、工程机械、资本市场与制造业升级动态，为出口型 B2B 客户提供可检索、可分发的行业信息入口。 12 Apr / 2026 全球地下矿山项目持续关注天井钻机与竖井装备 随着深部开采、竖井建设和跨区域矿山投资推进，具备远程控制、全液压驱动和稳定扩孔能力的专用装备正在成为海外项目方关注重点。 28 Mar / 2026 海外工程机械客户更重视交付",
+      "display": "block",
+      "visibility": "visible",
+      "opacity": "1",
+      "bg": "rgba(0, 0, 0, 0)",
+      "rect": {
+        "x": 0,
+        "y": 1221,
+        "w": 1440,
+        "h": 1397
+      },
+      "attrs": {
+        "class": "renyi-news-shell mx-auto max-w-[1360px] px-4 py-12 sm:px-6 lg:px-8 lg:py-16"
+      }
+    },
+    {
+      "text": "12 Apr / 2026 全球地下矿山项目持续关注天井钻机与竖井装备 随着深部开采、竖井建设和跨区域矿山投资推进，具备远程控制、全液压驱动和稳定扩孔能力的专用装备正在成为海外项目方关注重点。 28 Mar / 2026 海外工程机械客户更重视交付一致性与质量追溯 面向跨境采购和复杂工况设备，制造企业正在从单点加工能力转向工艺、检测、追溯一体化管理，帮助客户降低后期维护风险。 19 Feb / 2",
+      "display": "block",
+      "visibility": "visible",
+      "opacity": "1",
+      "bg": "rgb(255, 255, 255)",
+      "rect": {
+        "x": 24,
+        "y": 1456,
+        "w": 473,
+        "h": 1098
+      },
+      "attrs": {
+        "class": "renyi-news-list",
+        "aria-label": "新闻中心",
+        "data-renyi-news-locale": "zh",
+        "data-renyi-news-limit": "5"
+      }
+    }
+  ],
+  "menu": [
+    {
+      "text": "天井钻机系列有轨式天（反）井钻机无轨式天（反）井钻机钻杆、稳定杆扩孔刀盘油缸悬挂系列工程机械类特种车辆类（矿卡与铰卡）选矿设备系列充气搅拌式浮选机专用设备系列轮辋拆装机（多条件式轮辋）轮辋拆装机（门架式）马达拆装机炮孔填塞机轮胎拆卸手结构件系列后桥壳副车架车斗 深耕工业装备仁毅机械肩负“夯实中国制造基石”的企业使命，持续推动矿山装备与工程机械核心部件国产化，为复杂工况提供可靠、高效、可持续的装备支",
+      "display": "none",
+      "visibility": "hidden",
+      "opacity": "0",
+      "bg": "rgb(255, 255, 255)",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "attrs": {
+        "class": "sub-nav",
+        "style": "background-image: url(\"/renyi/renyi-product-menu-bg-raise-boring-site.png\"); background-repeat: no-repeat; background-size: 100% 100%; background-position: center top; display: none;"
+      }
+    }
+  ]
+}

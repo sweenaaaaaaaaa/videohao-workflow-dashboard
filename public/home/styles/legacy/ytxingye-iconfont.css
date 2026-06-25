@@ -1,0 +1,147 @@
+@font-face {
+  font-family: "ifa"; /* Project id 3634455 */
+  src: url("/legacy-assets/ytxingye-4oijad.woff2") format('woff2'),
+       url("/legacy-assets/ytxingye-1ye51x3.woff") format('woff'),
+       url("/legacy-assets/ytxingye-1b9v7ux.ttf") format('truetype');
+}
+
+.ifa {
+  font-family: "ifa" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.ifa-you:before {
+  content: "\e612";
+}
+
+.ifa-renyuanbiandongfenxi:before {
+  content: "\e63d";
+}
+
+.ifa-duidaoyi:before {
+  content: "\e617";
+}
+
+.ifa-shebei:before {
+  content: "\e65e";
+}
+
+.ifa-29gongyegongcheng_jiagonggongyi:before {
+  content: "\e670";
+}
+
+.ifa-icon-test1:before {
+  content: "\e6fa";
+}
+
+.ifa-youjiantou1:before {
+  content: "\e600";
+}
+
+.ifa-add-bold:before {
+  content: "\e68a";
+}
+
+.ifa-minus-bold:before {
+  content: "\e68b";
+}
+
+.ifa-fuwu:before {
+  content: "\e603";
+}
+
+.ifa-fuwuxunhuanguanli:before {
+  content: "\eace";
+}
+
+.ifa-peixunfuwu-:before {
+  content: "\e648";
+}
+
+.ifa-zuojiantou:before {
+  content: "\e626";
+}
+
+.ifa-youjiantou:before {
+  content: "\e627";
+}
+
+.ifa-icon-test:before {
+  content: "\e616";
+}
+
+.ifa-charutupian:before {
+  content: "\ec7f";
+}
+
+.ifa-wenhua1:before {
+  content: "\e62d";
+}
+
+.ifa-fuwuxunhuanguanli_o:before {
+  content: "\eb53";
+}
+
+.ifa-rencailinian:before {
+  content: "\e667";
+}
+
+.ifa-wenhua:before {
+  content: "\e619";
+}
+
+.ifa-he_21bianminfuwu:before {
+  content: "\e70c";
+}
+
+.ifa-jia:before {
+  content: "\e7b2";
+}
+
+.ifa-dianying:before {
+  content: "\e605";
+}
+
+.ifa-shuji:before {
+  content: "\e62f";
+}
+
+.ifa-gengduo:before {
+  content: "\e8a6";
+}
+
+.ifa-dengpao:before {
+  content: "\e739";
+}
+
+.ifa-wajueji:before {
+  content: "\e709";
+}
+
+.ifa-home:before {
+  content: "\e674";
+}
+
+.ifa-arrow-left-bold:before {
+  content: "\e685";
+}
+
+.ifa-arrow-up-bold:before {
+  content: "\e686";
+}
+
+.ifa-close-bold:before {
+  content: "\e687";
+}
+
+.ifa-arrow-down-bold:before {
+  content: "\e688";
+}
+
+.ifa-arrow-right-bold:before {
+  content: "\e689";
+}
+

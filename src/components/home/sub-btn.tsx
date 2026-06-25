@@ -1,0 +1,49 @@
+// @ts-nocheck
+export const SubBtn = () => {  
+return (    
+<>      
+<ul className="sub-btn">        
+<li>          
+<a            
+href="/zuanjixilie/"            
+title="天井钻机系列"          
+>
+            天井钻机系列          
+</a>        
+</li>        
+<li>          
+<a            
+href="/yougangxuangua/"            
+title="油缸悬挂系列"          
+>
+            油缸悬挂系列          
+</a>        
+</li>        
+<li>          
+<a            
+href="/pro_category/zaoyantaiche/"            
+title="结构件系列"          
+>
+            结构件系列          
+</a>        
+</li>        
+<li>          
+<a            
+href="/fuxuanjixilie/"            
+title="选矿设备系列"          
+>
+            选矿设备系列          
+</a>        
+</li>        
+<li>          
+<a            
+href="/pro_category/dexiafuwuche/"            
+title="专用设备系列"          
+>
+            专用设备系列          
+</a>        
+</li>      
+</ul>    
+</>  
+);
+};

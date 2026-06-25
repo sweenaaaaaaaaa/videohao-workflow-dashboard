@@ -1,0 +1,58 @@
+@media (min-width: 1300px) {
+  .container {    
+max-width: 15rem;    
+min-width: 12.8rem;    
+width: 90%;  
+}
+}
+html {  
+font-size: 625%;
+}
+html,
+body {  
+height: 100%;
+}
+body {  
+margin-top: 1.08rem;  
+color: #58595b;  
+font-size: 0.16rem;  
+font-family: 'Quicksand', sans-serif;
+}
+a:hover,
+a:focus {  
+color: #0070c0;  
+outline: 0 none;  
+text-decoration: none;
+}
+:focus {  
+outline: none;
+}
+::-ms-clear,
+::-ms-reveal {  
+display: none;
+}
+a {  
+color: #0070c0;
+}
+@keyframes amShowImg {  
+from {    
+opacity: 0;  
+}  
+100% {    
+opacity: 1;  
+}
+}
+@keyframes amShowInRight {  
+from {    
+opacity: 0;    
+-webkit-transform: translate3d(20%, 0, 0);    
+transform: translate3d(20%, 0, 0);  
+}  
+100% {    
+opacity: 1;    
+-webkit-transform: none;    
+transform: none;  
+}
+}
+@keyframes amShowInLeft {  
+from {

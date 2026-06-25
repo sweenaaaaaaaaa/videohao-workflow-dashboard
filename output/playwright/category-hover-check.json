@@ -1,0 +1,23 @@
+[
+  {
+    "path": "/chanpinzhanshi/",
+    "count": 0,
+    "text": null,
+    "before": null,
+    "after": null
+  },
+  {
+    "path": "/zuanjixilie/",
+    "count": 6,
+    "text": "有轨式天（反）井钻机",
+    "before": "rgb(0, 0, 0)",
+    "after": "rgb(217, 154, 0)"
+  },
+  {
+    "path": "/yougangxuangua/",
+    "count": 12,
+    "text": "挖掘机大臂油缸",
+    "before": "rgb(0, 0, 0)",
+    "after": "rgb(217, 154, 0)"
+  }
+]

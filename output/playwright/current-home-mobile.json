@@ -1,0 +1,130 @@
+{
+  "title": "长沙仁毅机械有限公司 - 官网",
+  "bodyClass": "home blog ind",
+  "subnav": [
+    {
+      "sel": ".header-box .menu-box .menu > li.has-sub > .sub-nav",
+      "text": "公司简介企业文化发展历程新闻中心 格物、致知、诚意、正心长沙仁毅机械制造有限公司是一家高新技术企业，专注矿山装备与工程机械备件国产化。公司深耕行业二十余载，主营",
+      "display": "block",
+      "visibility": "visible",
+      "opacity": "1",
+      "pointerEvents": "auto",
+      "rect": {
+        "x": -321,
+        "y": 150,
+        "w": 292,
+        "h": 187
+      },
+      "className": "sub-nav"
+    },
+    {
+      "sel": ".header-box .menu-box .menu > li.has-sub > .sub-nav",
+      "text": "天井钻机系列有轨式天（反）井钻机无轨式天（反）井钻机钻杆、稳定杆扩孔刀盘油缸悬挂系列工程机械类特种车辆类（矿卡与铰卡）选矿设备系列充气搅拌式浮选机专用设备系列轮",
+      "display": "block",
+      "visibility": "visible",
+      "opacity": "1",
+      "pointerEvents": "auto",
+      "rect": {
+        "x": -321,
+        "y": 390,
+        "w": 292,
+        "h": 847
+      },
+      "className": "sub-nav"
+    },
+    {
+      "sel": ".header-box .menu-box .menu > li.has-sub > .sub-nav",
+      "text": "产品质量售后服务 高端装备、精密检测、可靠交付仁毅机械拥有全面的检测实验室，覆盖原材料、化学检测、力学性能测试、无损检测及疲劳试验等环节，为产品交付建立可追溯的",
+      "display": "block",
+      "visibility": "visible",
+      "opacity": "1",
+      "pointerEvents": "auto",
+      "rect": {
+        "x": -321,
+        "y": 1291,
+        "w": 292,
+        "h": 94
+      },
+      "className": "sub-nav"
+    },
+    {
+      "sel": ".header-box .menu-box .menu > li.has-sub > .sub-nav",
+      "text": "人才理念招聘信息 精铸基石，智联全球仁毅坚持以人为本，重视员工成长与价值实现，让员工在精益生产、可靠交付和专业制造中成长成才，与企业携手共进。查看更多",
+      "display": "block",
+      "visibility": "visible",
+      "opacity": "1",
+      "pointerEvents": "auto",
+      "rect": {
+        "x": -321,
+        "y": 1438,
+        "w": 292,
+        "h": 94
+      },
+      "className": "sub-nav"
+    },
+    {
+      "sel": ".header-box .menu-box .menu > li.has-sub > .sub-nav",
+      "text": "联系我们在线留言 精工智造，可靠交付仁毅聚焦天井钻机、特种油缸、结构件及专用设备制造，依托技术研发、精密加工与质量检测能力，为矿山及工程机械客户提供稳定可靠的定",
+      "display": "block",
+      "visibility": "visible",
+      "opacity": "1",
+      "pointerEvents": "auto",
+      "rect": {
+        "x": -321,
+        "y": 1585,
+        "w": 292,
+        "h": 94
+      },
+      "className": "sub-nav"
+    },
+    {
+      "sel": ".header-box .menu-box .menu > li.has-sub > .sub-nav",
+      "text": "仁毅新闻 技术知识 行业动态 查看更多",
+      "display": "block",
+      "visibility": "visible",
+      "opacity": "1",
+      "pointerEvents": "auto",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "className": "sub-nav"
+    }
+  ],
+  "news": [
+    {
+      "sel": ".renyi-news-center, .renyi-news-layout, .renyi-home-news, .ind04, .ind05",
+      "text": "精铸基石，智联全球 新闻中心 同步捕捉中国与全球矿山装备、工程机械、资本市场与制造业升级动态，为出口型 B2B 客户提供可检索、可分发的行业信息入口。 23JU",
+      "display": "block",
+      "visibility": "visible",
+      "opacity": "1",
+      "pointerEvents": "auto",
+      "rect": {
+        "x": 0,
+        "y": 2913,
+        "w": 390,
+        "h": 1617
+      },
+      "className": "renyi-news-center bg-white text-slate-900"
+    }
+  ],
+  "hero": [
+    {
+      "sel": ".banner, .swiper, .ind-banner, .home-banner",
+      "text": "您的浏览器不支持 video 标签。 企业文化 格物 | 致知 | 诚意 | 正心 Quality first · Service first · Honest",
+      "display": "block",
+      "visibility": "visible",
+      "opacity": "1",
+      "pointerEvents": "auto",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 390,
+        "h": 229
+      },
+      "className": "banner"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+@font-face {  
+font-family: 'ifa';  
+src: url('../assets/6f7a3777f386.woff2') format('woff2');
+}
+.ifa {  
+font-family: 'ifa' !important;  
+font-size: 16px;  
+font-style: normal;  
+-webkit-font-smoothing: antialiased;  
+-moz-osx-font-smoothing: grayscale;
+}
+.ifa-you:before {  
+content: '';
+}
+.ifa-renyuanbiandongfenxi:before {  
+content: '';
+}
+.ifa-duidaoyi:before {  
+content: '';
+}
+.ifa-shebei:before {  
+content: '';
+}
+.ifa-29gongyegongcheng_jiagonggongyi:before {  
+content: '';
+}
+.ifa-icon-test1:before {  
+content: '';
+}
+.ifa-youjiantou1:before {  
+content: '';
+}
+.ifa-close-bold:before {  
+content: '';
+}
+.ifa-arrow-down-bold:before {  
+content: '';
+}
+.ifa-arrow-right-bold:before {  
+content: '';
+}
