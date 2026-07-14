@@ -110,6 +110,11 @@ const RENYI_HEADER_NAV_ITEMS = [
     labels: { zh: '产品', en: 'Products', ru: 'Продукция', es: 'Productos' },
   },
   {
+    className: 'm-2',
+    href: '/anlizhanshi/',
+    labels: { zh: '案例', en: 'Cases', ru: 'Проекты', es: 'Proyectos' },
+  },
+  {
     className: 'm-3 has-sub',
     href: '/fuwuzhichi/',
     labels: { zh: '服务', en: 'Service', ru: 'Сервис', es: 'Servicio' },
@@ -629,13 +634,13 @@ const FOOTER_MENU_COPY = {
     className: 'm-2 has-sub',
     href: '/fuwuzhichi/',
     labels: { zh: '服务支持', en: 'Service Support', ru: 'Сервисная поддержка', es: 'Soporte de servicio' },
-    submenu: RENYI_HEADER_NAV_ITEMS[2].submenu,
+    submenu: RENYI_HEADER_NAV_ITEMS[3].submenu,
   },
   contact: {
     className: 'm-4 has-sub',
     href: '/lianxiwomen/',
     labels: { zh: '联系我们', en: 'Contact Us', ru: 'Контакты', es: 'Contacto' },
-    submenu: RENYI_HEADER_NAV_ITEMS[4].submenu,
+    submenu: RENYI_HEADER_NAV_ITEMS[5].submenu,
   },
 } as const;
 
@@ -820,6 +825,7 @@ const FOOTER_PRODUCT_SERIES_HREFS = [
 const PRODUCT_SERIES_CARD_HREF_ALIASES: Record<string, string> = {
   '/pro_category/chanyunjixilie/': PRODUCT_SERIES_HREFS.raiseBoring,
   '/pro_category/yunkuangkache/': PRODUCT_SERIES_HREFS.hydraulic,
+  '/pro_category/yidongshiqiaomaotaiche/': PRODUCT_SERIES_HREFS.mineral,
   '/pro_category/fuwuchexilie/': '/pro_category/dexiafuwuche/',
 };
 const SPARE_PARTS_SERIES_HREF = '/pro_category/beijianzhongxin/';
@@ -842,19 +848,15 @@ const STRUCTURAL_SERIES_CHILD_LABELS: Record<string, string> = {
 };
 
 const SPECIAL_EQUIPMENT_CHILD_HREFS = [
-  '/zhuanyong-01/',
   '/zhuanyong-02/',
   '/zhuanyong-03/',
   '/zhuanyong-04/',
-  '/zhuanyong-05/',
 ];
 
 const SPECIAL_EQUIPMENT_CHILD_LABELS: Record<string, string> = {
-  '/zhuanyong-01/': '轮辋拆装机（多条件式轮辋）',
   '/zhuanyong-02/': '轮辋拆装机（门架式）',
   '/zhuanyong-03/': '马达拆装机',
   '/zhuanyong-04/': '炮孔填塞机',
-  '/zhuanyong-05/': '轮胎拆卸手',
 };
 
 const RAISE_BORING_SERIES_CHILD_LABELS: Record<string, string> = {
@@ -892,11 +894,9 @@ const HEADER_PRODUCT_CHILD_LABELS_BY_LOCALE: Record<RenyiLocale, Record<string, 
       '/xuanji-01/': 'Forced-Air Mechanical Flotation Machine',
     },
     [PRODUCT_SERIES_HREFS.special]: {
-      '/zhuanyong-01/': 'Rim Dismounting Machine (Multi-Condition Rim)',
       '/zhuanyong-02/': 'Rim Dismounting Machine (Gantry Type)',
       '/zhuanyong-03/': 'Motor Dismounting Machine',
       '/zhuanyong-04/': 'Blasthole Stemming Machine',
-      '/zhuanyong-05/': 'Tire Handler',
     },
     [PRODUCT_SERIES_HREFS.structural]: {
       '/jiegou-01/': 'Rear Axle Housing',
@@ -919,11 +919,9 @@ const HEADER_PRODUCT_CHILD_LABELS_BY_LOCALE: Record<RenyiLocale, Record<string, 
       '/xuanji-01/': 'Пневмомеханическая флотационная машина',
     },
     [PRODUCT_SERIES_HREFS.special]: {
-      '/zhuanyong-01/': 'Станок демонтажа ободов (многоусловный тип)',
       '/zhuanyong-02/': 'Станок демонтажа ободов (портальный тип)',
       '/zhuanyong-03/': 'Станок демонтажа моторов',
       '/zhuanyong-04/': 'Установка забойки скважин',
-      '/zhuanyong-05/': 'Манипулятор для шин',
     },
     [PRODUCT_SERIES_HREFS.structural]: {
       '/jiegou-01/': 'Корпус заднего моста',
@@ -946,11 +944,9 @@ const HEADER_PRODUCT_CHILD_LABELS_BY_LOCALE: Record<RenyiLocale, Record<string, 
       '/xuanji-01/': 'Máquina de flotación mecánica con aire forzado',
     },
     [PRODUCT_SERIES_HREFS.special]: {
-      '/zhuanyong-01/': 'Desmontadora de llantas (tipo multicondición)',
       '/zhuanyong-02/': 'Desmontadora de llantas (tipo pórtico)',
       '/zhuanyong-03/': 'Desmontadora de motores',
       '/zhuanyong-04/': 'Equipo de retacado de barrenos',
-      '/zhuanyong-05/': 'Manipulador de neumáticos',
     },
     [PRODUCT_SERIES_HREFS.structural]: {
       '/jiegou-01/': 'Carcasa de eje trasero',
@@ -1704,8 +1700,8 @@ function replaceFooterQrImages() {
 function replaceHeaderIconImageLabels() {
   const locale = getRenyiLogoCopy(window.location.pathname).locale;
   const iconLabels: Array<[string, string]> = [
-    ['.top-block .a1 img, img[src*="language.gif"], img[src*="ytxingye-16dg51r.gif"]', RENYI_LANGUAGE_ICON_ALTS[locale]],
-    ['.top-block .right_btn img, img[src*="head-btn.jpg"], img[src*="ytxingye-124h1r9.jpg"]', RENYI_QUICK_NAV_ICON_ALTS[locale]],
+    ['.top-block .a1 img, img[src*="language.gif"]', RENYI_LANGUAGE_ICON_ALTS[locale]],
+    ['.top-block .right_btn img, img[src*="head-btn.jpg"]', RENYI_QUICK_NAV_ICON_ALTS[locale]],
   ];
 
   iconLabels.forEach(([selector, label]) => {
@@ -2110,6 +2106,29 @@ function replaceHeaderTopNavLabels() {
     replaceTopAnchor(item, navItem.href, navItem.labels[locale], locale);
     replaceSubMenuItems(item, locale, 'submenu' in navItem ? navItem.submenu : undefined);
   });
+}
+
+function ensureHeaderCaseNav() {
+  const list = document.querySelector<HTMLUListElement>('.header-box .menu');
+
+  if (!list) {
+    return;
+  }
+
+  const item = list.querySelector<HTMLLIElement>(':scope > li.m-2') ?? document.createElement('li');
+  const anchor = document.createElement('a');
+  const label = document.createElement('span');
+  const serviceItem = list.querySelector<HTMLLIElement>(':scope > li.m-3');
+
+  const currentPath = normalizeHrefPath(window.location.pathname).replace(/^\/(en|ru|es)(?=\/)/, '');
+
+  item.className = currentPath.startsWith('/anlizhanshi/') ? 'm-2 current' : 'm-2';
+  anchor.append(label);
+  item.replaceChildren(anchor);
+
+  if (!item.parentElement) {
+    list.insertBefore(item, serviceItem);
+  }
 }
 
 function replaceHeaderLanguageLabel() {
@@ -2552,6 +2571,7 @@ function patchRenyiMirror() {
   removeSparePartsSeriesLinks();
   removeHeaderMenuNativeTooltips();
   replaceHeaderHomeNav();
+  ensureHeaderCaseNav();
   replaceHeaderTopNavLabels();
   replaceHeaderLanguageLabel();
   replaceProductSeriesCardLabels();

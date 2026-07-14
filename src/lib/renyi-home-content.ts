@@ -1,3 +1,5 @@
+import { RENYI_CASE_PROJECTS } from './renyi-case-projects';
+
 type Locale = 'zh' | 'en' | 'ru' | 'es';
 
 type HomeIntroCopy = {
@@ -40,6 +42,13 @@ type SolutionCopy = {
   paragraph: string;
 };
 
+type HomeCaseCopy = {
+  eyebrow: string;
+  title: string;
+  paragraph: string;
+  link: string;
+};
+
 const HOME_PATH_LOCALES: Record<string, Locale> = {
   '/': 'zh',
   '/en': 'en',
@@ -58,6 +67,37 @@ const PRODUCT_CATEGORY_STRUCTURAL_IMAGE = '/renyi/product-category-structural-co
 const HOME_INTRO_FACTORY_IMAGE = '/renyi/renyi-home-intro-factory.png';
 const SOLUTION_MAP_IMAGE = '/renyi/renyi-ind03-map-changsha-v2.svg';
 const NEWS_MONTH_LABELS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+const homeCaseCopies: Record<Locale, HomeCaseCopy> = {
+  zh: {
+    eyebrow: '项目实践与交付经验',
+    title: '案例展示',
+    paragraph:
+      '从矿山井筒施工、大型车辆维修，到结构件改造和专用设备安装调试，查看仁毅设备在不同现场条件下的实际应用。',
+    link: '查看全部案例',
+  },
+  en: {
+    eyebrow: 'Projects and delivery experience',
+    title: 'Case Studies',
+    paragraph:
+      'Explore Renyi equipment in real applications, from mine-shaft construction and heavy-vehicle repair to structural retrofit and specialized equipment commissioning.',
+    link: 'View all cases',
+  },
+  ru: {
+    eyebrow: 'Проекты и опыт поставок',
+    title: 'Реализованные проекты',
+    paragraph:
+      'Практическое применение оборудования Renyi: шахтные стволы, ремонт тяжелой техники, модернизация конструкций, монтаж и наладка спецоборудования.',
+    link: 'Все проекты',
+  },
+  es: {
+    eyebrow: 'Proyectos y experiencia de entrega',
+    title: 'Casos de éxito',
+    paragraph:
+      'Aplicaciones reales de equipos Renyi: pozos mineros, reparación de vehículos pesados, modernización estructural e instalación de equipos especiales.',
+    link: 'Ver todos los casos',
+  },
+};
 
 const solutionCopies: Record<Locale, SolutionCopy> = {
   zh: {
@@ -481,6 +521,52 @@ function newsDateBadge(datetime: string) {
   };
 }
 
+function homeCaseMarqueeSection(locale: Locale) {
+  const copy = homeCaseCopies[locale];
+  const indexHref = withLocalePath('/anlizhanshi/', locale);
+  const renderGroup = (duplicate: boolean) => `
+    <div class="renyi-home-cases__group"${duplicate ? ' aria-hidden="true"' : ''}>
+      ${RENYI_CASE_PROJECTS.map((project) => {
+        const title = project.title[locale];
+        const href = withLocalePath(`/anlizhanshi/${project.slug}/`, locale);
+
+        return `
+          <a class="renyi-home-case" href="${escapeHtmlAttribute(href)}"${duplicate ? ' tabindex="-1"' : ''}>
+            <span class="renyi-home-case__media">
+              <img src="${escapeHtmlAttribute(project.coverImage)}" alt="${escapeHtmlAttribute(title)}" loading="lazy">
+            </span>
+            <span class="renyi-home-case__copy">
+              <span class="renyi-home-case__category">${escapeHtmlText(project.category[locale])}</span>
+              <strong>${escapeHtmlText(title)}</strong>
+            </span>
+          </a>
+        `;
+      }).join('')}
+    </div>
+  `;
+
+  return `
+    <section class="renyi-home-cases renyi-home-cases--${locale}" aria-labelledby="renyi-home-cases-title">
+      <div class="container renyi-home-cases__layout">
+        <div class="renyi-home-cases__intro">
+          <div class="renyi-home-cases__heading">
+            <p class="renyi-home-cases__eyebrow">${escapeHtmlText(copy.eyebrow)}</p>
+            <h2 id="renyi-home-cases-title">${escapeHtmlText(copy.title)}</h2>
+          </div>
+          <p class="renyi-home-cases__description">${escapeHtmlText(copy.paragraph)}</p>
+          <a class="renyi-home-cases__link" href="${escapeHtmlAttribute(indexHref)}">${escapeHtmlText(copy.link)}<span aria-hidden="true">›</span></a>
+        </div>
+        <div class="renyi-home-cases__marquee" aria-label="${escapeHtmlAttribute(copy.title)}">
+          <div class="renyi-home-cases__track">
+            ${renderGroup(false)}
+            ${renderGroup(true)}
+          </div>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
 function homeNewsSection(copy: NewsCenterCopy, locale: Locale) {
   const liveNewsAttr = ' data-renyi-live-news="cat"';
 
@@ -675,7 +761,7 @@ function patchProductCategoryHero(html: string, locale: Locale) {
       `$1${PRODUCT_CATEGORY_SITE_IMAGE}$2<h2 class="renyi-product-category-heading"><span>${escapeHtmlText(copy.label)}</span>${escapeHtmlText(copy.title)}</h2> <div class="txt"> ${copy.description} </div>`,
     )
     .replace(
-      /src="https:\/\/(?:www|en|ru|es)\.ytxingye\.com\/wp-content\/uploads\/2024\/11\/UK-50\.jpg"/,
+      /src="https:\/\/snapshot\.local(?:\/(?:en|ru|es))?\/wp-content\/uploads\/2024\/11\/UK-50\.jpg"/,
       `src="${PRODUCT_CATEGORY_SUSPENSION_IMAGE}"`,
     )
     .replace(
@@ -683,15 +769,15 @@ function patchProductCategoryHero(html: string, locale: Locale) {
       `$1${escapeHtmlText(copy.buttons[1] ?? '')}$2`,
     )
     .replace(
-      /src="https:\/\/(?:www|en|ru|es)\.ytxingye\.com\/wp-content\/uploads\/2024\/11\/CYTJ45-2\.jpg"/,
+      /src="https:\/\/snapshot\.local(?:\/(?:en|ru|es))?\/wp-content\/uploads\/2024\/11\/CYTJ45-2\.jpg"/,
       `src="${PRODUCT_CATEGORY_SPECIAL_IMAGE}"`,
     )
     .replace(
-      /src="https:\/\/(?:www|en|ru|es)\.ytxingye\.com\/wp-content\/uploads\/2024\/11\/XMPYT-104-700\.jpg"/,
+      /src="https:\/\/snapshot\.local(?:\/(?:en|ru|es))?\/wp-content\/uploads\/2024\/11\/XMPYT-104-700\.jpg"/,
       `src="${PRODUCT_CATEGORY_MINERAL_IMAGE}"`,
     )
     .replace(
-      /src="https:\/\/(?:www|en|ru|es)\.ytxingye\.com\/wp-content\/uploads\/2024\/11\/FH-8\.jpg"/,
+      /src="https:\/\/snapshot\.local(?:\/(?:en|ru|es))?\/wp-content\/uploads\/2024\/11\/FH-8\.jpg"/,
       `src="${PRODUCT_CATEGORY_STRUCTURAL_IMAGE}"`,
     )
     .replace(buttonBoxPattern, `$1 ${buttonsHtml} $2`);
@@ -704,6 +790,17 @@ function patchNewsCenter(html: string, locale: Locale) {
     html,
     '<div class="ind04 page-col-space">',
     homeNewsSection(newsCenterCopies[locale], locale),
+  );
+}
+
+function patchHomeCaseMarquee(html: string, locale: Locale) {
+  if (html.includes('class="renyi-home-cases')) {
+    return html;
+  }
+
+  return html.replace(
+    '<div class="ind03 page-col-space">',
+    `${homeCaseMarqueeSection(locale)}<div class="ind03 page-col-space">`,
   );
 }
 
@@ -774,8 +871,11 @@ export function patchRenyiHomeHtml(html: string, pathname: string) {
     patchNewsCenter(
       patchSolutionCopy(
         patchSolutionMapImage(
-          patchProductCategoryHero(
-            html.replace(pattern, `${homeIntroSection(homeIntroCopies[locale], locale)}<div class="ind02">`),
+          patchHomeCaseMarquee(
+            patchProductCategoryHero(
+              html.replace(pattern, `${homeIntroSection(homeIntroCopies[locale], locale)}<div class="ind02">`),
+              locale,
+            ),
             locale,
           ),
         ),

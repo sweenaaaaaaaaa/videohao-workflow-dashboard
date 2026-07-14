@@ -1,12 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://csrenyi.com/</loc></url>
+  <url><loc>https://csrenyi.com/anlizhanshi</loc></url>
+  <url><loc>https://csrenyi.com/anlizhanshi/case-01</loc></url>
+  <url><loc>https://csrenyi.com/anlizhanshi/case-02</loc></url>
+  <url><loc>https://csrenyi.com/anlizhanshi/case-03</loc></url>
+  <url><loc>https://csrenyi.com/anlizhanshi/case-04</loc></url>
+  <url><loc>https://csrenyi.com/anlizhanshi/case-05</loc></url>
+  <url><loc>https://csrenyi.com/anlizhanshi/case-06</loc></url>
+  <url><loc>https://csrenyi.com/anlizhanshi/case-07</loc></url>
+  <url><loc>https://csrenyi.com/anlizhanshi/case-08</loc></url>
+  <url><loc>https://csrenyi.com/anlizhanshi/case-09</loc></url>
+  <url><loc>https://csrenyi.com/anlizhanshi/case-10</loc></url>
   <url><loc>https://csrenyi.com/category/renyixinwen</loc></url>
   <url><loc>https://csrenyi.com/category/xinwenzhongxin</loc></url>
   <url><loc>https://csrenyi.com/category/xinwenzhongxin/jishuzhishi</loc></url>
   <url><loc>https://csrenyi.com/category/xinwenzhongxin/xingyedongtai</loc></url>
   <url><loc>https://csrenyi.com/chanpinzhanshi</loc></url>
   <url><loc>https://csrenyi.com/en</loc></url>
+  <url><loc>https://csrenyi.com/en/anlizhanshi</loc></url>
+  <url><loc>https://csrenyi.com/en/anlizhanshi/case-01</loc></url>
+  <url><loc>https://csrenyi.com/en/anlizhanshi/case-02</loc></url>
+  <url><loc>https://csrenyi.com/en/anlizhanshi/case-03</loc></url>
+  <url><loc>https://csrenyi.com/en/anlizhanshi/case-04</loc></url>
+  <url><loc>https://csrenyi.com/en/anlizhanshi/case-05</loc></url>
+  <url><loc>https://csrenyi.com/en/anlizhanshi/case-06</loc></url>
+  <url><loc>https://csrenyi.com/en/anlizhanshi/case-07</loc></url>
+  <url><loc>https://csrenyi.com/en/anlizhanshi/case-08</loc></url>
+  <url><loc>https://csrenyi.com/en/anlizhanshi/case-09</loc></url>
+  <url><loc>https://csrenyi.com/en/anlizhanshi/case-10</loc></url>
   <url><loc>https://csrenyi.com/en/category/renyixinwen</loc></url>
   <url><loc>https://csrenyi.com/en/category/xinwenzhongxin</loc></url>
   <url><loc>https://csrenyi.com/en/category/xinwenzhongxin/jishuzhishi</loc></url>
@@ -61,11 +83,9 @@
   <url><loc>https://csrenyi.com/en/yougang-01</loc></url>
   <url><loc>https://csrenyi.com/en/yougang-02</loc></url>
   <url><loc>https://csrenyi.com/en/yougangxuangua</loc></url>
-  <url><loc>https://csrenyi.com/en/zhuanyong-01</loc></url>
   <url><loc>https://csrenyi.com/en/zhuanyong-02</loc></url>
   <url><loc>https://csrenyi.com/en/zhuanyong-03</loc></url>
   <url><loc>https://csrenyi.com/en/zhuanyong-04</loc></url>
-  <url><loc>https://csrenyi.com/en/zhuanyong-05</loc></url>
   <url><loc>https://csrenyi.com/en/zhuanyongxilie</loc></url>
   <url><loc>https://csrenyi.com/en/zuanji-01</loc></url>
   <url><loc>https://csrenyi.com/en/zuanji-02</loc></url>
@@ -75,6 +95,17 @@
   <url><loc>https://csrenyi.com/en/zuanji-06</loc></url>
   <url><loc>https://csrenyi.com/en/zuanjixilie</loc></url>
   <url><loc>https://csrenyi.com/es</loc></url>
+  <url><loc>https://csrenyi.com/es/anlizhanshi</loc></url>
+  <url><loc>https://csrenyi.com/es/anlizhanshi/case-01</loc></url>
+  <url><loc>https://csrenyi.com/es/anlizhanshi/case-02</loc></url>
+  <url><loc>https://csrenyi.com/es/anlizhanshi/case-03</loc></url>
+  <url><loc>https://csrenyi.com/es/anlizhanshi/case-04</loc></url>
+  <url><loc>https://csrenyi.com/es/anlizhanshi/case-05</loc></url>
+  <url><loc>https://csrenyi.com/es/anlizhanshi/case-06</loc></url>
+  <url><loc>https://csrenyi.com/es/anlizhanshi/case-07</loc></url>
+  <url><loc>https://csrenyi.com/es/anlizhanshi/case-08</loc></url>
+  <url><loc>https://csrenyi.com/es/anlizhanshi/case-09</loc></url>
+  <url><loc>https://csrenyi.com/es/anlizhanshi/case-10</loc></url>
   <url><loc>https://csrenyi.com/es/category/renyixinwen</loc></url>
   <url><loc>https://csrenyi.com/es/category/xinwenzhongxin</loc></url>
   <url><loc>https://csrenyi.com/es/category/xinwenzhongxin/jishuzhishi</loc></url>
@@ -129,11 +160,9 @@
   <url><loc>https://csrenyi.com/es/yougang-01</loc></url>
   <url><loc>https://csrenyi.com/es/yougang-02</loc></url>
   <url><loc>https://csrenyi.com/es/yougangxuangua</loc></url>
-  <url><loc>https://csrenyi.com/es/zhuanyong-01</loc></url>
   <url><loc>https://csrenyi.com/es/zhuanyong-02</loc></url>
   <url><loc>https://csrenyi.com/es/zhuanyong-03</loc></url>
   <url><loc>https://csrenyi.com/es/zhuanyong-04</loc></url>
-  <url><loc>https://csrenyi.com/es/zhuanyong-05</loc></url>
   <url><loc>https://csrenyi.com/es/zhuanyongxilie</loc></url>
   <url><loc>https://csrenyi.com/es/zuanji-01</loc></url>
   <url><loc>https://csrenyi.com/es/zuanji-02</loc></url>
@@ -155,6 +184,17 @@
   <url><loc>https://csrenyi.com/jiegouxilie</loc></url>
   <url><loc>https://csrenyi.com/lianxiwomen</loc></url>
   <url><loc>https://csrenyi.com/ru</loc></url>
+  <url><loc>https://csrenyi.com/ru/anlizhanshi</loc></url>
+  <url><loc>https://csrenyi.com/ru/anlizhanshi/case-01</loc></url>
+  <url><loc>https://csrenyi.com/ru/anlizhanshi/case-02</loc></url>
+  <url><loc>https://csrenyi.com/ru/anlizhanshi/case-03</loc></url>
+  <url><loc>https://csrenyi.com/ru/anlizhanshi/case-04</loc></url>
+  <url><loc>https://csrenyi.com/ru/anlizhanshi/case-05</loc></url>
+  <url><loc>https://csrenyi.com/ru/anlizhanshi/case-06</loc></url>
+  <url><loc>https://csrenyi.com/ru/anlizhanshi/case-07</loc></url>
+  <url><loc>https://csrenyi.com/ru/anlizhanshi/case-08</loc></url>
+  <url><loc>https://csrenyi.com/ru/anlizhanshi/case-09</loc></url>
+  <url><loc>https://csrenyi.com/ru/anlizhanshi/case-10</loc></url>
   <url><loc>https://csrenyi.com/ru/category/renyixinwen</loc></url>
   <url><loc>https://csrenyi.com/ru/category/xinwenzhongxin</loc></url>
   <url><loc>https://csrenyi.com/ru/category/xinwenzhongxin/jishuzhishi</loc></url>
@@ -209,11 +249,9 @@
   <url><loc>https://csrenyi.com/ru/yougang-01</loc></url>
   <url><loc>https://csrenyi.com/ru/yougang-02</loc></url>
   <url><loc>https://csrenyi.com/ru/yougangxuangua</loc></url>
-  <url><loc>https://csrenyi.com/ru/zhuanyong-01</loc></url>
   <url><loc>https://csrenyi.com/ru/zhuanyong-02</loc></url>
   <url><loc>https://csrenyi.com/ru/zhuanyong-03</loc></url>
   <url><loc>https://csrenyi.com/ru/zhuanyong-04</loc></url>
-  <url><loc>https://csrenyi.com/ru/zhuanyong-05</loc></url>
   <url><loc>https://csrenyi.com/ru/zhuanyongxilie</loc></url>
   <url><loc>https://csrenyi.com/ru/zuanji-01</loc></url>
   <url><loc>https://csrenyi.com/ru/zuanji-02</loc></url>
@@ -259,11 +297,9 @@
   <url><loc>https://csrenyi.com/yougang-01</loc></url>
   <url><loc>https://csrenyi.com/yougang-02</loc></url>
   <url><loc>https://csrenyi.com/yougangxuangua</loc></url>
-  <url><loc>https://csrenyi.com/zhuanyong-01</loc></url>
   <url><loc>https://csrenyi.com/zhuanyong-02</loc></url>
   <url><loc>https://csrenyi.com/zhuanyong-03</loc></url>
   <url><loc>https://csrenyi.com/zhuanyong-04</loc></url>
-  <url><loc>https://csrenyi.com/zhuanyong-05</loc></url>
   <url><loc>https://csrenyi.com/zhuanyongxilie</loc></url>
   <url><loc>https://csrenyi.com/zuanji-01</loc></url>
   <url><loc>https://csrenyi.com/zuanji-02</loc></url>

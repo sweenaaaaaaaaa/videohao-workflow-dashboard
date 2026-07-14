@@ -36,18 +36,18 @@ function RootDocument() {
         {alternates.map((alternate) => (
           <link key={alternate.hrefLang} rel="alternate" hrefLang={alternate.hrefLang} href={alternate.href} />
         ))}
-        <link rel="stylesheet" href="/home/styles/legacy/ytxingye-bootstrap.css" />
-        <link rel="stylesheet" href="/home/styles/legacy/ytxingye-animate.min.css" />
-        <link rel="stylesheet" href="/home/styles/legacy/ytxingye-font-awesome.min.css" />
-        <link rel="stylesheet" href="/home/styles/legacy/ytxingye-swiper.min.css" />
-        <link rel="stylesheet" href="/home/styles/legacy/ytxingye-magnific-popup.css" />
-        <link rel="stylesheet" href="/home/styles/legacy/ytxingye-iconfont.css" />
-        <link rel="stylesheet" href="/home/styles/legacy/ytxingye-base.css" />
-        <link rel="stylesheet" href="/home/styles/legacy/ytxingye-main.css" />
-        <link rel="stylesheet" href="/home/styles/legacy/ytxingye-classic-themes.min.css" />
-        <link rel="stylesheet" href="/home/styles/legacy/ytxingye-select2.min.css" />
-        <link rel="stylesheet" href="/home/styles/legacy/ytxingye-beautiful-taxonomy-filters-base.min.css" />
-        <link rel="stylesheet" href="/home/styles/legacy/ytxingye-contact-form-7.css" />
+        <link rel="stylesheet" href="/home/styles/core/site-bootstrap.css" />
+        <link rel="stylesheet" href="/home/styles/core/site-animate.min.css" />
+        <link rel="stylesheet" href="/home/styles/core/site-font-awesome.min.css" />
+        <link rel="stylesheet" href="/home/styles/core/site-swiper.min.css" />
+        <link rel="stylesheet" href="/home/styles/core/site-magnific-popup.css" />
+        <link rel="stylesheet" href="/home/styles/core/site-iconfont.css" />
+        <link rel="stylesheet" href="/home/styles/core/site-base.css" />
+        <link rel="stylesheet" href="/home/styles/core/site-main.css" />
+        <link rel="stylesheet" href="/home/styles/core/site-classic-themes.min.css" />
+        <link rel="stylesheet" href="/home/styles/core/site-select2.min.css" />
+        <link rel="stylesheet" href="/home/styles/core/site-taxonomy-filters.min.css" />
+        <link rel="stylesheet" href="/home/styles/core/site-contact-form.css" />
         <link rel="shortcut icon" href="/favicon.png?v=renyi-20260426" />
         <title>{title}</title>
         {bodyStyle ? <style>{`body { ${bodyStyle} }`}</style> : null}

@@ -182,14 +182,6 @@ export const Menu = () => {
                   <ul className="sub-btn3">
                     <li>
                       <a
-                        href="/zhuanyong-01/"
-                        title="轮辋拆装机（多条件式轮辋）"
-                      >
-                        轮辋拆装机（多条件式轮辋）
-                      </a>
-                    </li>
-                    <li>
-                      <a
                         href="/zhuanyong-02/"
                         title="轮辋拆装机（门架式）"
                       >
@@ -210,14 +202,6 @@ export const Menu = () => {
                         title="炮孔填塞机"
                       >
                         炮孔填塞机
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="/zhuanyong-05/"
-                        title="轮胎拆卸手"
-                      >
-                        轮胎拆卸手
                       </a>
                     </li>
                   </ul>
@@ -271,6 +255,11 @@ export const Menu = () => {
             </div>
           </div>
         </div>
+      </li>
+      <li className="m-2">
+        <a href="/anlizhanshi/" title="案例">
+          <span data-title="案例">案例</span>
+        </a>
       </li>
       <li className="m-3 has-sub">
         <a href="/fuwuzhichi/" title="服务">

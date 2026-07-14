@@ -1,0 +1,1 @@
+import{R as s,g as o,r as e,j as n}from"./main-ByPiIzx-.js";import{S as i}from"./site-mirror-page-2H4AFCaZ.js";function l(){const r=s.useParams(),t=r._splat?`/${r._splat}`:"/",a=o(t)??t;return e.useEffect(()=>{a!==t&&window.history.replaceState(null,"",a)},[a,t]),n.jsx(i,{path:a})}export{l as component};

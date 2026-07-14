@@ -1,5 +1,11 @@
 import { sitePages, type SitePageData } from '@/data/site-pages.generated';
 import { patchRenyiAboutHtml } from '@/lib/renyi-about-content';
+import {
+  getRenyiCaseProject,
+  RENYI_CASE_DETAILS,
+  RENYI_CASE_PROJECTS,
+  type RenyiCaseProject,
+} from '@/lib/renyi-case-projects';
 import { patchRenyiHomeHtml } from '@/lib/renyi-home-content';
 import {
   createRenyiLegalPageData,
@@ -81,81 +87,25 @@ export const RENYI_JOIN_TRAINING_MODE_IMAGE = '/renyi/renyi-join-training-mode-i
 export const RENYI_JOIN_PRODUCTION_PRACTICE_IMAGE = '/renyi/renyi-join-production-practice-imagegen.jpg?v=20260518-imagegen';
 export const RENYI_RAISE_BORING_CATEGORY_BANNER_IMAGE = '/renyi/raise-boring-category-banner.png?v=20260509-full';
 export const RENYI_WHATSAPP_QR_IMAGE = '/renyi/renyi-whatsapp-qr.png';
+export const RENYI_WECHAT_OFFICIAL_ACCOUNT_QR_IMAGE = '/renyi/renyi-wechat-official-account-qr.jpg';
 export const RENYI_WHATSAPP_PHONE = '8613250789622';
 export const RENYI_WHATSAPP_DISPLAY_PHONE = '+86 132 5078 9622';
 export const RENYI_WHATSAPP_URL = `https://wa.me/${RENYI_WHATSAPP_PHONE}`;
-const RENYI_LEGACY_FOOTER_QR_IMAGES = [
-  'https://www.ytxingye.com/wp-content/themes/phoenix/static/images/dy.jpg',
-  'https://www.ytxingye.com/wp-content/themes/phoenix/static/images/wx.jpg',
-] as const;
-const RENYI_LEGACY_ASSET_URL_PATTERN =
-  /https?:\/\/(?:www|en|ru|es)\.ytxingye\.com[^\s"'<>)]*\.(?:png|jpe?g|gif|mp4|webp|svg|pdf|css|woff2?|ttf|eot)(?:\?[^\s"'<>)]*)?/gi;
+const RENYI_SNAPSHOT_ORIGIN_PATTERN = /https?:\/\/snapshot\.local(?=\/)/gi;
 
-function hashRenyiLegacyAssetUrl(value: string) {
-  let hash = 5381;
-
-  for (let index = 0; index < value.length; index += 1) {
-    hash = ((hash << 5) + hash) ^ value.charCodeAt(index);
-  }
-
-  return (hash >>> 0).toString(36);
+function sanitizeRenyiSnapshotHtml(html: string) {
+  return html
+    .replace(/\s+srcset=(["'])[^"']*snapshot\.local[^"']*\1/gi, '')
+    .replace(/[A-Z0-9._%+-]+@snapshot\.local/gi, 'info@csrenyi.com')
+    .replace(/<img\b[^>]*\bsrc=(["'])[^"']*(?:snapshot\.local|\/wp-content\/)[^"']*\1[^>]*>/gi, '')
+    .replace(/<source\b[^>]*\bsrc=(["'])[^"']*(?:snapshot\.local|\/wp-content\/)[^"']*\1[^>]*>/gi, '')
+    .replace(/url\(\s*https?:\/\/snapshot\.local[^)]*\)/gi, 'none')
+    .replace(RENYI_SNAPSHOT_ORIGIN_PATTERN, '')
+    .replace(/\/(?:en\/|ru\/|es\/)?wp-content\/[^\s"'<>)]*/gi, '');
 }
 
-const RENYI_LEGACY_ASSET_PATH_ALIASES: Record<string, string> = {
-  '/legacy-assets/ytxingye-en9kdn.mp4': '/legacy-assets/ytxingye-178spc7.mp4',
-  '/legacy-assets/ytxingye-p6i8ae.mp4': '/legacy-assets/ytxingye-178spc7.mp4',
-  '/legacy-assets/ytxingye-1ye7e23.jpg': '/legacy-assets/ytxingye-1iyufgq.jpg',
-  '/legacy-assets/ytxingye-5g3yhm.jpg': '/legacy-assets/ytxingye-1iyufgq.jpg',
-  '/legacy-assets/ytxingye-enpnhy.jpg': '/legacy-assets/ytxingye-1iyufgq.jpg',
-  '/legacy-assets/ytxingye-1kvdlmm.gif': '/legacy-assets/ytxingye-16dg51r.gif',
-  '/legacy-assets/ytxingye-1nrl677.gif': '/legacy-assets/ytxingye-16dg51r.gif',
-  '/legacy-assets/ytxingye-krkba7.gif': '/legacy-assets/ytxingye-16dg51r.gif',
-  '/legacy-assets/ytxingye-1njppeh.jpg': '/legacy-assets/ytxingye-124h1r9.jpg',
-  '/legacy-assets/ytxingye-5se46t.jpg': '/legacy-assets/ytxingye-124h1r9.jpg',
-  '/legacy-assets/ytxingye-rpk8ec.jpg': '/legacy-assets/ytxingye-124h1r9.jpg',
-  '/legacy-assets/ytxingye-15h3jn8.png': '/legacy-assets/ytxingye-13wi6yw.png',
-  '/legacy-assets/ytxingye-1lbb44k.png': '/legacy-assets/ytxingye-13wi6yw.png',
-  '/legacy-assets/ytxingye-15f0p11.png': '/legacy-assets/ytxingye-13x647d.png',
-  '/legacy-assets/ytxingye-1l989id.png': '/legacy-assets/ytxingye-13x647d.png',
-  '/legacy-assets/ytxingye-2vf8d0.png': '/legacy-assets/ytxingye-13x647d.png',
-  '/legacy-assets/ytxingye-1s78e4b.png': '/legacy-assets/ytxingye-1jp2e3v.png',
-  '/legacy-assets/ytxingye-8vumzb.png': '/legacy-assets/ytxingye-1jp2e3v.png',
-  '/legacy-assets/ytxingye-1mf2p8x.png': '/legacy-assets/ytxingye-1jtte4h.png',
-  '/legacy-assets/ytxingye-1w4qt4t.png': '/legacy-assets/ytxingye-1jtte4h.png',
-  '/legacy-assets/ytxingye-5wvie8.png': '/legacy-assets/ytxingye-1jtte4h.png',
-  '/legacy-assets/ytxingye-2nqv6e.png': '/legacy-assets/ytxingye-1p2bpsn.png',
-  '/legacy-assets/ytxingye-2scve.png': '/legacy-assets/ytxingye-1p2bpsn.png',
-  '/legacy-assets/ytxingye-yoyime.png': '/legacy-assets/ytxingye-1p2bpsn.png',
-};
-
-function getRenyiLegacyAssetLocalPath(value: string) {
-  try {
-    const url = new URL(value.replace(/&amp;/g, '&'));
-    const extension = url.pathname.match(/\.(png|jpe?g|gif|mp4|webp|svg|pdf|css|woff2?|ttf|eot)$/i)?.[0]?.toLowerCase();
-
-    if (!extension || !/(^|\.)ytxingye\.com$/.test(url.hostname)) {
-      return value;
-    }
-
-    url.hash = '';
-
-    const localPath = `/legacy-assets/ytxingye-${hashRenyiLegacyAssetUrl(url.toString())}${extension}`;
-
-    return RENYI_LEGACY_ASSET_PATH_ALIASES[localPath] ?? localPath;
-  } catch {
-    return value;
-  }
-}
-
-function localizeRenyiLegacyAssetUrlsHtml(html: string) {
-  const withoutLegacySrcsets = html.replace(/\s+srcset=(["'])[^"']*ytxingye\.com[^"']*\1/gi, '');
-  const withoutLegacyEmails = withoutLegacySrcsets.replace(/[A-Z0-9._%+-]+@ytxingye\.com/gi, 'info@csrenyi.com');
-  const normalizedLegacyUrls = withoutLegacyEmails.replace(
-    /(https?:\/\/(?:www|en|ru|es)\.ytxingye\.com)\s+(\/)/gi,
-    '$1$2',
-  );
-
-  return normalizedLegacyUrls.replace(RENYI_LEGACY_ASSET_URL_PATTERN, (url) => getRenyiLegacyAssetLocalPath(url));
+function sanitizeRenyiSnapshotStyle(style: string) {
+  return style.replace(/url\(\s*https?:\/\/snapshot\.local[^)]*\)/gi, 'none');
 }
 const RENYI_PRODUCT_MENU_COPY: Record<RenyiLocale, { title: string; text: string }> = {
   zh: {
@@ -2330,6 +2280,11 @@ const RENYI_HEADER_NAV_ITEMS = [
     labels: { zh: '产品', en: 'Products', ru: 'Продукция', es: 'Productos' },
   },
   {
+    className: 'm-2',
+    href: '/anlizhanshi/',
+    labels: { zh: '案例', en: 'Cases', ru: 'Проекты', es: 'Proyectos' },
+  },
+  {
     className: 'm-3 has-sub',
     href: '/fuwuzhichi/',
     labels: { zh: '服务', en: 'Service', ru: 'Сервис', es: 'Servicio' },
@@ -2452,13 +2407,13 @@ const RENYI_FOOTER_MENU_COPY = {
     className: 'm-2 has-sub',
     href: '/fuwuzhichi/',
     labels: { zh: '服务支持', en: 'Service Support', ru: 'Сервисная поддержка', es: 'Soporte de servicio' },
-    submenu: RENYI_HEADER_NAV_ITEMS[2].submenu,
+    submenu: RENYI_HEADER_NAV_ITEMS[3].submenu,
   },
   contact: {
     className: 'm-4 has-sub',
     href: '/lianxiwomen/',
     labels: { zh: '联系我们', en: 'Contact Us', ru: 'Контакты', es: 'Contacto' },
-    submenu: RENYI_HEADER_NAV_ITEMS[4].submenu,
+    submenu: RENYI_HEADER_NAV_ITEMS[5].submenu,
   },
 } as const;
 
@@ -2523,9 +2478,7 @@ const RENYI_IMAGE_ALT_SUFFIXES: Record<RenyiLocale, Array<[string, string]>> = {
     [RENYI_ZEGA_SALES_AUTHORIZATION_IMAGE, '志高掘进ZEGA经销授权书，授权长沙仁毅机械制造有限公司为战略客户经销商，授权期2021年7月1日至2022年12月31日'],
     [RENYI_ZEGA_REMANUFACTURING_NOTICE_IMAGE, '志高掘进ZEGA系列产品授权再制造中心通知，授权长沙仁毅机械制造有限公司为长沙授权再制造中心，2022年元月'],
     ['language.gif', '语言选择图标'],
-    ['/legacy-assets/ytxingye-16dg51r.gif', '语言选择图标'],
     ['head-btn.jpg', '快捷导航按钮'],
-    ['/legacy-assets/ytxingye-124h1r9.jpg', '快捷导航按钮'],
 	    ['2m.png', '长沙仁毅微信公众号二维码'],
 	    [RENYI_WHATSAPP_QR_IMAGE, '长沙仁毅 WhatsApp 联系二维码'],
 	    ['dy.jpg', '长沙仁毅抖音二维码'],
@@ -2569,9 +2522,7 @@ const RENYI_IMAGE_ALT_SUFFIXES: Record<RenyiLocale, Array<[string, string]>> = {
     [RENYI_ZEGA_SALES_AUTHORIZATION_IMAGE, 'ZEGA distributor authorization certificate appointing Changsha Renyi Machinery Manufacturing Co., Ltd. as a strategic customer distributor, valid from July 1, 2021 to December 31, 2022'],
     [RENYI_ZEGA_REMANUFACTURING_NOTICE_IMAGE, 'ZEGA authorized remanufacturing center notice authorizing Changsha Renyi Machinery Manufacturing Co., Ltd. as the Changsha authorized remanufacturing center, January 2022'],
     ['language.gif', 'Language selector icon'],
-    ['/legacy-assets/ytxingye-16dg51r.gif', 'Language selector icon'],
     ['head-btn.jpg', 'Quick navigation button'],
-    ['/legacy-assets/ytxingye-124h1r9.jpg', 'Quick navigation button'],
 	    ['2m.png', 'Changsha Renyi WeChat public account QR code'],
 	    [RENYI_WHATSAPP_QR_IMAGE, 'Changsha Renyi WhatsApp contact QR code'],
 	    ['dy.jpg', 'Changsha Renyi Douyin QR code'],
@@ -2615,9 +2566,7 @@ const RENYI_IMAGE_ALT_SUFFIXES: Record<RenyiLocale, Array<[string, string]>> = {
     [RENYI_ZEGA_SALES_AUTHORIZATION_IMAGE, 'Дистрибьюторский сертификат ZEGA, назначающий Changsha Renyi Machinery Manufacturing Co., Ltd. стратегическим дистрибьютором, срок действия с 1 июля 2021 года по 31 декабря 2022 года'],
     [RENYI_ZEGA_REMANUFACTURING_NOTICE_IMAGE, 'Уведомление об авторизованном центре ремануфактуринга продукции ZEGA, назначающее Changsha Renyi Machinery Manufacturing Co., Ltd. авторизованным центром в Чанше, январь 2022 года'],
     ['language.gif', 'Значок выбора языка'],
-    ['/legacy-assets/ytxingye-16dg51r.gif', 'Значок выбора языка'],
     ['head-btn.jpg', 'Кнопка быстрой навигации'],
-    ['/legacy-assets/ytxingye-124h1r9.jpg', 'Кнопка быстрой навигации'],
 	    ['2m.png', 'QR-код официального аккаунта WeChat Changsha Renyi'],
 	    [RENYI_WHATSAPP_QR_IMAGE, 'QR-код WhatsApp для связи с Changsha Renyi'],
 	    ['dy.jpg', 'QR-код Douyin Changsha Renyi'],
@@ -2661,9 +2610,7 @@ const RENYI_IMAGE_ALT_SUFFIXES: Record<RenyiLocale, Array<[string, string]>> = {
     [RENYI_ZEGA_SALES_AUTHORIZATION_IMAGE, 'Certificado de autorización de distribuidor ZEGA que nombra a Changsha Renyi Machinery Manufacturing Co., Ltd. como distribuidor estratégico, válido del 1 de julio de 2021 al 31 de diciembre de 2022'],
     [RENYI_ZEGA_REMANUFACTURING_NOTICE_IMAGE, 'Aviso de centro autorizado de remanufactura de productos ZEGA que autoriza a Changsha Renyi Machinery Manufacturing Co., Ltd. como centro autorizado en Changsha, enero de 2022'],
     ['language.gif', 'Icono de selección de idioma'],
-    ['/legacy-assets/ytxingye-16dg51r.gif', 'Icono de selección de idioma'],
     ['head-btn.jpg', 'Botón de navegación rápida'],
-    ['/legacy-assets/ytxingye-124h1r9.jpg', 'Botón de navegación rápida'],
 	    ['2m.png', 'Código QR de la cuenta pública de WeChat de Changsha Renyi'],
 	    [RENYI_WHATSAPP_QR_IMAGE, 'Código QR de contacto de WhatsApp de Changsha Renyi'],
 	    ['dy.jpg', 'Código QR de Douyin de Changsha Renyi'],
@@ -2913,6 +2860,7 @@ const RENYI_FOOTER_PRODUCT_SERIES_HREFS = [
 const RENYI_PRODUCT_SERIES_CARD_HREF_ALIASES: Record<string, string> = {
   '/pro_category/chanyunjixilie/': RENYI_PRODUCT_SERIES_HREFS.raiseBoring,
   '/pro_category/yunkuangkache/': RENYI_PRODUCT_SERIES_HREFS.hydraulic,
+  '/pro_category/yidongshiqiaomaotaiche/': RENYI_PRODUCT_SERIES_HREFS.mineral,
   '/pro_category/fuwuchexilie/': '/pro_category/dexiafuwuche/',
 };
 
@@ -3001,6 +2949,203 @@ const RENYI_AFTER_SALES_NDT_IMAGE = '/renyi/renyi-after-sales-service-philosophy
 const RENYI_AFTER_SALES_CYLINDER_TEST_IMAGE = '/renyi/renyi-after-sales-service-system-imagegen.jpg?v=20260517-imagegen-ads';
 const RENYI_AFTER_SALES_WELDING_IMAGE = '/renyi/renyi-after-sales-customer-training-imagegen.jpg?v=20260517-imagegen-ads';
 const RENYI_SERVICE_PAGE_PATHS = new Set(['/fuwuzhichi/', '/en/fuwuzhichi/', '/ru/fuwuzhichi/', '/es/fuwuzhichi/']);
+const RENYI_CASE_PAGE_PATHS = new Set(['/anlizhanshi/', '/en/anlizhanshi/', '/ru/anlizhanshi/', '/es/anlizhanshi/']);
+
+type RenyiCasePageCopy = {
+  pageTitle: string;
+  bannerTitle: string;
+  bannerHeadline: string;
+  bannerSubtitle: string;
+  heading: string;
+  introduction: string;
+  scopeLabel: string;
+  contactLabel: string;
+  contactText: string;
+  cases: Array<{ period: string; title: string; description: string; scope: string; image: string; imageAlt: string }>;
+};
+
+const RENYI_CASE_PAGE_COPY: Record<RenyiLocale, RenyiCasePageCopy> = {
+  zh: {
+    pageTitle: '项目案例',
+    bannerTitle: '案例',
+    bannerHeadline: '经现场验证的装备与服务能力',
+    bannerSubtitle: 'PROJECT CASES',
+    heading: '项目实践与交付经验',
+    introduction: '从矿山装备制造到大型车辆维保，仁毅围绕客户现场工况提供研发、制造、改造与服务支持。',
+    scopeLabel: '项目范围',
+    contactLabel: '咨询项目',
+    contactText: '如需了解相关设备、改造或维保方案，请与仁毅团队联系。',
+    cases: [
+      {
+        period: '2007-2010',
+        title: '江铜小松630E电动轮后尾梁现场技改',
+        description: '在江铜完成12台小松630E电动轮后尾梁现场技术改造，围绕大型矿用车辆结构件完成现场实施。',
+        scope: '结构改造、现场施工、交付验证',
+        image: '/renyi/product-structural-subframe-630e-assembly.jpg',
+        imageAlt: '630E大型矿用车辆结构件装配展示',
+      },
+      {
+        period: '2016至今',
+        title: '沃尔沃A40E与A25铰接式卡车大修',
+        description: '完成11台沃尔沃A40E和2台沃尔沃A25铰接式卡车大修，持续积累大型工程车辆维修经验。',
+        scope: '整车大修、部件检测、维修交付',
+        image: '/renyi/product-structural-truck-body.jpg',
+        imageAlt: '大型铰接式车辆车斗结构件展示',
+      },
+      {
+        period: '2019.06-2021.06',
+        title: '中铝广西58台铰接式卡车现场维保',
+        description: '为VOLVO A40D、A40F及CAT740、CAT745系列铰接式卡车提供现场维护保养服务。',
+        scope: '现场维保、故障处理、技术支持',
+        image: '/renyi/product-hydraulic-special-cat740-suspension.jpg',
+        imageAlt: 'CAT740铰接式卡车悬挂部件展示',
+      },
+      {
+        period: '2017至今',
+        title: '1米至2.5米天井钻机研制与交付',
+        description: '持续研制生产多种规格天井钻机，形成从研发设计、加工装配到检测交付的完整能力。',
+        scope: '研发设计、装备制造、调试交付',
+        image: '/renyi/product-rail-raise-boring-rig-imagegen-main-rig.jpg',
+        imageAlt: '仁毅天井钻机整机展示',
+      },
+    ],
+  },
+  en: {
+    pageTitle: 'Project Cases',
+    bannerTitle: 'CASES',
+    bannerHeadline: 'Equipment and service capabilities proven on site',
+    bannerSubtitle: 'PROJECT CASES',
+    heading: 'Project Experience and Delivery',
+    introduction: 'From mining equipment manufacturing to heavy vehicle maintenance, Renyi supports real worksite requirements with engineering, production, retrofit, and service capabilities.',
+    scopeLabel: 'Project scope',
+    contactLabel: 'Discuss a project',
+    contactText: 'Contact the Renyi team for equipment, retrofit, or maintenance solutions.',
+    cases: [
+      {
+        period: '2007-2010',
+        title: 'Jiangxi Copper Komatsu 630E rear structure retrofit',
+        description: 'Renyi completed on-site rear structure retrofits for 12 Komatsu 630E electric-drive mining trucks at Jiangxi Copper.',
+        scope: 'Structural retrofit, on-site work, delivery verification',
+        image: '/renyi/product-structural-subframe-630e-assembly.jpg',
+        imageAlt: '630E heavy mining vehicle structural component assembly',
+      },
+      {
+        period: 'Since 2016',
+        title: 'Volvo A40E and A25 articulated truck overhaul',
+        description: 'Renyi completed major overhauls for 11 Volvo A40E and 2 Volvo A25 articulated trucks.',
+        scope: 'Vehicle overhaul, component inspection, service delivery',
+        image: '/renyi/product-structural-truck-body.jpg',
+        imageAlt: 'Heavy articulated vehicle body structure',
+      },
+      {
+        period: '2019.06-2021.06',
+        title: 'On-site maintenance for 58 articulated trucks',
+        description: 'Renyi supported China Aluminium Guangxi with on-site maintenance for Volvo A40D, A40F and CAT740, CAT745 articulated trucks.',
+        scope: 'On-site maintenance, troubleshooting, technical support',
+        image: '/renyi/product-hydraulic-special-cat740-suspension.jpg',
+        imageAlt: 'CAT740 articulated truck suspension component',
+      },
+      {
+        period: 'Since 2017',
+        title: 'Raise boring rigs from 1 m to 2.5 m',
+        description: 'Renyi has developed and delivered multiple raise boring rig specifications through engineering, machining, assembly, testing, and commissioning.',
+        scope: 'Engineering, equipment manufacturing, commissioning',
+        image: '/renyi/product-rail-raise-boring-rig-imagegen-main-rig.jpg',
+        imageAlt: 'Renyi raise boring rig',
+      },
+    ],
+  },
+  ru: {
+    pageTitle: 'Проекты',
+    bannerTitle: 'ПРОЕКТЫ',
+    bannerHeadline: 'Оборудование и сервис, проверенные на площадке',
+    bannerSubtitle: 'PROJECT CASES',
+    heading: 'Опыт проектов и поставок',
+    introduction: 'От производства горного оборудования до обслуживания тяжелой техники Renyi обеспечивает проектирование, изготовление, модернизацию и сервис для реальных условий эксплуатации.',
+    scopeLabel: 'Объем работ',
+    contactLabel: 'Обсудить проект',
+    contactText: 'Свяжитесь с командой Renyi для обсуждения оборудования, модернизации или обслуживания.',
+    cases: [
+      {
+        period: '2007-2010',
+        title: 'Модернизация задней конструкции Komatsu 630E для Jiangxi Copper',
+        description: 'На площадке Jiangxi Copper выполнена модернизация задней конструкции 12 карьерных самосвалов Komatsu 630E с электрическим приводом.',
+        scope: 'Модернизация конструкции, работы на площадке, приемка',
+        image: '/renyi/product-structural-subframe-630e-assembly.jpg',
+        imageAlt: 'Сборка металлоконструкции карьерного самосвала 630E',
+      },
+      {
+        period: 'С 2016 года',
+        title: 'Капитальный ремонт Volvo A40E и A25',
+        description: 'Выполнен капитальный ремонт 11 сочлененных самосвалов Volvo A40E и 2 машин Volvo A25.',
+        scope: 'Капремонт, контроль компонентов, сдача техники',
+        image: '/renyi/product-structural-truck-body.jpg',
+        imageAlt: 'Кузов тяжелого сочлененного самосвала',
+      },
+      {
+        period: '2019.06-2021.06',
+        title: 'Обслуживание 58 сочлененных самосвалов',
+        description: 'Для China Aluminium Guangxi выполнено обслуживание Volvo A40D, A40F и CAT740, CAT745 на рабочей площадке.',
+        scope: 'Техобслуживание, устранение неисправностей, поддержка',
+        image: '/renyi/product-hydraulic-special-cat740-suspension.jpg',
+        imageAlt: 'Компонент подвески сочлененного самосвала CAT740',
+      },
+      {
+        period: 'С 2017 года',
+        title: 'Станки raise boring диаметром от 1 до 2,5 м',
+        description: 'Renyi разработала и поставила станки нескольких типоразмеров, обеспечив проектирование, обработку, сборку, испытания и ввод в эксплуатацию.',
+        scope: 'Проектирование, производство, ввод в эксплуатацию',
+        image: '/renyi/product-rail-raise-boring-rig-imagegen-main-rig.jpg',
+        imageAlt: 'Станок raise boring производства Renyi',
+      },
+    ],
+  },
+  es: {
+    pageTitle: 'Proyectos',
+    bannerTitle: 'PROYECTOS',
+    bannerHeadline: 'Equipos y servicios probados en campo',
+    bannerSubtitle: 'PROJECT CASES',
+    heading: 'Experiencia en proyectos y entregas',
+    introduction: 'Desde la fabricación de equipos mineros hasta el mantenimiento de vehículos pesados, Renyi aporta ingeniería, producción, modernización y servicio para condiciones reales de trabajo.',
+    scopeLabel: 'Alcance del proyecto',
+    contactLabel: 'Consultar proyecto',
+    contactText: 'Contacte con el equipo de Renyi para soluciones de equipos, modernización o mantenimiento.',
+    cases: [
+      {
+        period: '2007-2010',
+        title: 'Modernización de estructura trasera Komatsu 630E',
+        description: 'Renyi completó en Jiangxi Copper la modernización en campo de la estructura trasera de 12 camiones mineros eléctricos Komatsu 630E.',
+        scope: 'Modernización estructural, trabajo en campo, verificación',
+        image: '/renyi/product-structural-subframe-630e-assembly.jpg',
+        imageAlt: 'Montaje de componente estructural para vehículo minero 630E',
+      },
+      {
+        period: 'Desde 2016',
+        title: 'Revisión mayor de Volvo A40E y A25',
+        description: 'Renyi completó la revisión mayor de 11 camiones articulados Volvo A40E y 2 unidades Volvo A25.',
+        scope: 'Revisión de vehículos, inspección, entrega de servicio',
+        image: '/renyi/product-structural-truck-body.jpg',
+        imageAlt: 'Estructura de caja para vehículo articulado pesado',
+      },
+      {
+        period: '2019.06-2021.06',
+        title: 'Mantenimiento en campo de 58 camiones articulados',
+        description: 'Renyi prestó mantenimiento en campo para modelos Volvo A40D, A40F y CAT740, CAT745 de China Aluminium Guangxi.',
+        scope: 'Mantenimiento, diagnóstico, soporte técnico',
+        image: '/renyi/product-hydraulic-special-cat740-suspension.jpg',
+        imageAlt: 'Componente de suspensión para camión articulado CAT740',
+      },
+      {
+        period: 'Desde 2017',
+        title: 'Equipos raise boring de 1 m a 2,5 m',
+        description: 'Renyi ha desarrollado y entregado equipos de varias especificaciones con ingeniería, mecanizado, montaje, pruebas y puesta en marcha.',
+        scope: 'Ingeniería, fabricación, puesta en marcha',
+        image: '/renyi/product-rail-raise-boring-rig-imagegen-main-rig.jpg',
+        imageAlt: 'Equipo raise boring de Renyi',
+      },
+    ],
+  },
+};
 
 const RENYI_HYDRAULIC_SERIES_CATEGORY_COPY: RenyiHydraulicCategoryConfig['copy'] = {
   zh: { title: '油缸悬挂系列', subtitle: 'HYDRAULIC CYLINDER & SUSPENSION SERIES', inquiry: '在线留言', more: '了解更多' },
@@ -6501,7 +6646,9 @@ const RENYI_SPECIAL_EQUIPMENT_CATEGORY_CONFIGS: RenyiHydraulicCategoryConfig[] =
     ],
     bodyClass: 'renyi-special-equipment-category',
     copy: RENYI_SPECIAL_EQUIPMENT_CATEGORY_COPY,
-    cards: RENYI_SPECIAL_EQUIPMENT_CARDS,
+    cards: RENYI_SPECIAL_EQUIPMENT_CARDS.filter(
+      (card) => card.href !== '/zhuanyong-01/' && card.href !== '/zhuanyong-05/',
+    ),
   },
   ...RENYI_SPECIAL_EQUIPMENT_CARDS.slice(2).map((card, index) => {
     const legacyPath = RENYI_SPECIAL_EQUIPMENT_LEGACY_CHILD_PATHS[index + 2] ?? '';
@@ -6784,7 +6931,7 @@ function patchRenyiCultureBannerHtml(html: string, pathname: string) {
   const imagePath = RENYI_CULTURE_BANNER_IMAGES[locale];
 
   return html.replace(
-    /<div class="swiper-slide"\s+style="background-image:\s*url\(https:\/\/(?:www|en|ru|es)\.ytxingye\.com\s*\/wp-content\/uploads\/2022\/09\/b1\.jpg\)">\s*<div class="banner-container">/,
+    /<div class="swiper-slide"\s+style="background-image:\s*url\(https:\/\/snapshot\.local(?:\/(?:en|ru|es))?\s*\/wp-content\/uploads\/2022\/09\/b1\.jpg\)">\s*<div class="banner-container">/,
     `<div class="swiper-slide renyi-culture-banner-slide" style="background-image: none"><img class="img-w renyi-culture-banner-img" src="${imagePath}" alt=""><div class="banner-container">`,
   );
 }
@@ -6795,7 +6942,7 @@ function patchRenyiVideoFallbackHtml(html: string, pathname: string) {
 
 function patchRenyiAboutMenuBackgroundHtml(html: string) {
   return html.replaceAll(
-    /background-image:\s*url\(https:\/\/(?:www|en|ru|es)\.ytxingye\.com\/wp-content\/uploads\/2022\/09\/menubg\.jpg\);/g,
+    /background-image:\s*url\(https:\/\/snapshot\.local(?:\/(?:en|ru|es))?\/wp-content\/uploads\/2022\/09\/menubg\.jpg\);/g,
     `background-image: url(${RENYI_ABOUT_MENU_BACKGROUND_IMAGE});`,
   );
 }
@@ -6817,6 +6964,12 @@ function isRenyiAboutPath(pathname: string) {
 
 function isRenyiServicePath(pathname: string) {
   return RENYI_SERVICE_PAGE_PATHS.has(normalizeSitePath(pathname));
+}
+
+function isRenyiCasePath(pathname: string) {
+  const normalizedPath = normalizeSitePath(pathname);
+
+  return RENYI_CASE_PAGE_PATHS.has(normalizedPath) || Boolean(getRenyiCaseProject(normalizedPath));
 }
 
 function isRenyiRaiseBoringCategoryPath(pathname: string) {
@@ -6995,6 +7148,27 @@ function patchRenyiProductInquiryLinksHtml(html: string) {
     .replace(/<div class="btn-box"><a href="[^"]*#a2">([\s\S]*?)<\/a>/g, (_match, label: string) =>
       `<div class="btn-box">${renderRenyiWhatsappInquiryAnchorHtml(getLabel(label))}`,
     );
+}
+
+const RENYI_PRODUCT_CASE_BUTTON_LABELS: Record<RenyiLocale, string> = {
+  zh: '案例展示',
+  en: 'Case Studies',
+  ru: 'Примеры проектов',
+  es: 'Casos de éxito',
+};
+
+function patchRenyiProductCaseButtonHtml(html: string, pathname: string) {
+  if (!html.includes('class="go-inquiry"') || html.includes('class="go-cases"')) {
+    return html;
+  }
+
+  const locale = getRenyiLocale(pathname);
+  const href = withRenyiLocalePath('/anlizhanshi/', locale);
+  const buttonHtml = `<a class="go-cases" href="${escapeHtmlAttribute(href)}">${escapeHtmlText(
+    RENYI_PRODUCT_CASE_BUTTON_LABELS[locale],
+  )}</a>`;
+
+  return html.replace(/(<a class="go-inquiry"[\s\S]*?<\/a>)/, `$1${buttonHtml}`);
 }
 
 function patchRenyiRaiseBoringTrialProductHtml(html: string, pathname: string) {
@@ -7294,6 +7468,205 @@ function patchRenyiServiceQualityHtml(html: string, pathname: string) {
   patchedHtml = replaceRenyiFirstTagHtml(patchedHtml, '<section class="server01', 'section', renderRenyiQualityControlSectionHtml(locale));
 
   return replaceRenyiFirstTagHtml(patchedHtml, '<section class="server02', 'section', renderRenyiAfterSalesSectionHtml(locale));
+}
+
+const RENYI_CASE_UI_COPY: Record<
+  RenyiLocale,
+  {
+    location: string;
+    view: string;
+    back: string;
+    details: string;
+    detailHeadings: [string, string, string];
+    facts: string;
+    gallery: string;
+    videos: string;
+    image: string;
+    videoFallback: string;
+  }
+> = {
+  zh: {
+    location: '项目地点',
+    view: '查看案例',
+    back: '返回案例总览',
+    details: '项目详情',
+    detailHeadings: ['项目背景', '实施内容', '现场记录'],
+    facts: '工程信息',
+    gallery: '现场图片',
+    videos: '现场视频',
+    image: '现场图片',
+    videoFallback: '您的浏览器不支持视频播放。',
+  },
+  en: {
+    location: 'Location',
+    view: 'View case',
+    back: 'Back to cases',
+    details: 'Project details',
+    detailHeadings: ['Project background', 'Scope and execution', 'Site record'],
+    facts: 'Project facts',
+    gallery: 'Site photos',
+    videos: 'Site videos',
+    image: 'Site photo',
+    videoFallback: 'Your browser does not support video playback.',
+  },
+  ru: {
+    location: 'Место проекта',
+    view: 'Открыть проект',
+    back: 'Вернуться к проектам',
+    details: 'Описание проекта',
+    detailHeadings: ['Исходная задача', 'Выполнение работ', 'Материалы с объекта'],
+    facts: 'Данные проекта',
+    gallery: 'Фотографии',
+    videos: 'Видео',
+    image: 'Фото с объекта',
+    videoFallback: 'Ваш браузер не поддерживает воспроизведение видео.',
+  },
+  es: {
+    location: 'Ubicación',
+    view: 'Ver proyecto',
+    back: 'Volver a proyectos',
+    details: 'Detalles del proyecto',
+    detailHeadings: ['Contexto del proyecto', 'Ejecución', 'Registro de obra'],
+    facts: 'Datos del proyecto',
+    gallery: 'Fotos de obra',
+    videos: 'Videos de obra',
+    image: 'Foto de obra',
+    videoFallback: 'Su navegador no admite la reproducción de video.',
+  },
+};
+
+function renderRenyiCaseContactHtml(locale: RenyiLocale) {
+  const copy = RENYI_CASE_PAGE_COPY[locale];
+  const contactHref = escapeHtmlAttribute(withRenyiLocalePath('/lianxiwomen/', locale));
+
+  return `<section class="renyi-case-contact"> <div class="container"> <div> <h2>${escapeHtmlText(
+    copy.contactLabel,
+  )}</h2> <p>${escapeHtmlText(copy.contactText)}</p> </div> <a href="${contactHref}">${escapeHtmlText(
+    copy.contactLabel,
+  )}</a> </div> </section>`;
+}
+
+function renderRenyiCaseIndexContentHtml(locale: RenyiLocale) {
+  const copy = RENYI_CASE_PAGE_COPY[locale];
+  const ui = RENYI_CASE_UI_COPY[locale];
+  const casesHtml = RENYI_CASE_PROJECTS.map((project) => {
+    const href = escapeHtmlAttribute(withRenyiLocalePath(`/anlizhanshi/${project.slug}/`, locale));
+    const title = project.title[locale];
+
+    return `<article class="renyi-case-card"> <div class="renyi-case-card__header"> <p class="renyi-case-card__period">${escapeHtmlText(
+      project.category[locale],
+    )}</p> <h3><a href="${href}">${escapeHtmlText(title)}</a></h3> </div> <a class="renyi-case-card__media" href="${href}" aria-label="${escapeHtmlAttribute(
+      title,
+    )}"> <img src="${escapeHtmlAttribute(project.coverImage)}" alt="${escapeHtmlAttribute(
+      title,
+    )}" loading="lazy"> </a> <div class="renyi-case-card__body"> <p class="renyi-case-card__description">${escapeHtmlText(
+      project.summary[locale],
+    )}</p> <dl> <div> <dt>${escapeHtmlText(ui.location)}</dt> <dd>${escapeHtmlText(
+      project.location[locale],
+    )}</dd> </div> </dl> <a class="renyi-case-card__more" href="${href}">${escapeHtmlText(
+      ui.view,
+    )}<span aria-hidden="true">›</span></a> </div> </article>`;
+  }).join(' ');
+
+  return `<div class="page-content renyi-case-page-content"> <section class="renyi-case-overview"> <div class="container"> <div class="renyi-case-heading"> <h2>${escapeHtmlText(
+    copy.heading,
+  )}</h2> <p>${escapeHtmlText(copy.introduction)}</p> </div> <div class="renyi-case-grid"> ${casesHtml} </div> </div> </section> ${renderRenyiCaseContactHtml(
+    locale,
+  )} </div>`;
+}
+
+function renderRenyiCaseDetailContentHtml(project: RenyiCaseProject, locale: RenyiLocale) {
+  const ui = RENYI_CASE_UI_COPY[locale];
+  const indexHref = escapeHtmlAttribute(withRenyiLocalePath('/anlizhanshi/', locale));
+  const detailParagraphs = RENYI_CASE_DETAILS[project.slug]?.[locale] ?? [project.summary[locale]];
+  const detailsHtml = detailParagraphs
+    .map(
+      (paragraph, index) =>
+        `<article class="renyi-case-narrative__item"> <h3>${escapeHtmlText(
+          ui.detailHeadings[index] ?? ui.details,
+        )}</h3> <p>${escapeHtmlText(paragraph)}</p> </article>`,
+    )
+    .join(' ');
+  const factsHtml = project.facts[locale]
+    .map(
+      ([label, value]) =>
+        `<div class="renyi-case-fact"> <dt>${escapeHtmlText(label)}</dt> <dd>${escapeHtmlText(value)}</dd> </div>`,
+    )
+    .join(' ');
+  const galleryHtml = project.images
+    .map((image, index) => {
+      const imageAlt = `${project.title[locale]} - ${ui.image} ${index + 1}`;
+
+      return `<a class="renyi-case-gallery__item" href="${escapeHtmlAttribute(
+        image,
+      )}" target="_blank" rel="noopener"> <img src="${escapeHtmlAttribute(image)}" alt="${escapeHtmlAttribute(
+        imageAlt,
+      )}" loading="lazy"> </a>`;
+    })
+    .join(' ');
+  const videosHtml = project.videos.length
+    ? `<section class="renyi-case-detail__section"> <h2>${escapeHtmlText(ui.videos)}</h2> <div class="renyi-case-video-grid"> ${project.videos
+        .map(
+          (video) =>
+            `<video controls preload="metadata" playsinline> <source src="${escapeHtmlAttribute(
+              video,
+            )}" type="video/mp4">${escapeHtmlText(ui.videoFallback)}</video>`,
+        )
+        .join(' ')} </div> </section>`
+    : '';
+
+  return `<div class="page-content renyi-case-page-content renyi-case-detail-page"> <section class="renyi-case-detail"> <div class="container"> <a class="renyi-case-detail__back" href="${indexHref}"><span aria-hidden="true">‹</span>${escapeHtmlText(
+    ui.back,
+  )}</a> <header class="renyi-case-detail__header"> <p>${escapeHtmlText(
+    project.category[locale],
+  )}</p> <h2>${escapeHtmlText(project.title[locale])}</h2> <div>${escapeHtmlText(
+    project.summary[locale],
+  )}</div> </header> <section class="renyi-case-detail__section renyi-case-narrative"> <h2>${escapeHtmlText(
+    ui.details,
+  )}</h2> <div class="renyi-case-narrative__grid"> ${detailsHtml} </div> </section> <section class="renyi-case-detail__section"> <h2>${escapeHtmlText(
+    ui.facts,
+  )}</h2> <dl class="renyi-case-facts"> ${factsHtml} </dl> </section> <section class="renyi-case-detail__section"> <h2>${escapeHtmlText(
+    ui.gallery,
+  )}</h2> <div class="renyi-case-gallery"> ${galleryHtml} </div> </section> ${videosHtml} </div> </section> ${renderRenyiCaseContactHtml(
+    locale,
+  )} </div>`;
+}
+
+function patchRenyiCasePageHtml(html: string, pathname: string) {
+  if (!isRenyiCasePath(pathname)) {
+    return html;
+  }
+
+  const locale = getRenyiLocale(pathname);
+  const copy = RENYI_CASE_PAGE_COPY[locale];
+  const project = getRenyiCaseProject(pathname);
+  const bannerTitle = project?.category[locale] ?? copy.bannerTitle;
+  const bannerHeadline = project?.title[locale] ?? copy.bannerHeadline;
+  const bannerSubtitle = project?.location[locale] ?? copy.bannerSubtitle;
+  let patchedHtml = html.replace(
+    /<div class="page-banner"\s+style="background-image:\s*url\([^)]+\);?">/,
+    `<div class="page-banner renyi-case-page-banner renyi-case-page-banner--${locale}" style="background-image: url(/renyi/product-category-raise-boring-site.png); background-position: center center; background-size: cover; background-repeat: no-repeat;">`,
+  );
+
+  patchedHtml = patchedHtml.replace(
+    /<div class="banner-tit-box">[\s\S]*?<\/div>\s*<\/div>\s*<\/div>\s*<div class="container">/,
+    `<div class="banner-tit-box"> <div class="tit">${escapeHtmlText(bannerTitle)}</div> <div class="txt1">${escapeHtmlText(
+      bannerHeadline,
+    )}</div> <div class="txt2">${escapeHtmlText(bannerSubtitle)}</div> </div> </div> </div> <div class="container">`,
+  );
+
+  const pageContentStart = patchedHtml.indexOf('<div class="page-content');
+  const pageContentRange = pageContentStart === -1 ? null : findRenyiMatchingTagRange(patchedHtml, pageContentStart, 'div');
+
+  if (!pageContentRange) {
+    return patchedHtml;
+  }
+
+  const pageContentHtml = project
+    ? renderRenyiCaseDetailContentHtml(project, locale)
+    : renderRenyiCaseIndexContentHtml(locale);
+
+  return `${patchedHtml.slice(0, pageContentStart)}${pageContentHtml}${patchedHtml.slice(pageContentRange.end)}`;
 }
 
 function getRenyiHydraulicCategoryConfig(pathname: string) {
@@ -7856,10 +8229,12 @@ function patchRenyiFooterContactsHtml(html: string, pathname: string) {
 }
 
 function patchRenyiFooterQrHtml(html: string) {
-  return RENYI_LEGACY_FOOTER_QR_IMAGES.reduce(
-    (contents, imageUrl) => contents.replaceAll(imageUrl, RENYI_WHATSAPP_QR_IMAGE),
-    html,
-  );
+  return html
+    .replace(/https?:\/\/snapshot\.local(?:\/(?:en|ru|es))?\/wp-content\/themes\/phoenix\/static\/images\/dy\.jpg/gi, RENYI_WHATSAPP_QR_IMAGE)
+    .replace(
+      /https?:\/\/snapshot\.local(?:\/(?:en|ru|es))?\/wp-content\/themes\/phoenix\/static\/images\/wx\.jpg/gi,
+      RENYI_WECHAT_OFFICIAL_ACCOUNT_QR_IMAGE,
+    );
 }
 
 function renderRenyiFooterLegalRecordsHtml() {
@@ -8180,19 +8555,15 @@ const RENYI_STRUCTURAL_SERIES_CHILD_LABELS: Record<string, string> = {
 };
 
 const RENYI_SPECIAL_EQUIPMENT_CHILD_HREFS = [
-  '/zhuanyong-01/',
   '/zhuanyong-02/',
   '/zhuanyong-03/',
   '/zhuanyong-04/',
-  '/zhuanyong-05/',
 ] as const;
 
 const RENYI_SPECIAL_EQUIPMENT_CHILD_LABELS: Record<string, string> = {
-  '/zhuanyong-01/': '轮辋拆装机（多条件式轮辋）',
   '/zhuanyong-02/': '轮辋拆装机（门架式）',
   '/zhuanyong-03/': '马达拆装机',
   '/zhuanyong-04/': '炮孔填塞机',
-  '/zhuanyong-05/': '轮胎拆卸手',
 };
 
 const RENYI_RAISE_BORING_SERIES_CHILD_LABELS: Record<string, string> = {
@@ -8227,11 +8598,9 @@ const RENYI_HEADER_PRODUCT_CHILD_LABELS_BY_LOCALE: Record<RenyiLocale, Record<st
       '/xuanji-01/': 'Forced-Air Mechanical Flotation Machine',
     },
     [RENYI_PRODUCT_SERIES_HREFS.special]: {
-      '/zhuanyong-01/': 'Rim Dismounting Machine (Multi-Condition Rim)',
       '/zhuanyong-02/': 'Rim Dismounting Machine (Gantry Type)',
       '/zhuanyong-03/': 'Motor Dismounting Machine',
       '/zhuanyong-04/': 'Blasthole Stemming Machine',
-      '/zhuanyong-05/': 'Tire Handler',
     },
     [RENYI_PRODUCT_SERIES_HREFS.structural]: {
       '/jiegou-01/': 'Rear Axle Housing',
@@ -8251,11 +8620,9 @@ const RENYI_HEADER_PRODUCT_CHILD_LABELS_BY_LOCALE: Record<RenyiLocale, Record<st
       '/xuanji-01/': 'Пневмомеханическая флотационная машина',
     },
     [RENYI_PRODUCT_SERIES_HREFS.special]: {
-      '/zhuanyong-01/': 'Станок демонтажа ободов (многоусловный тип)',
       '/zhuanyong-02/': 'Станок демонтажа ободов (портальный тип)',
       '/zhuanyong-03/': 'Станок демонтажа моторов',
       '/zhuanyong-04/': 'Установка забойки скважин',
-      '/zhuanyong-05/': 'Манипулятор для шин',
     },
     [RENYI_PRODUCT_SERIES_HREFS.structural]: {
       '/jiegou-01/': 'Корпус заднего моста',
@@ -8275,11 +8642,9 @@ const RENYI_HEADER_PRODUCT_CHILD_LABELS_BY_LOCALE: Record<RenyiLocale, Record<st
       '/xuanji-01/': 'Máquina de flotación mecánica con aire forzado',
     },
     [RENYI_PRODUCT_SERIES_HREFS.special]: {
-      '/zhuanyong-01/': 'Desmontadora de llantas (tipo multicondición)',
       '/zhuanyong-02/': 'Desmontadora de llantas (tipo pórtico)',
       '/zhuanyong-03/': 'Desmontadora de motores',
       '/zhuanyong-04/': 'Equipo de retacado de barrenos',
-      '/zhuanyong-05/': 'Manipulador de neumáticos',
     },
     [RENYI_PRODUCT_SERIES_HREFS.structural]: {
       '/jiegou-01/': 'Carcasa de eje trasero',
@@ -8602,6 +8967,19 @@ function patchRenyiMenuItemSubListHtml(
 
 function patchRenyiHeaderTopNavHtml(html: string, pathname: string) {
   const locale = getRenyiLocale(pathname);
+  const caseLabel = RENYI_HEADER_NAV_ITEMS[2].labels[locale];
+  const caseHref = escapeHtmlAttribute(withRenyiLocalePath('/anlizhanshi/', locale));
+  const existingCaseStart = findRenyiHeaderMenuItemStart(html, 'm-2');
+  const existingCaseRange = existingCaseStart === -1 ? null : findRenyiMatchingTagRange(html, existingCaseStart, 'li');
+  const caseItemHtml = `<li class="m-2${isRenyiCasePath(pathname) ? ' current' : ''}"> <a href="${caseHref}" title="${escapeHtmlAttribute(
+    caseLabel,
+  )}"><span data-title="${escapeHtmlAttribute(caseLabel)}">${escapeHtmlText(caseLabel)}</span></a> </li> `;
+  const serviceStart = existingCaseRange ? -1 : findRenyiHeaderMenuItemStart(html, 'm-3 has-sub');
+  const htmlWithCase = existingCaseRange
+    ? `${html.slice(0, existingCaseStart)}${caseItemHtml}${html.slice(existingCaseRange.end)}`
+    : serviceStart === -1
+      ? html
+      : `${html.slice(0, serviceStart)}${caseItemHtml}${html.slice(serviceStart)}`;
 
   return RENYI_HEADER_NAV_ITEMS.reduce((contents, item) => {
     const start = findRenyiHeaderMenuItemStart(contents, item.className);
@@ -8614,7 +8992,7 @@ function patchRenyiHeaderTopNavHtml(html: string, pathname: string) {
     const nextStart = findRenyiHeaderMenuItemStart(withAnchor, item.className);
 
     return patchRenyiMenuItemSubListHtml(withAnchor, nextStart, locale, 'submenu' in item ? item.submenu : undefined);
-  }, html);
+  }, htmlWithCase);
 }
 
 function patchRenyiHeaderLanguageLabelHtml(html: string, pathname: string) {
@@ -8624,6 +9002,22 @@ function patchRenyiHeaderLanguageLabelHtml(html: string, pathname: string) {
     /(<ul class="top-block">[\s\S]*?<a class="a1"[\s\S]*?<span class="hidden-sm hidden-xs">)[\s\S]*?(<\/span>)/,
     `$1${label}$2`,
   );
+}
+
+function patchRenyiHeaderIconsHtml(html: string, pathname: string) {
+  const locale = getRenyiLocale(pathname);
+  const languageLabel = escapeHtmlAttribute(RENYI_LANGUAGE_LABELS[locale]);
+  const quickNavLabel = escapeHtmlAttribute(RENYI_QUICK_NAV_TITLES[locale]);
+
+  return html
+    .replace(
+      /(<a class="a1"[^>]*>)\s*<img\b[^>]*\bsrc=(["'])[^"']*\/language\.gif\2[^>]*>/i,
+      `$1<span class="renyi-header-icon renyi-header-icon--language" role="img" aria-label="${languageLabel}"></span>`,
+    )
+    .replace(
+      /(<a class="a2 right_btn"[^>]*>)\s*<img\b[^>]*\bsrc=(["'])[^"']*\/head-btn\.jpg\2[^>]*>/i,
+      `$1<span class="renyi-header-icon renyi-header-icon--quick-nav" role="img" aria-label="${quickNavLabel}"><i></i></span>`,
+    );
 }
 
 function findRenyiHeaderAboutStart(html: string) {
@@ -8671,7 +9065,7 @@ function patchRenyiHeaderAboutMenuTextHtml(html: string, pathname: string) {
 function patchRenyiHeaderProductMenuHtml(html: string, pathname: string) {
   const locale = getRenyiLocale(pathname);
   const htmlWithBackground = html.replace(
-    /https?:\/\/(?:www|en|ru|es)\.ytxingye\.com\/wp-content\/uploads\/2022\/10\/chanpin\.jpg/g,
+    /https?:\/\/snapshot\.local(?:\/(?:en|ru|es))?\/wp-content\/uploads\/2022\/10\/chanpin\.jpg/g,
     RENYI_PRODUCT_MENU_BACKGROUND_IMAGE,
   );
   const productStart = findRenyiHeaderProductStart(htmlWithBackground);
@@ -8687,21 +9081,21 @@ function patchRenyiHeaderProductMenuHtml(html: string, pathname: string) {
 
 function patchRenyiHeaderJoinMenuBackgroundHtml(html: string) {
   return html.replace(
-    /https?:\/\/(?:www|en|ru|es)\.ytxingye\.com\/wp-content\/uploads\/2022\/10\/jiaru\.jpg/g,
+    /https?:\/\/snapshot\.local(?:\/(?:en|ru|es))?\/wp-content\/uploads\/2022\/10\/jiaru\.jpg/g,
     RENYI_JOIN_MENU_BACKGROUND_IMAGE,
   );
 }
 
 function patchRenyiHeaderServiceMenuBackgroundHtml(html: string) {
   return html.replace(
-    /background-image:\s*url\(\s*(?:https?:\/\/(?:www|en|ru|es)\.ytxingye\.com\/wp-content\/uploads\/2022\/10\/fueu\.jpg|\/legacy-assets\/ytxingye-12dmmw4\.jpg)\s*\);?/g,
+    /background-image:\s*url\(\s*https?:\/\/snapshot\.local(?:\/(?:en|ru|es))?\/wp-content\/uploads\/2022\/10\/fueu\.jpg\s*\);?/g,
     `background-image: linear-gradient(90deg, rgba(244, 244, 242, 0.96) 0%, rgba(244, 244, 242, 0.88) 28%, rgba(244, 244, 242, 0.54) 42%, rgba(244, 244, 242, 0.08) 60%, rgba(244, 244, 242, 0) 74%), url(${RENYI_SERVICE_MENU_BACKGROUND_IMAGE});`,
   );
 }
 
 function patchRenyiHeaderContactMenuBackgroundHtml(html: string) {
   return html.replace(
-    /background-image:\s*url\(\s*https?:\/\/(?:www|en|ru|es)\.ytxingye\.com\/wp-content\/uploads\/2022\/10\/lianxi\.jpg\s*\);?/g,
+    /background-image:\s*url\(\s*https?:\/\/snapshot\.local(?:\/(?:en|ru|es))?\/wp-content\/uploads\/2022\/10\/lianxi\.jpg\s*\);?/g,
     `background-image: ${RENYI_CONTACT_MENU_BACKGROUND_CSS};`,
   );
 }
@@ -9404,14 +9798,17 @@ function patchRenyiShortPathAliasLinksHtml(html: string, pathname: string) {
 }
 
 export function patchRenyiHtml(html: string, pathname: string) {
-  let patchedHtml = html.replaceAll('https://www.ytxingye.com/banner.mp4', RENYI_PROMO_VIDEO_PATH);
+  let patchedHtml = html.replace(
+    /https?:\/\/snapshot\.local(?:\/(?:en|ru|es))?\/banner\.mp4/gi,
+    RENYI_PROMO_VIDEO_PATH,
+  );
   patchedHtml = patchedHtml
-    .replaceAll(
-      'https://www.ytxingye.com/wp-content/themes/phoenix/static/images/banner-0.png',
+    .replace(
+      /https?:\/\/snapshot\.local(?:\/(?:en|ru|es))?\/wp-content\/themes\/phoenix\/static\/images\/banner-0\.png/gi,
       RENYI_PROMO_VIDEO_POSTER_IMAGE,
     )
-    .replaceAll(
-      'https://www.ytxingye.com/wp-content/themes/phoenix/static/images/banner-1.png',
+    .replace(
+      /https?:\/\/snapshot\.local(?:\/(?:en|ru|es))?\/wp-content\/themes\/phoenix\/static\/images\/banner-1\.png/gi,
       RENYI_PROMO_VIDEO_POSTER_IMAGE,
     );
 
@@ -9430,12 +9827,15 @@ export function patchRenyiHtml(html: string, pathname: string) {
   patchedHtml = patchRenyiStructuralCategoryHtml(patchedHtml, pathname);
   patchedHtml = patchRenyiStructuralProductHtml(patchedHtml, pathname);
   patchedHtml = patchRenyiProductInquiryLinksHtml(patchedHtml);
+  patchedHtml = patchRenyiProductCaseButtonHtml(patchedHtml, pathname);
   patchedHtml = patchRenyiNewsBannerHtml(patchedHtml, pathname);
   patchedHtml = patchRenyiServiceQualityHtml(patchedHtml, pathname);
   patchedHtml = patchRenyiNewsPageHtml(patchedHtml, pathname);
+  patchedHtml = patchRenyiCasePageHtml(patchedHtml, pathname);
   patchedHtml = patchRenyiHeaderHomeMenuHtml(patchedHtml, pathname);
   patchedHtml = patchRenyiHeaderTopNavHtml(patchedHtml, pathname);
   patchedHtml = patchRenyiHeaderLanguageLabelHtml(patchedHtml, pathname);
+  patchedHtml = patchRenyiHeaderIconsHtml(patchedHtml, pathname);
   patchedHtml = patchRenyiHeaderAboutMenuTextHtml(patchedHtml, pathname);
   patchedHtml = patchRenyiHeaderProductMenuHtml(patchedHtml, pathname);
   patchedHtml = patchRenyiHeaderProductMenuTextHtml(patchedHtml, pathname);
@@ -9475,8 +9875,8 @@ export function patchRenyiHtml(html: string, pathname: string) {
   );
   const productSeriesHtml = patchRenyiProductSeriesCardLabelsHtml(localizedHtml, pathname);
   const shortPathHtml = patchRenyiShortPathAliasLinksHtml(productSeriesHtml, pathname);
-  const localAssetHtml = localizeRenyiLegacyAssetUrlsHtml(shortPathHtml);
-  const seoH1Html = patchRenyiSeoH1Html(localAssetHtml, pathname);
+  const sanitizedHtml = sanitizeRenyiSnapshotHtml(shortPathHtml);
+  const seoH1Html = patchRenyiSeoH1Html(sanitizedHtml, pathname);
 
   return patchRenyiImageAltHtml(patchRenyiInternalNewsPathsHtml(patchRenyiHeaderMenuNativeTooltipHtml(seoH1Html)), pathname);
 }
@@ -10410,13 +10810,12 @@ function rewriteRenyiInternalNewsUrl(value: string) {
     return value;
   }
 
-  const absoluteMatch = value.match(/^https:\/\/(www|en|ru|es)\.ytxingye\.com(\/[^?#]*)?([?#].*)?$/);
+  const absoluteMatch = value.match(/^https:\/\/snapshot\.local(\/(?:en|ru|es))?(\/[^?#]*)?([?#].*)?$/);
   let pathname = value;
   let suffix = '';
 
   if (absoluteMatch) {
-    const localePrefix = absoluteMatch[1] === 'www' ? '' : `/${absoluteMatch[1]}`;
-    pathname = `${localePrefix}${absoluteMatch[2] || '/'}`;
+    pathname = `${absoluteMatch[1] || ''}${absoluteMatch[2] || '/'}`;
     suffix = absoluteMatch[3] || '';
   } else {
     const suffixMatch = value.match(/^([^?#]*)([?#].*)$/);
@@ -10473,6 +10872,22 @@ export function getSitePage(pathname: string): SitePageData | null {
 
   if (isRenyiRemovedSparePartsPath(normalizedPath)) {
     return null;
+  }
+
+  if (isRenyiCasePath(normalizedPath)) {
+    const locale = getRenyiLocale(normalizedPath);
+    const project = getRenyiCaseProject(normalizedPath);
+    const templatePage = getRenyiTemplatePage(withRenyiLocalePath('/fuwuzhichi/', locale));
+    const pageTitle = project?.title[locale] ?? RENYI_CASE_PAGE_COPY[locale].pageTitle;
+
+    return templatePage
+      ? {
+          ...templatePage,
+          path: normalizedPath,
+          title: `${pageTitle} - ${RENYI_COMPANY_NAMES[locale]}`,
+          bodyClass: `${templatePage.bodyClass} renyi-case-page`,
+        }
+      : null;
   }
 
   const templatePath = getRenyiSiteTemplatePath(normalizedPath);
@@ -10594,6 +11009,6 @@ export function getDocumentMetadata(pathname: string) {
                   : isServicePage
                     ? `${bodyClass} renyi-service-quality-page`
                     : bodyClass,
-    bodyStyle: page?.bodyStyle ? localizeRenyiLegacyAssetUrlsHtml(page.bodyStyle) : undefined,
+    bodyStyle: page?.bodyStyle ? sanitizeRenyiSnapshotStyle(page.bodyStyle) : undefined,
   };
 }

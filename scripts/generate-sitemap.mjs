@@ -38,11 +38,20 @@ const PRODUCT_PATHS = [
   '/jiegou-03/',
   '/jiegou-05/',
   '/zhuanyongxilie/',
-  '/zhuanyong-01/',
   '/zhuanyong-02/',
   '/zhuanyong-03/',
   '/zhuanyong-04/',
-  '/zhuanyong-05/',
+  '/anlizhanshi/',
+  '/anlizhanshi/case-01/',
+  '/anlizhanshi/case-02/',
+  '/anlizhanshi/case-03/',
+  '/anlizhanshi/case-04/',
+  '/anlizhanshi/case-05/',
+  '/anlizhanshi/case-06/',
+  '/anlizhanshi/case-07/',
+  '/anlizhanshi/case-08/',
+  '/anlizhanshi/case-09/',
+  '/anlizhanshi/case-10/',
 ];
 
 const LEGAL_PATHS = ['/faluwenjian/1361/', '/faluwenjian/1362/', '/faluwenjian/1363/'];

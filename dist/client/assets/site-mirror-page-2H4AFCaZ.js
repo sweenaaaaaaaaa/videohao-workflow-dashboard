@@ -1,0 +1,1 @@
+import{a as n,j as a,N as s,p as r}from"./main-ByPiIzx-.js";function i(t){const e=n(t.path);return e?a.jsx("div",{style:{display:"contents"},dangerouslySetInnerHTML:{__html:r(e.bodyHtml,t.path)}}):a.jsx(s,{})}export{i as S};
