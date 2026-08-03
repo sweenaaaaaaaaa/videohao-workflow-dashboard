@@ -13,6 +13,10 @@ export type RenyiCaseProject = {
   coverImage: string;
   images: string[];
   videos: string[];
+  source?: {
+    label: LocalizedText;
+    url: string;
+  };
 };
 
 function localized(zh: string, en: string, ru: string, es: string): LocalizedText {
@@ -39,8 +43,10 @@ const case05 = caseAssets(5, 3);
 const case06 = caseAssets(6, 3);
 const case07 = caseAssets(7, 2);
 const case08 = caseAssets(8, 4, 1);
-const case09 = caseAssets(9, 17, 1);
 const case10 = caseAssets(10, 1, 1);
+const case11 = caseAssets(11, 2);
+const case12 = caseAssets(12, 1);
+const case13 = caseAssets(13, 1);
 
 export const RENYI_CASE_PROJECTS: RenyiCaseProject[] = [
   {
@@ -252,32 +258,6 @@ export const RENYI_CASE_PROJECTS: RenyiCaseProject[] = [
     ...case08,
   },
   {
-    slug: 'case-09',
-    code: '3.9',
-    title: localized(
-      '轮胎拆装机在华润水泥红水河公司的安装调试',
-      'Tire Dismounting Machine Commissioning at China Resources Cement',
-      'Монтаж шиномонтажного станка на China Resources Cement',
-      'Puesta en marcha de desmontadora en China Resources Cement',
-    ),
-    category: localized('专用设备安装调试', 'Equipment commissioning', 'Монтаж и наладка', 'Instalación y puesta en marcha'),
-    location: localized('广西华润水泥红水河公司', 'Guangxi, China', 'Гуанси, Китай', 'Guangxi, China'),
-    summary: localized(
-      '2022年4月22日，仁毅团队在广西完成轮胎拆装机安装、调试与现场操作确认。',
-      'On 22 April 2022, the Renyi team completed installation, commissioning, and operation checks for a tire dismounting machine in Guangxi.',
-      '22 апреля 2022 года команда Renyi выполнила монтаж, наладку и проверку работы шиномонтажного станка в Гуанси.',
-      'El 22 de abril de 2022, el equipo de Renyi completó instalación, puesta en marcha y verificación operativa en Guangxi.',
-    ),
-    facts: {
-      zh: [['客户', '华润水泥红水河公司'], ['日期', '2022年4月22日'], ['工作内容', '安装、调试、操作确认']],
-      en: [['Customer', 'China Resources Cement Hongshuihe'], ['Date', '22 April 2022'], ['Work scope', 'Installation, commissioning, operation check']],
-      ru: [['Заказчик', 'China Resources Cement Hongshuihe'], ['Дата', '22 апреля 2022'], ['Объем работ', 'Монтаж, наладка, проверка работы']],
-      es: [['Cliente', 'China Resources Cement Hongshuihe'], ['Fecha', '22 de abril de 2022'], ['Alcance', 'Instalación, puesta en marcha y verificación']],
-    },
-    coverImage: case09.images[3]!,
-    ...case09,
-  },
-  {
     slug: 'case-10',
     code: '3.10',
     title: localized(
@@ -302,6 +282,96 @@ export const RENYI_CASE_PROJECTS: RenyiCaseProject[] = [
     },
     coverImage: case10.images[0]!,
     ...case10,
+  },
+  {
+    slug: 'case-11',
+    code: '3.11',
+    title: localized(
+      'MSHA多件式轮辋锁圈飞出死亡事故复盘（2023）',
+      'MSHA Multi-piece Rim Lock Ring Fatality Review (2023)',
+      'Разбор MSHA: смертельный выброс замочного кольца обода (2023)',
+      'Análisis MSHA: accidente mortal por aro de cierre (2023)',
+    ),
+    category: localized('行业安全事故复盘', 'Industry safety review', 'Разбор промышленной безопасности', 'Análisis de seguridad industrial'),
+    location: localized('美国田纳西州奥姆', 'Orme, Tennessee, USA', 'Орм, Теннесси, США', 'Orme, Tennessee, EE. UU.'),
+    summary: localized(
+      '2023年4月9日，一名工人在安装越野卡车轮胎时，被已装配轮辋飞出的锁圈击中死亡。本页依据MSHA正式调查整理，非仁毅项目。',
+      'On 9 April 2023, a worker was fatally struck by a lock ring that dislodged from an assembled off-road truck wheel. This is an MSHA-based safety review, not a Renyi project.',
+      '9 апреля 2023 года рабочий погиб от удара замочного кольца, сорвавшегося с собранного колеса внедорожного грузовика. Это разбор отчета MSHA, а не проект Renyi.',
+      'El 9 de abril de 2023, un trabajador murió al ser golpeado por un aro de cierre desprendido de una rueda montada. Es un análisis del informe de MSHA, no un proyecto de Renyi.',
+    ),
+    facts: {
+      zh: [['事故日期', '2023年4月9日'], ['作业', '安装越野卡车轮胎'], ['轮辋', '20英寸两件式轮辋'], ['当时充气', '70 psi'], ['主要问题', '部件缺陷、无约束装置、缺少任务培训'], ['与仁毅关系', '非仁毅项目；用于行业安全教育']],
+      en: [['Date', '9 April 2023'], ['Task', 'Mounting an off-road truck tire'], ['Rim', '20-inch two-piece rim'], ['Inflation', '70 psi'], ['Key issues', 'Defective components, no restraint, insufficient task training'], ['Renyi involvement', 'Not a Renyi project; presented for safety education']],
+      ru: [['Дата', '9 апреля 2023'], ['Работа', 'Монтаж шины внедорожного грузовика'], ['Обод', 'Двухкомпонентный, 20 дюймов'], ['Давление', '70 psi'], ['Основные проблемы', 'Дефекты, отсутствие удерживающего устройства и обучения'], ['Связь с Renyi', 'Не проект Renyi; материал для обучения безопасности']],
+      es: [['Fecha', '9 de abril de 2023'], ['Trabajo', 'Montaje de neumático todoterreno'], ['Llanta', 'Dos piezas, 20 pulgadas'], ['Inflado', '70 psi'], ['Problemas clave', 'Componentes defectuosos, sin dispositivo de retención y formación insuficiente'], ['Relación con Renyi', 'No es un proyecto de Renyi; material de formación en seguridad']],
+    },
+    coverImage: case11.images[0]!,
+    source: {
+      label: localized('查看MSHA官方事故调查报告', 'View the official MSHA investigation report', 'Открыть официальный отчет MSHA', 'Ver el informe oficial de MSHA'),
+      url: 'https://www.msha.gov/data-reports/fatality-reports/2023/april-9-2023-fatality/final-report',
+    },
+    ...case11,
+  },
+  {
+    slug: 'case-12',
+    code: '3.12',
+    title: localized(
+      'MSHA多件式轮辋锁圈装反死亡事故复盘（1999）',
+      'MSHA Reversed Lock Ring Fatality Review (1999)',
+      'Разбор MSHA: смертельная установка замочного кольца обратной стороной (1999)',
+      'Análisis MSHA: aro de cierre instalado al revés (1999)',
+    ),
+    category: localized('行业安全事故复盘', 'Industry safety review', 'Разбор промышленной безопасности', 'Análisis de seguridad industrial'),
+    location: localized('美国纽约州西布卢姆菲尔德', 'West Bloomfield, New York, USA', 'Уэст-Блумфилд, Нью-Йорк, США', 'West Bloomfield, Nueva York, EE. UU.'),
+    summary: localized(
+      '1999年10月30日，一名机械师更换卡车前轮时，被分离的多件式轮辋锁圈与法兰击中死亡。MSHA认定锁圈装反是直接原因；本页非仁毅项目。',
+      'On 30 October 1999, a mechanic was fatally struck by a lock ring and flange separated from a multi-piece truck wheel. MSHA identified a reversed lock ring as the primary cause; this was not a Renyi project.',
+      '30 октября 1999 года механик погиб от удара отделившихся замочного кольца и фланца многокомпонентного колеса. MSHA установило, что кольцо было установлено обратной стороной; это не проект Renyi.',
+      'El 30 de octubre de 1999, un mecánico murió al ser golpeado por el aro de cierre y la brida de una rueda multipieza. MSHA determinó que el aro estaba instalado al revés; no fue un proyecto de Renyi.',
+    ),
+    facts: {
+      zh: [['事故日期', '1999年10月30日'], ['作业', '更换卡车前轮'], ['轮辋', '三件式平底轮辋'], ['轮胎压力', '约130 psi'], ['直接原因', '锁圈安装方向错误'], ['与仁毅关系', '非仁毅项目；用于行业安全教育']],
+      en: [['Date', '30 October 1999'], ['Task', 'Changing a truck front wheel'], ['Rim', 'Three-piece flat-base rim'], ['Tire pressure', 'About 130 psi'], ['Direct cause', 'Lock ring installed backwards'], ['Renyi involvement', 'Not a Renyi project; presented for safety education']],
+      ru: [['Дата', '30 октября 1999'], ['Работа', 'Замена переднего колеса грузовика'], ['Обод', 'Трехкомпонентный с плоским основанием'], ['Давление', 'Около 130 psi'], ['Прямая причина', 'Замочное кольцо установлено обратной стороной'], ['Связь с Renyi', 'Не проект Renyi; материал для обучения безопасности']],
+      es: [['Fecha', '30 de octubre de 1999'], ['Trabajo', 'Cambio de rueda delantera de camión'], ['Llanta', 'Base plana de tres piezas'], ['Presión', 'Aproximadamente 130 psi'], ['Causa directa', 'Aro de cierre instalado al revés'], ['Relación con Renyi', 'No es un proyecto de Renyi; material de formación en seguridad']],
+    },
+    coverImage: case12.images[0]!,
+    source: {
+      label: localized('查看MSHA官方事故调查报告', 'View the official MSHA investigation report', 'Открыть официальный отчет MSHA', 'Ver el informe oficial de MSHA'),
+      url: 'https://arlweb.msha.gov/fatals/1999/ftl99m46.htm',
+    },
+    ...case12,
+  },
+  {
+    slug: 'case-13',
+    code: '3.13',
+    title: localized(
+      'MSHA大型轮胎更换车辆失稳死亡事故复盘（2020）',
+      'MSHA Large Tire Change Machine Instability Fatality Review (2020)',
+      'Разбор MSHA: смертельная потеря устойчивости при замене крупной шины (2020)',
+      'Análisis MSHA: inestabilidad durante cambio de neumático gigante (2020)',
+    ),
+    category: localized('行业安全事故复盘', 'Industry safety review', 'Разбор промышленной безопасности', 'Análisis de seguridad industrial'),
+    location: localized('美国肯塔基州派克维尔', 'Pikeville, Kentucky, USA', 'Пайквилл, Кентукки, США', 'Pikeville, Kentucky, EE. UU.'),
+    summary: localized(
+      '2020年12月15日，一名轮胎技师更换CAT 992D装载机45/65R45右后轮胎时，车辆失稳落下将其压死。事故与场地及防滚防落措施不足有关；本页非仁毅项目。',
+      'On 15 December 2020, a tire technician was killed when a CAT 992D loader fell during replacement of its 45/65R45 right-rear tire. The investigation identified unstable ground and inadequate blocking; this was not a Renyi project.',
+      '15 декабря 2020 года шинный техник погиб, когда погрузчик CAT 992D упал во время замены правой задней шины 45/65R45. Причинами стали неустойчивое основание и недостаточная фиксация; это не проект Renyi.',
+      'El 15 de diciembre de 2020, un técnico murió cuando una cargadora CAT 992D cayó durante el cambio del neumático trasero derecho 45/65R45. La investigación señaló terreno inestable y bloqueo insuficiente; no fue un proyecto de Renyi.',
+    ),
+    facts: {
+      zh: [['事故日期', '2020年12月15日'], ['设备', 'CAT 992D装载机'], ['轮胎规格', '45/65R45'], ['作业', '更换右后轮胎'], ['主要问题', '场地不稳定、车辆未可靠防滚防落'], ['与仁毅关系', '非仁毅项目；用于行业安全教育']],
+      en: [['Date', '15 December 2020'], ['Machine', 'CAT 992D loader'], ['Tire', '45/65R45'], ['Task', 'Changing the right-rear tire'], ['Key issues', 'Unstable ground and inadequate blocking'], ['Renyi involvement', 'Not a Renyi project; presented for safety education']],
+      ru: [['Дата', '15 декабря 2020'], ['Машина', 'Погрузчик CAT 992D'], ['Шина', '45/65R45'], ['Работа', 'Замена правой задней шины'], ['Основные проблемы', 'Неустойчивое основание и недостаточная фиксация'], ['Связь с Renyi', 'Не проект Renyi; материал для обучения безопасности']],
+      es: [['Fecha', '15 de diciembre de 2020'], ['Máquina', 'Cargadora CAT 992D'], ['Neumático', '45/65R45'], ['Trabajo', 'Cambio del neumático trasero derecho'], ['Problemas clave', 'Terreno inestable y bloqueo insuficiente'], ['Relación con Renyi', 'No es un proyecto de Renyi; material de formación en seguridad']],
+    },
+    coverImage: case13.images[0]!,
+    source: {
+      label: localized('查看MSHA官方事故调查报告', 'View the official MSHA investigation report', 'Открыть официальный отчет MSHA', 'Ver el informe oficial de MSHA'),
+      url: 'https://www.msha.gov/data-reports/fatality-reports/2020/december-15-2020-fatality/final-report',
+    },
+    ...case13,
   },
 ];
 
@@ -485,28 +555,6 @@ export const RENYI_CASE_DETAILS: Record<
       'Cuatro fotografías muestran distintas etapas en el taller y un video registra la prueba de marcha tras la reparación.',
     ],
   },
-  'case-09': {
-    zh: [
-      '2022年4月22日，仁毅团队在广西华润水泥红水河公司开展轮胎拆装机安装调试。设备面向大型工程车辆轮胎拆卸与安装作业。',
-      '现场工作包括设备到位、部件安装、系统调试和操作确认。图片资料完整记录设备由安装准备到现场操作的多个环节，便于查看设备结构和使用方式。',
-      '本案例包含17张现场图片和1段视频，是现有案例中资料最完整的一组，覆盖设备、控制区域、轮胎夹持与现场操作过程。',
-    ],
-    en: [
-      'On 22 April 2022, the Renyi team installed and commissioned a tire dismounting machine at China Resources Cement Hongshuihe in Guangxi. The equipment is intended for handling tires on large industrial vehicles.',
-      'Site work included positioning, component installation, system commissioning, and operation checks. The image sequence records multiple stages from preparation through on-site use.',
-      'With 17 photographs and one video, this is the most extensively documented case in the collection, covering the machine, control area, tire handling, and operator interaction.',
-    ],
-    ru: [
-      '22 апреля 2022 года команда Renyi выполнила монтаж и наладку шиномонтажного станка на предприятии China Resources Cement Hongshuihe в Гуанси.',
-      'Работы включали установку оборудования, монтаж узлов, наладку системы и проверку операций. Серия изображений показывает этапы от подготовки до практического использования.',
-      'Проект представлен 17 фотографиями и одним видео — наиболее полным комплектом материалов, охватывающим станок, управление, работу с шиной и действия оператора.',
-    ],
-    es: [
-      'El 22 de abril de 2022, el equipo de Renyi instaló y puso en marcha una desmontadora de neumáticos en China Resources Cement Hongshuihe, Guangxi.',
-      'El trabajo incluyó posicionamiento, montaje de componentes, ajuste del sistema y comprobación operativa. La secuencia de imágenes registra desde la preparación hasta el uso en obra.',
-      'Con 17 fotografías y un video, es el caso mejor documentado de la colección y cubre la máquina, el área de control, la manipulación del neumático y la operación.',
-    ],
-  },
   'case-10': {
     zh: [
       '炮孔填塞机在新疆准东煤田露天矿现场投入应用，设备用于爆破孔填塞作业，将专用设备与露天矿爆破施工流程衔接。',
@@ -527,6 +575,72 @@ export const RENYI_CASE_DETAILS: Record<
       'Un equipo de retacado se utilizó en la explotación a cielo abierto del yacimiento de Zhundong, Xinjiang, para integrar maquinaria especializada en el proceso de relleno de barrenos.',
       'El caso registra la máquina en un entorno minero real. La fuente no indica rendimiento, diámetro de barreno ni producción por turno, por lo que no se añaden cifras no confirmadas.',
       'Una fotografía muestra el equipo y el entorno de la mina, mientras un video registra el movimiento del vehículo y su estado de trabajo en obra.',
+    ],
+  },
+  'case-11': {
+    zh: [
+      '2023年4月9日，美国田纳西州South Pittsburg Stone #2露天矿开展越野卡车轮胎装配作业。一名63岁工人在继续装配其他轮胎时，被先前已装配轮辋突然脱离的锁圈击中死亡。本案例来自MSHA调查，不是仁毅项目。',
+      '调查记录显示，涉事两件式轮辋存在锈蚀、圆角、变形和部件标识无法核验等问题；现场使用了不适当工具，轮胎充至70 psi，且没有使用轮胎约束装置。MSHA同时认定任务培训不足。',
+      '官方图片包括事故现场标注照片和缺陷轮辋特写。安全启示是：机械化拆装只能减少敲击、撬动和人员近距离暴露，仍必须落实完全泄压、部件检查与报废、约束隔离和任务培训。',
+    ],
+    en: [
+      'On 9 April 2023, off-road truck tires were being mounted at South Pittsburg Stone #2 in Tennessee. A 63-year-old worker was fatally struck when the lock ring from an earlier assembled wheel suddenly dislodged. This is an MSHA case review, not a Renyi project.',
+      'MSHA documented rust, rounded edges, distortion, and unverifiable component markings on the two-piece rim. Improper tools were used, the tire had been inflated to 70 psi, and no tire restraint device was in place. Inadequate task training also contributed.',
+      'The official images show the marked accident scene and the defective rim. The lesson is that mechanized handling may reduce striking and close exposure, but it does not replace full deflation, component inspection and rejection, restraint, exclusion zones, or training.',
+    ],
+    ru: [
+      '9 апреля 2023 года на предприятии South Pittsburg Stone #2 в Теннесси выполнялся монтаж шин внедорожного грузовика. 63-летний рабочий погиб от удара замочного кольца, внезапно сорвавшегося с ранее собранного колеса. Это разбор MSHA, а не проект Renyi.',
+      'MSHA зафиксировало коррозию, скругленные кромки, деформацию и невозможность проверить маркировку деталей двухкомпонентного обода. Использовались неподходящие инструменты, давление составляло 70 psi, удерживающего устройства не было, обучение задаче было недостаточным.',
+      'Официальные изображения показывают размеченное место происшествия и дефектный обод. Механизация снижает удары и близкое присутствие людей, но не заменяет полное стравливание давления, браковку деталей, ограждение и обучение.',
+    ],
+    es: [
+      'El 9 de abril de 2023 se montaban neumáticos todoterreno en South Pittsburg Stone #2, Tennessee. Un trabajador de 63 años murió cuando el aro de cierre de una rueda previamente montada se desprendió y lo golpeó. Es un análisis de MSHA, no un proyecto de Renyi.',
+      'MSHA documentó corrosión, bordes redondeados, deformación y marcas de identificación ilegibles en la llanta de dos piezas. Se usaron herramientas inadecuadas, el neumático estaba a 70 psi, no había dispositivo de retención y la formación era insuficiente.',
+      'Las imágenes oficiales muestran la escena señalizada y la llanta defectuosa. La mecanización reduce golpes y exposición cercana, pero no sustituye el desinflado, la inspección y descarte, la retención, el aislamiento ni la formación.',
+    ],
+  },
+  'case-12': {
+    zh: [
+      '1999年10月30日，美国纽约州West Bloomfield Mine维修车间内，一名50岁机械师在把卡车前轮装到前轴时，被多件式轮辋分离后的锁圈与法兰击中，因胸部钝性创伤死亡。本案例来自MSHA调查，不是仁毅项目。',
+      '调查认定锁圈被反向安装，未能正确嵌入轮辋底座沟槽，是轮辋总成在压力下分离的主要原因。现场也没有张贴多件式轮辋匹配、拆装和检查说明，形成了重要的管理缺口。',
+      'MSHA旧档案未公开事故现场照片，因此本页使用与该事故对应的官方Fatal Alert通报配图，并明确标注图片性质。安全启示是型号匹配、方向确认和制造商作业说明必须制度化复核。',
+    ],
+    en: [
+      'On 30 October 1999, a 50-year-old mechanic at West Bloomfield Mine in New York was installing a truck front wheel when the lock ring and flange separated from the multi-piece rim and struck him. He died from blunt-force chest trauma. This was not a Renyi project.',
+      'MSHA determined that the lock ring had been installed backwards and could not seat correctly in the rim-base gutter groove. The shop also lacked posted instructions for component matching, mounting, demounting, and inspection.',
+      'The archived MSHA material does not publish an accident-scene photograph, so this page uses the case-specific official Fatal Alert illustration and labels it accordingly. The key lesson is to institutionalize component matching, orientation checks, and manufacturer procedures.',
+    ],
+    ru: [
+      '30 октября 1999 года в мастерской West Bloomfield Mine в Нью-Йорке 50-летний механик устанавливал переднее колесо грузовика. Замочное кольцо и фланец отделились от многокомпонентного обода и смертельно травмировали его. Это не проект Renyi.',
+      'MSHA установило, что замочное кольцо было смонтировано обратной стороной и не вошло в канавку основания обода. В мастерской также отсутствовали инструкции по совместимости деталей, монтажу, демонтажу и осмотру.',
+      'В архиве MSHA нет фотографии места происшествия, поэтому используется официальная иллюстрация Fatal Alert именно по этому случаю. Главный вывод — обязательная проверка совместимости, направления установки и инструкций изготовителя.',
+    ],
+    es: [
+      'El 30 de octubre de 1999, un mecánico de 50 años instalaba una rueda delantera en West Bloomfield Mine, Nueva York. El aro de cierre y la brida se separaron de la llanta multipieza y lo golpearon mortalmente. No fue un proyecto de Renyi.',
+      'MSHA determinó que el aro de cierre estaba instalado al revés y no podía asentarse en la ranura de la base. El taller tampoco tenía instrucciones visibles de compatibilidad, montaje, desmontaje e inspección.',
+      'El archivo de MSHA no publica una fotografía de la escena, por lo que se utiliza la ilustración oficial Fatal Alert correspondiente a este caso y se identifica como tal. La lección es verificar compatibilidad, orientación y procedimientos del fabricante.',
+    ],
+  },
+  'case-13': {
+    zh: [
+      '2020年12月15日，美国肯塔基州Fords Branch Mine 1进行CAT 992D装载机右后轮胎更换。58岁轮胎技师拆下45/65R45轮胎并等待检查时，装载机发生移位并落下，将其压死。本案例来自MSHA调查，不是仁毅项目。',
+      '调查发现作业地点为不平整的松散填料，千斤顶支座已陷入地面；车辆未通过可靠机械支撑防止滚动或落下，防铰接连杆也未连接。液压千斤顶和遥控系统经测试工作正常。',
+      '官方照片记录了涉事CAT 992D装载机在事故现场的状态。该事故说明，即使使用起重机和轮胎定位器，大型轮胎机械化仍必须以坚实场地、防滚防落、清空人员和禁止进入车下为前提。',
+    ],
+    en: [
+      'On 15 December 2020, the right-rear tire of a CAT 992D loader was being changed at Fords Branch Mine 1 in Kentucky. After the 45/65R45 tire had been removed and positioned for inspection, the loader shifted and fell, fatally crushing the 58-year-old tire technician. This was not a Renyi project.',
+      'Investigators found uneven unconsolidated fill and jack stands sunk into the ground. The machine was not mechanically secured against rolling or falling, and the anti-pivot link was not connected. Testing found no malfunction in the hydraulic jacks or remote system.',
+      'The official photograph records the CAT 992D at the accident site. The case shows that cranes and tire positioners do not replace firm ground, mechanical blocking, exclusion of personnel, and a strict prohibition on entering beneath raised equipment.',
+    ],
+    ru: [
+      '15 декабря 2020 года на Fords Branch Mine 1 в Кентукки меняли правую заднюю шину погрузчика CAT 992D. После снятия и установки шины 45/65R45 для осмотра машина сместилась и упала, смертельно придавив 58-летнего шинного техника. Это не проект Renyi.',
+      'Следователи обнаружили неровную рыхлую насыпь и просевшие опоры домкратов. Машина не была механически защищена от движения и падения, противошарнирная тяга не была соединена. Домкраты и дистанционное управление работали исправно.',
+      'Официальная фотография показывает CAT 992D на месте происшествия. Даже при наличии крана и позиционера шин необходимы прочное основание, механическая фиксация, удаление людей и запрет работы под поднятой машиной.',
+    ],
+    es: [
+      'El 15 de diciembre de 2020 se cambiaba el neumático trasero derecho de una cargadora CAT 992D en Fords Branch Mine 1, Kentucky. Tras retirar y colocar para inspección el neumático 45/65R45, la máquina se desplazó y cayó, aplastando mortalmente al técnico de 58 años. No fue un proyecto de Renyi.',
+      'Los investigadores encontraron relleno suelto e irregular y soportes hundidos. La máquina no estaba asegurada mecánicamente contra rodadura o caída y el enlace antipivote no estaba conectado. Los gatos y el sistema remoto funcionaban correctamente.',
+      'La fotografía oficial muestra la CAT 992D en la escena. El caso demuestra que una grúa y un posicionador no sustituyen terreno firme, bloqueo mecánico, zona de exclusión y la prohibición de entrar bajo equipos elevados.',
     ],
   },
 };

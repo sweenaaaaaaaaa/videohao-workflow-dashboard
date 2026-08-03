@@ -391,9 +391,14 @@
 }
 
 @media (min-width: 992px) {
+  body.page-template-page-product .page-content,
+  body.single-post .page-content {
+    padding-top: 1.08rem !important;
+  }
+
   .header-box .menu-box .menu > li.m-1.has-sub > .sub-nav {
-    background-position: center top !important;
-    background-size: cover !important;
+    background-position: right center !important;
+    background-size: auto 100% !important;
   }
 
   .header-box .menu-box .menu > li.m-1.has-sub > .sub-nav .sub-btn2 {
@@ -551,4 +556,87 @@
     flex-basis: 48px !important;
     width: 48px !important;
   }
+}
+
+.renyi-product-faq {
+  padding: 64px 0 72px;
+  background: #f6f6f4;
+}
+
+.renyi-optimized-picture {
+  display: contents;
+}
+
+.renyi-news-page-banner,
+.renyi-about-page-banner,
+.renyi-service-page-banner {
+  width: 100%;
+  aspect-ratio: 1920 / 715;
+}
+
+.renyi-contact-page-banner {
+  width: 100%;
+  aspect-ratio: 1983 / 793;
+}
+
+.renyi-join-page-banner {
+  width: 100%;
+  aspect-ratio: 1920 / 460;
+}
+
+.renyi-raise-boring-page-banner {
+  width: 100%;
+  aspect-ratio: 1920 / 604;
+}
+
+.renyi-hydraulic-page-banner,
+.renyi-mineral-page-banner,
+.renyi-special-equipment-page-banner,
+.renyi-structural-page-banner {
+  aspect-ratio: 1920 / 715;
+}
+
+.renyi-service-quality-page .server01 {
+  overflow-x: hidden;
+}
+
+@media (max-width: 991px) {
+  .pro-v-body-b table {
+    display: block;
+    width: 100% !important;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+.renyi-product-faq h2 {
+  margin: 0 0 24px;
+  color: #171717;
+  font-size: clamp(28px, 3vw, 42px);
+  font-weight: 700;
+}
+
+.renyi-product-faq__item {
+  border-top: 1px solid #d8d8d2;
+  padding: 18px 0;
+}
+
+.renyi-product-faq__item:last-child {
+  border-bottom: 1px solid #d8d8d2;
+}
+
+.renyi-product-faq__item summary {
+  cursor: pointer;
+  color: #202020;
+  font-size: 18px;
+  font-weight: 650;
+}
+
+.renyi-product-faq__item p {
+  max-width: 900px;
+  margin: 14px 0 0;
+  color: #555;
+  font-size: 16px;
+  line-height: 1.8;
 }

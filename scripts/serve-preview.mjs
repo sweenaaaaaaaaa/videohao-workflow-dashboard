@@ -4,7 +4,7 @@ import { networkInterfaces } from 'node:os';
 import { extname, join, normalize, resolve, sep } from 'node:path';
 import { Readable } from 'node:stream';
 import { fileURLToPath } from 'node:url';
-import { createGzip } from 'node:zlib';
+import { constants as zlibConstants, createBrotliCompress, createGzip } from 'node:zlib';
 import serverEntry from '../dist/server/server.js';
 
 const rootDir = resolve(fileURLToPath(new URL('..', import.meta.url)));
@@ -13,6 +13,7 @@ const port = Number(process.env.PORT || process.argv[2] || 3000);
 const host = process.env.HOST || '0.0.0.0';
 
 const mimeTypes = {
+  '.avif': 'image/avif',
   '.css': 'text/css; charset=utf-8',
   '.gif': 'image/gif',
   '.html': 'text/html; charset=utf-8',
@@ -35,6 +36,48 @@ const mimeTypes = {
 };
 
 const gzipExtensions = new Set(['.css', '.html', '.js', '.json', '.map', '.svg', '.txt', '.xml']);
+
+function setSecurityHeaders(req, res) {
+  res.setHeader('Content-Security-Policy', [
+    "default-src 'self'",
+    "base-uri 'self'",
+    "connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://hm.baidu.com https://*.tradingview.com https://*.tradingview-widget.com wss://*.tradingview.com",
+    "font-src 'self' data:",
+    "form-action 'self' https://wa.me",
+    "frame-ancestors 'self'",
+    "frame-src 'self' https://*.tradingview.com https://*.tradingview-widget.com",
+    "img-src 'self' data: https:",
+    "media-src 'self'",
+    "object-src 'none'",
+    "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://hm.baidu.com https://s3.tradingview.com",
+    "style-src 'self' 'unsafe-inline'",
+  ].join('; '));
+  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
+  res.setHeader('Permissions-Policy', 'camera=(), geolocation=(), microphone=()');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+
+  if (process.env.ENABLE_HSTS === 'true' || req.headers['x-forwarded-proto'] === 'https') {
+    res.setHeader('Strict-Transport-Security', 'max-age=31536000');
+  }
+}
+
+function getCacheControl(pathname, ext) {
+  if (ext === '.html') {
+    return 'no-cache';
+  }
+
+  if (pathname === '/robots.txt' || pathname === '/sitemap.xml' || pathname === '/site.webmanifest') {
+    return 'public, max-age=3600, must-revalidate';
+  }
+
+  if (pathname.startsWith('/assets/') && /-[A-Za-z0-9_-]{8,}\.[^.]+$/.test(pathname)) {
+    return 'public, max-age=31536000, immutable';
+  }
+
+  return 'public, max-age=0, must-revalidate';
+}
 
 function getStaticFile(pathname) {
   let decodedPath;
@@ -61,7 +104,7 @@ function getStaticFile(pathname) {
     return null;
   }
 
-  return { filePath: resolvedCandidate, stats };
+  return { filePath: resolvedCandidate, pathname: decodedPath, stats };
 }
 
 function parseByteRange(rangeHeader, size) {
@@ -111,10 +154,12 @@ function parseByteRange(rangeHeader, size) {
 function sendStaticFile(req, res, staticFile) {
   const ext = extname(staticFile.filePath).toLowerCase();
   const contentType = mimeTypes[ext] || 'application/octet-stream';
-  const cacheControl = ext === '.html' ? 'no-cache' : 'public, max-age=31536000, immutable';
+  const cacheControl = getCacheControl(staticFile.pathname, ext);
   const byteRange = req.method === 'GET' ? parseByteRange(req.headers.range, staticFile.stats.size) : null;
-  const acceptsGzip = req.headers['accept-encoding']?.includes('gzip');
-  const shouldGzip = req.method === 'GET' && !byteRange && acceptsGzip && gzipExtensions.has(ext);
+  const acceptEncoding = req.headers['accept-encoding'] || '';
+  const shouldBrotli = req.method === 'GET' && !byteRange && acceptEncoding.includes('br') && gzipExtensions.has(ext);
+  const shouldGzip =
+    req.method === 'GET' && !byteRange && !shouldBrotli && acceptEncoding.includes('gzip') && gzipExtensions.has(ext);
 
   res.setHeader('Content-Type', contentType);
   res.setHeader('Accept-Ranges', 'bytes');
@@ -139,6 +184,14 @@ function sendStaticFile(req, res, staticFile) {
   }
 
   res.statusCode = 200;
+  if (shouldBrotli) {
+    res.setHeader('Content-Encoding', 'br');
+    createReadStream(staticFile.filePath)
+      .pipe(createBrotliCompress({ params: { [zlibConstants.BROTLI_PARAM_QUALITY]: 5 } }))
+      .pipe(res);
+    return;
+  }
+
   if (shouldGzip) {
     res.setHeader('Content-Encoding', 'gzip');
     createReadStream(staticFile.filePath).pipe(createGzip()).pipe(res);
@@ -198,8 +251,37 @@ async function sendSsrResponse(req, res) {
 }
 
 const server = createServer(async (req, res) => {
+  const startedAt = performance.now();
+  const requestUrl = req.url || '/';
+
+  res.on('finish', () => {
+    if (process.env.REQUEST_LOGS !== 'true' && res.statusCode < 400) {
+      return;
+    }
+
+    console.log(
+      JSON.stringify({
+        type: 'http_request',
+        method: req.method,
+        path: requestUrl,
+        status: res.statusCode,
+        durationMs: Number((performance.now() - startedAt).toFixed(1)),
+      }),
+    );
+  });
+
   try {
+    setSecurityHeaders(req, res);
     const url = new URL(req.url || '/', `http://${req.headers.host || `${host}:${port}`}`);
+
+    if (url.pathname === '/healthz') {
+      res.statusCode = 200;
+      res.setHeader('Cache-Control', 'no-store');
+      res.setHeader('Content-Type', 'application/json; charset=utf-8');
+      res.end(JSON.stringify({ status: 'ok', uptimeSeconds: Math.round(process.uptime()) }));
+      return;
+    }
+
     const staticFile = getStaticFile(url.pathname);
 
     if (staticFile) {
@@ -209,7 +291,7 @@ const server = createServer(async (req, res) => {
 
     await sendSsrResponse(req, res);
   } catch (error) {
-    console.error(error);
+    console.error(JSON.stringify({ type: 'server_error', path: requestUrl, message: String(error) }));
     if (!res.headersSent) {
       res.statusCode = 500;
       res.setHeader('Content-Type', 'text/plain; charset=utf-8');
@@ -239,3 +321,10 @@ server.listen(port, host, () => {
 
   console.log(`Renyi preview server ready at http://${host}:${port}/`);
 });
+
+for (const signal of ['SIGINT', 'SIGTERM']) {
+  process.on(signal, () => {
+    server.close(() => process.exit(0));
+    server.closeAllConnections();
+  });
+}

@@ -1,17 +1,10 @@
-import { NotFound } from '@/components/not-found';
-import { getSitePage, patchRenyiHtml } from '@/lib/site-pages';
+import type { SitePageData } from '@/data/site-page-types';
 
-export function SiteMirrorPage(props: { path: string }) {
-  const page = getSitePage(props.path);
-
-  if (!page) {
-    return <NotFound />;
-  }
-
+export function SiteMirrorPage(props: { page: SitePageData; path: string }) {
   return (
     <div
       style={{ display: 'contents' }}
-      dangerouslySetInnerHTML={{ __html: patchRenyiHtml(page.bodyHtml, props.path) }}
+      dangerouslySetInnerHTML={{ __html: props.page.bodyHtml }}
     />
   );
 }

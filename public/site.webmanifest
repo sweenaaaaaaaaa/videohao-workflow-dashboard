@@ -1,0 +1,18 @@
+{
+  "name": "长沙仁毅机械制造有限公司",
+  "short_name": "长沙仁毅",
+  "description": "天井钻机、特种油缸、结构件、选矿设备与矿山专用装备制造商",
+  "lang": "zh-CN",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#d99a00",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

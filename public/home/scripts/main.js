@@ -648,7 +648,7 @@ $(function(){
 			container.innerHTML =
 				'<div class="tradingview-widget-container__widget"></div>' +
 				'<div class="tradingview-widget-copyright">' +
-					'<a href="https://www.tradingview.com/symbols/NYSE-CAT/?utm_source=renyi.local&amp;utm_medium=widget_new&amp;utm_campaign=advanced-chart" rel="noopener nofollow" target="_blank">' +
+				'<a href="https://www.tradingview.com/symbols/NYSE-CAT/?utm_source=renyi.local&amp;utm_medium=widget_new&amp;utm_campaign=advanced-chart" rel="noopener nofollow" target="_blank">' +
 						'<span class="blue-text">CAT stock chart</span>' +
 					'</a>' +
 					'<span class="trademark"> by TradingView</span>' +

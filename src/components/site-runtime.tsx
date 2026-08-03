@@ -33,13 +33,11 @@ const RENYI_WECHAT_OFFICIAL_ACCOUNT_QR_IMAGE = '/renyi/renyi-wechat-official-acc
 
 const SITE_SCRIPTS = [
   '/home/scripts/jquery.min.js',
-  '/home/scripts/jquery-migrate.min.js',
   '/home/scripts/swiper.min.js',
   '/home/scripts/swiper.animate.min.js',
   '/home/scripts/jquery.magnific-popup.min.js',
   '/home/scripts/wow.js',
-  '/home/scripts/countUp.js',
-  '/home/scripts/main.js',
+  '/home/scripts/main.js?v=20260727-cat-chart',
 ];
 
 const RENYI_SOLUTION_MAP_IMAGE = '/renyi/renyi-ind03-map-changsha-v2.svg';
@@ -709,11 +707,11 @@ const PRODUCT_SERIES_CARD_LABELS: Record<RenyiLocale, Record<string, string>> = 
 };
 
 const PRODUCT_SERIES_CARD_IMAGES: Record<string, string> = {
-  '/zuanjixilie/': '/renyi/product-category-raise-boring-site-card.png?v=20260509',
-  '/yougangxuangua/': '/renyi/product-category-hydraulic-suspension-cylinders.png?v=20260429',
-  '/pro_category/zaoyantaiche/': '/renyi/product-category-structural-components-fill.png?v=20260513-imagegen-no-shadow',
-  '/fuxuanjixilie/': '/renyi/product-category-mineral-processing-fill.png?v=20260429-fill',
-  '/pro_category/dexiafuwuche/': '/renyi/product-category-special-equipment-yard.png?v=20260429',
+  '/zuanjixilie/': '/renyi/product-category-raise-boring-site-card.jpg?v=20260801',
+  '/yougangxuangua/': '/renyi/product-category-hydraulic-suspension-cylinders.jpg?v=20260801',
+  '/pro_category/zaoyantaiche/': '/renyi/product-category-structural-components-fill.jpg?v=20260801',
+  '/fuxuanjixilie/': '/renyi/product-category-mineral-processing-fill.jpg?v=20260801',
+  '/pro_category/dexiafuwuche/': '/renyi/product-category-special-equipment-yard.jpg?v=20260801',
 };
 
 const PRODUCT_SERIES_CARD_ALTS: Record<RenyiLocale, Record<string, string>> = {
@@ -1072,9 +1070,16 @@ function replaceBrandLogo() {
 function replacePromoVideo() {
   const locale = getRenyiLogoCopy(window.location.pathname).locale;
   const videoPath = RENYI_PROMO_VIDEO_PATHS[locale];
+  const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+  const shouldLoadVideo = !window.matchMedia('(max-width: 767px)').matches && !connection?.saveData;
 
   document.querySelectorAll<HTMLSourceElement>('video#banner_video source').forEach((source) => {
-    source.src = videoPath;
+    source.dataset.src = videoPath;
+    if (shouldLoadVideo) {
+      source.src = videoPath;
+    } else {
+      source.removeAttribute('src');
+    }
   });
 
   document.querySelectorAll<HTMLVideoElement>('video#banner_video').forEach((video) => {
@@ -1084,13 +1089,18 @@ function replacePromoVideo() {
     video.playsInline = true;
     video.removeAttribute('loop');
     video.setAttribute('playsinline', '');
+    video.preload = shouldLoadVideo ? 'metadata' : 'none';
     Array.from(video.childNodes).forEach((node) => {
       if (node.nodeType === Node.TEXT_NODE && node.textContent?.includes('video')) {
         node.textContent = RENYI_VIDEO_FALLBACK_TEXT[locale];
       }
     });
-    video.load();
-    void video.play().catch(() => {});
+    if (shouldLoadVideo) {
+      video.load();
+      void video.play().catch(() => {});
+    } else {
+      video.pause();
+    }
   });
 
   document
@@ -2673,6 +2683,39 @@ function scrollToCurrentHash() {
   window.scrollTo({ top: Math.max(0, top), behavior: 'auto' });
 }
 
+type RenyiAnalyticsWindow = Window & {
+  dataLayer?: Array<Record<string, unknown>>;
+  _hmt?: Array<unknown[]>;
+};
+
+function trackRenyiConversion(type: string, label: string) {
+  const analyticsWindow = window as RenyiAnalyticsWindow;
+  const payload = {
+    event: 'renyi_conversion',
+    conversion_type: type,
+    conversion_label: label.slice(0, 160),
+    page_path: window.location.pathname,
+  };
+
+  analyticsWindow.dataLayer?.push(payload);
+  analyticsWindow._hmt?.push(['_trackEvent', 'conversion', type, payload.conversion_label]);
+}
+
+function getRenyiConversionFromClick(event: MouseEvent) {
+  const target = event.target instanceof Element ? event.target : null;
+  const link = target?.closest<HTMLAnchorElement>('a');
+  const href = link?.href || '';
+  const label = link?.innerText.trim() || link?.getAttribute('aria-label') || href;
+
+  if (/https?:\/\/(?:api\.)?whatsapp\.com|https?:\/\/wa\.me/i.test(href)) return ['whatsapp', label] as const;
+  if (href.startsWith('tel:')) return ['phone', label] as const;
+  if (href.startsWith('mailto:')) return ['email', label] as const;
+  if (link?.classList.contains('go-cases')) return ['case_cta', label] as const;
+  if (link?.classList.contains('go-inquiry') || link?.hash === '#a2') return ['inquiry_cta', label] as const;
+  if (target?.closest('img[src*="wechat"], img[src*="weixin"], img[src*="wx."]')) return ['wechat', label] as const;
+  return null;
+}
+
 export function SiteRuntime() {
   const pathname = useLocation({
     select: (location) => location.pathname,
@@ -2736,6 +2779,25 @@ export function SiteRuntime() {
 
     return () => {
       window.removeEventListener('hashchange', scrollToCurrentHash);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleClick = (event: MouseEvent) => {
+      const conversion = getRenyiConversionFromClick(event);
+      if (conversion) trackRenyiConversion(conversion[0], conversion[1]);
+    };
+    const handleSubmit = (event: SubmitEvent) => {
+      if (event.target instanceof HTMLFormElement && event.target.matches('.wpcf7-form')) {
+        trackRenyiConversion('form_submit', event.target.action || window.location.href);
+      }
+    };
+
+    document.addEventListener('click', handleClick, true);
+    document.addEventListener('submit', handleSubmit, true);
+    return () => {
+      document.removeEventListener('click', handleClick, true);
+      document.removeEventListener('submit', handleSubmit, true);
     };
   }, []);
 

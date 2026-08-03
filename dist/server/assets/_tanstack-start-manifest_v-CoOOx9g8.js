@@ -1,4 +1,0 @@
-const tsrStartManifest = () => ({ "routes": { "__root__": { "filePath": "/Users/toly/Documents/长沙仁毅/step1-full-project/src/routes/__root.tsx", "children": ["/", "/$", "/api/cat-news", "/api/trpc/$"], "preloads": ["/assets/main-ByPiIzx-.js"], "assets": [] }, "/": { "filePath": "/Users/toly/Documents/长沙仁毅/step1-full-project/src/routes/index.tsx", "assets": [], "preloads": ["/assets/index-CQvolT-_.js", "/assets/site-mirror-page-2H4AFCaZ.js"] }, "/$": { "filePath": "/Users/toly/Documents/长沙仁毅/step1-full-project/src/routes/$.tsx", "assets": [], "preloads": ["/assets/_-BqsmB_de.js", "/assets/site-mirror-page-2H4AFCaZ.js"] }, "/api/cat-news": { "filePath": "/Users/toly/Documents/长沙仁毅/step1-full-project/src/routes/api/cat-news.ts" }, "/api/trpc/$": { "filePath": "/Users/toly/Documents/长沙仁毅/step1-full-project/src/routes/api/trpc.$.ts" } }, "clientEntry": "/assets/main-ByPiIzx-.js" });
-export {
-  tsrStartManifest
-};

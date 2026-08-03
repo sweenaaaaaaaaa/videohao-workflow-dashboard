@@ -10,7 +10,7 @@ const HOME_SCRIPTS = [
   '/home/scripts/jquery.magnific-popup.min.js',
   '/home/scripts/wow.js',
   '/home/scripts/countUp.js',
-  '/home/scripts/main.js',
+  '/home/scripts/main.js?v=20260727-cat-chart',
 ];
 
 function loadScript(src: string) {

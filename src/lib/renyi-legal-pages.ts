@@ -436,6 +436,137 @@ La interpretación, ejecución y resolución de disputas de este aviso se regir�
   },
 };
 
+const CURRENT_PRIVACY_COPY: Record<LegalLocale, LegalPageCopy> = {
+  zh: {
+    title: '隐私政策',
+    text: `
+隐私政策
+本政策说明 csrenyi.com 在您浏览网站或提交业务咨询时如何处理个人信息。本网站目前用于企业、产品、案例和联系方式展示，不提供在线下单、账户注册或在线支付。
+
+收集个人信息
+当您填写咨询表单时，您可以提供姓名、电子邮箱、电话号码和留言内容。表单会打开 WhatsApp，由您确认后发送消息。服务器及安全服务也可能记录 IP 地址、浏览器类型、访问时间、访问页面和错误信息等必要技术日志。
+
+使用个人信息
+我们仅将这些信息用于回复咨询、提供产品与服务支持、维护网站安全、排查故障和改进网站体验，不会出售您的个人信息。
+
+分享个人信息
+为运行网站或完成您主动发起的咨询，必要信息可能由托管、安全和通信服务提供商处理。通过 WhatsApp 发送的信息同时受 WhatsApp 自身隐私政策约束。除法律要求、保护合法权益或提供上述必要服务外，我们不会向第三方披露您的个人信息。
+
+保留
+咨询记录仅在业务沟通、客户服务、争议处理或履行法律义务所需期间保存；技术日志按托管与安全服务的合理周期保存。
+
+您的权利
+您可以请求访问、更正或删除我们持有的个人信息，也可以撤回后续沟通许可。请发送邮件至 info@csrenyi.com，我们将在适用法律要求的范围内处理。
+
+Cookie
+本网站目前不使用购物、支付或广告画像 Cookie。网站运行所需的基础技术或安全服务可能使用必要 Cookie；如未来启用统计或广告工具，我们会更新本政策并按适用要求提供说明或同意机制。
+
+未成年人
+本网站面向企业和专业客户，不以未成年人为目标。如果您认为未成年人向我们提供了个人信息，请联系我们删除。
+
+变化
+我们可能因网站功能、服务供应商或法律要求变化而更新本政策，更新版本以本页面公布内容为准。
+`.trim(),
+  },
+  en: {
+    title: 'Privacy Policy',
+    text: `
+Privacy Policy
+This policy explains how csrenyi.com handles personal information when you browse the Site or make a business inquiry. The Site currently presents company, product, case-study and contact information; it does not provide online accounts, checkout or payment processing.
+
+Collecting Personal Information
+When you use an inquiry form, you may provide your name, email address, phone number and message. The form opens WhatsApp and you choose whether to send the message. Hosting and security services may also record necessary technical logs such as IP address, browser type, access time, requested pages and error information.
+
+Using Personal Information
+We use this information only to respond to inquiries, provide product or service support, protect the Site, diagnose faults and improve the Site experience. We do not sell personal information.
+
+Sharing Personal Information
+Information may be processed by hosting, security and communication providers where necessary to operate the Site or complete an inquiry you initiate. Messages sent through WhatsApp are also governed by WhatsApp's privacy policy. We do not otherwise disclose personal information except where required by law, necessary to protect legitimate rights, or needed to provide these services.
+
+Retention
+Inquiry records are retained only for as long as reasonably needed for business communication, customer support, dispute handling or legal obligations. Technical logs are retained according to reasonable hosting and security-service periods.
+
+Your Rights
+You may request access to, correction of or deletion of personal information we hold, or withdraw permission for further communications. Contact info@csrenyi.com and we will respond as required by applicable law.
+
+Cookies
+The Site currently does not use shopping, payment or advertising-profile cookies. Essential technical or security services may use necessary cookies. If analytics or advertising tools are enabled later, this policy will be updated and any notice or consent required by applicable law will be provided.
+
+Minors
+The Site is intended for business and professional users and is not directed to minors. Contact us if you believe a minor has provided personal information so that it can be removed.
+
+Changes
+We may update this policy when Site functions, service providers or legal requirements change. The current version is the version published on this page.
+`.trim(),
+  },
+  ru: {
+    title: 'Политика конфиденциальности',
+    text: `
+Политика конфиденциальности
+Настоящая политика объясняет, как csrenyi.com обрабатывает персональные данные при просмотре Сайта или отправке делового запроса. Сайт предназначен для представления компании, продукции, проектов и контактов; на нем нет учетных записей, онлайн-заказов и онлайн-оплаты.
+
+Сбор персональных данных
+В форме запроса вы можете указать имя, адрес электронной почты, номер телефона и текст сообщения. Форма открывает WhatsApp, после чего вы сами подтверждаете отправку. Сервисы хостинга и безопасности также могут записывать необходимые технические журналы: IP-адрес, тип браузера, время доступа, посещенные страницы и сведения об ошибках.
+
+Использование персональных данных
+Данные используются только для ответа на запросы, поддержки по продукции и услугам, защиты Сайта, диагностики ошибок и улучшения работы Сайта. Мы не продаем персональные данные.
+
+Передача персональных данных
+Для работы Сайта и обработки инициированного вами запроса данные могут обрабатываться поставщиками хостинга, безопасности и связи. Сообщения через WhatsApp также регулируются политикой конфиденциальности WhatsApp. В иных случаях данные раскрываются только по требованию закона, для защиты законных прав или предоставления указанных услуг.
+
+Хранение
+Запросы хранятся только в течение срока, разумно необходимого для деловой переписки, поддержки, разрешения споров или выполнения юридических обязанностей. Технические журналы хранятся в соответствии с разумными сроками сервисов хостинга и безопасности.
+
+Ваши права
+Вы можете запросить доступ, исправление или удаление ваших данных, а также отказаться от дальнейших сообщений. Напишите на info@csrenyi.com; запрос будет обработан в соответствии с применимым законодательством.
+
+Cookie
+Сайт в настоящее время не использует cookie интернет-магазина, платежей или рекламного профилирования. Необходимые технические и защитные сервисы могут применять обязательные cookie. При подключении аналитики или рекламы политика будет обновлена и, если требуется законом, будет предоставлено уведомление или механизм согласия.
+
+Несовершеннолетние
+Сайт предназначен для деловых и профессиональных пользователей и не ориентирован на несовершеннолетних. Сообщите нам, если несовершеннолетний предоставил данные, чтобы мы могли их удалить.
+
+Изменения
+Политика может обновляться при изменении функций Сайта, поставщиков услуг или требований законодательства. Действующей является версия, опубликованная на этой странице.
+`.trim(),
+  },
+  es: {
+    title: 'Política de privacidad',
+    text: `
+Política de privacidad
+Esta política explica cómo csrenyi.com trata la información personal cuando usted navega por el Sitio o realiza una consulta comercial. El Sitio presenta información de la empresa, productos, casos y contacto; actualmente no ofrece cuentas, compras ni pagos en línea.
+
+Recopilación de información personal
+Al utilizar un formulario de consulta puede proporcionar su nombre, correo electrónico, teléfono y mensaje. El formulario abre WhatsApp y usted decide si envía el mensaje. Los servicios de alojamiento y seguridad también pueden registrar datos técnicos necesarios, como dirección IP, tipo de navegador, hora de acceso, páginas solicitadas e información de errores.
+
+Uso de información personal
+Utilizamos esta información únicamente para responder consultas, prestar soporte de productos o servicios, proteger el Sitio, diagnosticar fallos y mejorar la experiencia. No vendemos información personal.
+
+Compartir información personal
+La información puede ser tratada por proveedores de alojamiento, seguridad y comunicaciones cuando sea necesario para operar el Sitio o completar una consulta iniciada por usted. Los mensajes enviados mediante WhatsApp también se rigen por la política de privacidad de WhatsApp. No divulgamos información salvo obligación legal, protección de derechos legítimos o prestación de estos servicios.
+
+Retención
+Las consultas se conservan solo durante el tiempo razonablemente necesario para la comunicación comercial, atención al cliente, resolución de disputas u obligaciones legales. Los registros técnicos se conservan según periodos razonables de los servicios de alojamiento y seguridad.
+
+Sus derechos
+Puede solicitar acceso, corrección o eliminación de la información que conservamos, o retirar el permiso para comunicaciones posteriores. Escriba a info@csrenyi.com y responderemos conforme a la legislación aplicable.
+
+Cookies
+El Sitio no utiliza actualmente cookies de compras, pagos ni perfiles publicitarios. Los servicios técnicos o de seguridad esenciales pueden usar cookies necesarias. Si en el futuro se activan herramientas de analítica o publicidad, actualizaremos esta política y proporcionaremos el aviso o consentimiento exigido por la legislación aplicable.
+
+Menores
+El Sitio está destinado a usuarios empresariales y profesionales y no se dirige a menores. Contáctenos si considera que un menor ha proporcionado información para que podamos eliminarla.
+
+Cambios
+Podemos actualizar esta política cuando cambien las funciones del Sitio, los proveedores o los requisitos legales. La versión vigente es la publicada en esta página.
+`.trim(),
+  },
+};
+
+function getLegalPageCopy(locale: LegalLocale, pageKey: LegalPageKey) {
+  return pageKey === 'privacy' ? CURRENT_PRIVACY_COPY[locale] : LEGAL_PAGE_COPY[locale][pageKey];
+}
+
 const HEADING_LINES = new Set([
   '收集个人信息',
   '设备信息',
@@ -598,7 +729,7 @@ export function getRenyiLegalPageTitle(pathname: string) {
   const { locale } = getLocaleAndBarePath(pathname);
   const pageKey = getLegalPageKey(pathname);
 
-  return pageKey ? LEGAL_PAGE_COPY[locale][pageKey].title : null;
+  return pageKey ? getLegalPageCopy(locale, pageKey).title : null;
 }
 
 export function createRenyiLegalPageData<T extends { path: string; sourceUrl: string; title: string }>(
@@ -627,7 +758,7 @@ export function patchRenyiLegalPageHtml(html: string, pathname: string) {
     return html;
   }
 
-  const copy = LEGAL_PAGE_COPY[locale][pageKey];
+  const copy = getLegalPageCopy(locale, pageKey);
 
   return html
     .replace(

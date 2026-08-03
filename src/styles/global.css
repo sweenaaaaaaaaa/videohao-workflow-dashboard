@@ -22,7 +22,13 @@
   pointer-events: none;
 }
 
-.renyi-case-page-banner .page-banner-container,
+.renyi-case-page-banner .page-banner-container {
+  top: 58%;
+  bottom: auto;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
 .renyi-case-page-banner .page-banner-container .container,
 .renyi-case-page-banner .banner-tit-box {
   position: relative;
@@ -294,6 +300,23 @@
   color: #565a5e;
   font-size: 17px;
   line-height: 1.8;
+}
+
+.renyi-case-source-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+  color: #8b6500;
+  font-size: 15px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.renyi-case-source-link:hover,
+.renyi-case-source-link:focus {
+  color: #171717;
+  text-decoration: underline;
 }
 
 .renyi-case-detail__section {

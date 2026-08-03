@@ -16,7 +16,7 @@ projects: ['./tsconfig.json'],
     viteReact(),    
   ],  
   build: {    
-sourcemap: 'hidden',    
+sourcemap: process.env.SOURCE_MAPS === 'true' ? 'hidden' : false,
 rollupOptions: {      
 external(source) {        
 if (source.startsWith('node:')) {          

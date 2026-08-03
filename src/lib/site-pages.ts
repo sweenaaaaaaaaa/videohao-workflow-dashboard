@@ -1,4 +1,5 @@
-import { sitePages, type SitePageData } from '@/data/site-pages.generated';
+import { sitePageIndex } from '@/data/site-page-index.generated';
+import type { SitePageData } from '@/data/site-page-types';
 import { patchRenyiAboutHtml } from '@/lib/renyi-about-content';
 import {
   getRenyiCaseProject,
@@ -9,6 +10,7 @@ import {
 import { patchRenyiHomeHtml } from '@/lib/renyi-home-content';
 import {
   createRenyiLegalPageData,
+  getRenyiLegalPageTitle,
   patchRenyiLegalFooterLinksHtml,
   patchRenyiLegalPageHtml,
 } from '@/lib/renyi-legal-pages';
@@ -2744,11 +2746,11 @@ const RENYI_PRODUCT_SERIES_CARD_LABELS: Record<RenyiLocale, Record<string, strin
 };
 
 const RENYI_PRODUCT_SERIES_CARD_IMAGES: Record<string, string> = {
-  '/zuanjixilie/': '/renyi/product-category-raise-boring-site-card.png?v=20260509',
-  '/yougangxuangua/': '/renyi/product-category-hydraulic-suspension-cylinders.png?v=20260429',
-  '/pro_category/zaoyantaiche/': '/renyi/product-category-structural-components-fill.png?v=20260513-imagegen-no-shadow',
-  '/fuxuanjixilie/': '/renyi/product-category-mineral-processing-fill.png?v=20260429-fill',
-  '/pro_category/dexiafuwuche/': '/renyi/product-category-special-equipment-yard.png?v=20260429',
+  '/zuanjixilie/': '/renyi/product-category-raise-boring-site-card.jpg?v=20260801',
+  '/yougangxuangua/': '/renyi/product-category-hydraulic-suspension-cylinders.jpg?v=20260801',
+  '/pro_category/zaoyantaiche/': '/renyi/product-category-structural-components-fill.jpg?v=20260801',
+  '/fuxuanjixilie/': '/renyi/product-category-mineral-processing-fill.jpg?v=20260801',
+  '/pro_category/dexiafuwuche/': '/renyi/product-category-special-equipment-yard.jpg?v=20260801',
 };
 
 const RENYI_PRODUCT_SERIES_CARD_ALTS: Record<RenyiLocale, Record<string, string>> = {
@@ -4692,7 +4694,7 @@ function renyiHydraulicProductConfig(
     bodyClass,
     category,
     title,
-    cardImage: images[0] ?? variants[0]?.image ?? '/renyi/product-category-hydraulic-suspension-cylinders.png?v=20260429',
+    cardImage: images[0] ?? variants[0]?.image ?? '/renyi/product-category-hydraulic-suspension-cylinders.jpg?v=20260801',
     images: Array.from(new Set(images)),
     variants,
   };
@@ -6940,6 +6942,80 @@ function patchRenyiVideoFallbackHtml(html: string, pathname: string) {
   return html.replaceAll('您的浏览器不支持 video 标签。', RENYI_VIDEO_FALLBACK_TEXT[getRenyiLocale(pathname)]);
 }
 
+function upsertRenyiHtmlAttribute(tag: string, name: string, value: string) {
+  const attributePattern = new RegExp(`\\s${name}=(['"])[^'"]*\\1`, 'i');
+
+  if (attributePattern.test(tag)) {
+    return tag.replace(attributePattern, ` ${name}="${value}"`);
+  }
+
+  return tag.replace(/\s*\/>$|>$/, (ending) => ` ${name}="${value}"${ending.trimStart()}`);
+}
+
+const RENYI_AVIF_IMAGE_PATHS = new Set([
+  '/renyi/renyi-banner-culture-zh-1920x832.png',
+  '/renyi/renyi-banner-culture-en-1920x832.png',
+  '/renyi/renyi-banner-culture-ru-1920x832.png',
+  '/renyi/renyi-banner-culture-es-1920x832.png',
+  '/renyi/renyi-home-intro-factory.png',
+  '/renyi/product-category-raise-boring-site.png',
+  '/renyi/product-mineral-forced-air-flotation-indoor-01.png',
+  '/renyi/product-mineral-forced-air-flotation-indoor-02.png',
+  '/renyi/product-mineral-forced-air-flotation-indoor-03.png',
+  '/renyi/product-mineral-forced-air-flotation-indoor-04.png',
+  '/renyi/product-special-motor-dismounting-imagegen-side.jpg',
+]);
+
+function patchRenyiMediaLoadingHtml(html: string) {
+  let criticalImageAssigned = false;
+  const imageOptimizedHtml = html.replace(/<img\b[^>]*>/gi, (imgTag) => {
+    const src = imgTag.match(/\bsrc=(['"])([^'"]+)\1/i)?.[2] ?? '';
+    const isCritical = !criticalImageAssigned && /(?:banner|poster|certificate)/i.test(src);
+    let nextTag = upsertRenyiHtmlAttribute(imgTag, 'decoding', 'async');
+
+    if (!/\sloading=/i.test(nextTag)) {
+      nextTag = upsertRenyiHtmlAttribute(nextTag, 'loading', isCritical ? 'eager' : 'lazy');
+    }
+
+    if (isCritical) {
+      criticalImageAssigned = true;
+      nextTag = upsertRenyiHtmlAttribute(nextTag, 'fetchpriority', 'high');
+    }
+
+    const imagePath = src.split('?')[0] ?? src;
+    const avifPath = RENYI_AVIF_IMAGE_PATHS.has(imagePath)
+      ? imagePath.replace(/\.(?:png|jpe?g)$/i, '.avif')
+      : null;
+
+    return avifPath
+      ? `<picture class="renyi-optimized-picture"><source type="image/avif" srcset="${escapeHtmlAttribute(
+          avifPath,
+        )}">${nextTag}</picture>`
+      : nextTag;
+  });
+
+  return imageOptimizedHtml.replace(/<video\b[^>]*>[\s\S]*?<\/video>/gi, (videoHtml) => {
+    const isBannerVideo = /\bid=(['"])banner_video\1/i.test(videoHtml);
+    let nextHtml = videoHtml.replace(/<video\b[^>]*>/i, (videoTag) => {
+      let nextTag = upsertRenyiHtmlAttribute(videoTag, 'preload', isBannerVideo ? 'none' : 'metadata');
+      nextTag = upsertRenyiHtmlAttribute(nextTag, 'playsinline', '');
+      if (isBannerVideo) {
+        nextTag = upsertRenyiHtmlAttribute(nextTag, 'poster', RENYI_PROMO_VIDEO_POSTER_IMAGE);
+        nextTag = upsertRenyiHtmlAttribute(nextTag, 'data-renyi-deferred-video', 'true');
+      }
+      return nextTag;
+    });
+
+    if (isBannerVideo) {
+      nextHtml = nextHtml.replace(/<source\b[^>]*>/gi, (sourceTag) =>
+        sourceTag.replace(/\ssrc=(['"])([^'"]+)\1/i, ' data-src="$2"'),
+      );
+    }
+
+    return nextHtml;
+  });
+}
+
 function patchRenyiAboutMenuBackgroundHtml(html: string) {
   return html.replaceAll(
     /background-image:\s*url\(https:\/\/snapshot\.local(?:\/(?:en|ru|es))?\/wp-content\/uploads\/2022\/09\/menubg\.jpg\);/g,
@@ -7156,6 +7232,95 @@ const RENYI_PRODUCT_CASE_BUTTON_LABELS: Record<RenyiLocale, string> = {
   ru: 'Примеры проектов',
   es: 'Casos de éxito',
 };
+
+const RENYI_PRODUCT_FAQ_COPY: Record<
+  RenyiLocale,
+  { title: string; items: Array<{ question: string; answer: string }> }
+> = {
+  zh: {
+    title: '常见问题',
+    items: [
+      {
+        question: '产品能否根据现场工况定制？',
+        answer: '可以。仁毅会根据设备接口、工作环境、目标参数和交付范围进行技术选型，最终配置以双方确认的技术文件为准。',
+      },
+      {
+        question: '如何获取技术方案和报价？',
+        answer: '请提供使用场景、设备型号、关键尺寸或目标参数，并通过页面询盘入口联系仁毅，技术与销售团队会进一步确认需求。',
+      },
+    ],
+  },
+  en: {
+    title: 'Frequently Asked Questions',
+    items: [
+      {
+        question: 'Can the product be customized for site conditions?',
+        answer: 'Yes. Renyi confirms the equipment interface, operating environment, target parameters and delivery scope before finalizing the technical documents.',
+      },
+      {
+        question: 'How can I request a technical proposal and quotation?',
+        answer: 'Share the application, equipment model, key dimensions or target parameters through the inquiry link. Our technical and sales teams will confirm the requirements with you.',
+      },
+    ],
+  },
+  ru: {
+    title: 'Частые вопросы',
+    items: [
+      {
+        question: 'Можно ли адаптировать изделие под условия площадки?',
+        answer: 'Да. Renyi уточняет интерфейсы оборудования, рабочую среду, целевые параметры и объем поставки до утверждения технической документации.',
+      },
+      {
+        question: 'Как запросить техническое предложение и цену?',
+        answer: 'Передайте через форму запроса область применения, модель оборудования, ключевые размеры или целевые параметры. Техническая и коммерческая команды уточнят требования.',
+      },
+    ],
+  },
+  es: {
+    title: 'Preguntas frecuentes',
+    items: [
+      {
+        question: '¿Se puede adaptar el producto a las condiciones del sitio?',
+        answer: 'Sí. Renyi confirma las interfaces del equipo, el entorno de trabajo, los parámetros objetivo y el alcance de suministro antes de aprobar la documentación técnica.',
+      },
+      {
+        question: '¿Cómo solicito una propuesta técnica y una cotización?',
+        answer: 'Envíe mediante el enlace de consulta la aplicación, el modelo del equipo, las dimensiones clave o los parámetros objetivo. Los equipos técnico y comercial confirmarán los requisitos.',
+      },
+    ],
+  },
+};
+
+function isRenyiProductDetailPath(pathname: string) {
+  return Boolean(
+    getRenyiRaiseBoringTrialProductConfig(pathname) ||
+      getRenyiHydraulicProductConfig(pathname) ||
+      getRenyiMineralProductConfig(pathname) ||
+      getRenyiSpecialEquipmentProductConfig(pathname) ||
+      getRenyiStructuralProductConfig(pathname),
+  );
+}
+
+function patchRenyiProductFaqHtml(html: string, pathname: string) {
+  if (!isRenyiProductDetailPath(pathname) || html.includes('class="renyi-product-faq"')) {
+    return html;
+  }
+
+  const copy = RENYI_PRODUCT_FAQ_COPY[getRenyiLocale(pathname)];
+  const itemsHtml = copy.items
+    .map(
+      ({ question, answer }) =>
+        `<details class="renyi-product-faq__item"><summary>${escapeHtmlText(question)}</summary><p>${escapeHtmlText(
+          answer,
+        )}</p></details>`,
+    )
+    .join('');
+  const section = `<section class="renyi-product-faq"><div class="container"><h2>${escapeHtmlText(
+    copy.title,
+  )}</h2>${itemsHtml}</div></section>`;
+
+  return html.includes('<footer') ? html.replace('<footer', `${section}<footer`) : `${html}${section}`;
+}
 
 function patchRenyiProductCaseButtonHtml(html: string, pathname: string) {
   if (!html.includes('class="go-inquiry"') || html.includes('class="go-cases"')) {
@@ -7614,6 +7779,13 @@ function renderRenyiCaseDetailContentHtml(project: RenyiCaseProject, locale: Ren
         )
         .join(' ')} </div> </section>`
     : '';
+  const sourceHtml = project.source
+    ? `<a class="renyi-case-source-link" href="${escapeHtmlAttribute(
+        project.source.url,
+      )}" target="_blank" rel="noopener noreferrer nofollow">${escapeHtmlText(
+        project.source.label[locale],
+      )}<span aria-hidden="true">↗</span></a>`
+    : '';
 
   return `<div class="page-content renyi-case-page-content renyi-case-detail-page"> <section class="renyi-case-detail"> <div class="container"> <a class="renyi-case-detail__back" href="${indexHref}"><span aria-hidden="true">‹</span>${escapeHtmlText(
     ui.back,
@@ -7621,7 +7793,7 @@ function renderRenyiCaseDetailContentHtml(project: RenyiCaseProject, locale: Ren
     project.category[locale],
   )}</p> <h2>${escapeHtmlText(project.title[locale])}</h2> <div>${escapeHtmlText(
     project.summary[locale],
-  )}</div> </header> <section class="renyi-case-detail__section renyi-case-narrative"> <h2>${escapeHtmlText(
+  )}</div> ${sourceHtml} </header> <section class="renyi-case-detail__section renyi-case-narrative"> <h2>${escapeHtmlText(
     ui.details,
   )}</h2> <div class="renyi-case-narrative__grid"> ${detailsHtml} </div> </section> <section class="renyi-case-detail__section"> <h2>${escapeHtmlText(
     ui.facts,
@@ -9828,6 +10000,7 @@ export function patchRenyiHtml(html: string, pathname: string) {
   patchedHtml = patchRenyiStructuralProductHtml(patchedHtml, pathname);
   patchedHtml = patchRenyiProductInquiryLinksHtml(patchedHtml);
   patchedHtml = patchRenyiProductCaseButtonHtml(patchedHtml, pathname);
+  patchedHtml = patchRenyiProductFaqHtml(patchedHtml, pathname);
   patchedHtml = patchRenyiNewsBannerHtml(patchedHtml, pathname);
   patchedHtml = patchRenyiServiceQualityHtml(patchedHtml, pathname);
   patchedHtml = patchRenyiNewsPageHtml(patchedHtml, pathname);
@@ -9876,7 +10049,8 @@ export function patchRenyiHtml(html: string, pathname: string) {
   const productSeriesHtml = patchRenyiProductSeriesCardLabelsHtml(localizedHtml, pathname);
   const shortPathHtml = patchRenyiShortPathAliasLinksHtml(productSeriesHtml, pathname);
   const sanitizedHtml = sanitizeRenyiSnapshotHtml(shortPathHtml);
-  const seoH1Html = patchRenyiSeoH1Html(sanitizedHtml, pathname);
+  const mediaOptimizedHtml = patchRenyiMediaLoadingHtml(sanitizedHtml);
+  const seoH1Html = patchRenyiSeoH1Html(mediaOptimizedHtml, pathname);
 
   return patchRenyiImageAltHtml(patchRenyiInternalNewsPathsHtml(patchRenyiHeaderMenuNativeTooltipHtml(seoH1Html)), pathname);
 }
@@ -9912,7 +10086,7 @@ function getRenyiAlternateLinks(pathname: string) {
   const barePath = getRenyiBareLocalePath(pathname);
   const alternates = RENYI_LOCALES.flatMap((locale) => {
     const localizedPath = withRenyiLocalePath(barePath, locale);
-    const page = getSitePage(localizedPath);
+    const page = getSitePageMetadata(localizedPath);
 
     return page
       ? [
@@ -9971,7 +10145,11 @@ function getRenyiSeoPageType(pathname: string) {
     return 'product';
   }
 
-  if (barePath.startsWith('/pro_category/') || /\/(?:zuanjixilie|yougangxuangua|fuxuanjixilie|jiegouxilie|zhuanyongxilie)\//.test(barePath)) {
+  if (
+    barePath === '/chanpinzhanshi/' ||
+    barePath.startsWith('/pro_category/') ||
+    /\/(?:zuanjixilie|yougangxuangua|fuxuanjixilie|jiegouxilie|zhuanyongxilie)\//.test(barePath)
+  ) {
     return 'category';
   }
 
@@ -9980,6 +10158,46 @@ function getRenyiSeoPageType(pathname: string) {
   }
 
   return 'page';
+}
+
+const RENYI_HOME_SEO_TITLES: Record<RenyiLocale, string> = {
+  zh: `${RENYI_COMPANY_NAME} - 天井钻机与矿山装备制造商`,
+  en: `Raise Boring Machines & Mining Equipment - ${RENYI_COMPANY_NAMES.en}`,
+  ru: `Оборудование Raise Boring и горная техника - ${RENYI_COMPANY_NAMES.ru}`,
+  es: `Equipos Raise Boring y maquinaria minera - ${RENYI_COMPANY_NAMES.es}`,
+};
+
+const RENYI_CORE_SEO_TITLES: Record<string, Record<RenyiLocale, string>> = {
+  '/chanpinzhanshi/': {
+    zh: '产品中心',
+    en: 'Products',
+    ru: 'Продукция',
+    es: 'Productos',
+  },
+  '/category/xinwenzhongxin/': {
+    zh: '新闻中心',
+    en: 'News',
+    ru: 'Новости',
+    es: 'Noticias',
+  },
+};
+
+function getRenyiExplicitSeoTitle(pathname: string, locale: RenyiLocale) {
+  const barePath = getRenyiBareLocalePath(pathname);
+
+  if (barePath === '/') {
+    return RENYI_HOME_SEO_TITLES[locale];
+  }
+
+  const legalTitle = getRenyiLegalPageTitle(pathname);
+
+  if (legalTitle) {
+    return `${legalTitle} - ${RENYI_COMPANY_NAMES[locale]}`;
+  }
+
+  const coreTitle = RENYI_CORE_SEO_TITLES[barePath]?.[locale];
+
+  return coreTitle ? `${coreTitle} - ${RENYI_COMPANY_NAMES[locale]}` : null;
 }
 
 function getRenyiMetaDescription(pathname: string, title: string, locale: RenyiLocale) {
@@ -10551,7 +10769,7 @@ function getRenyiFallbackImageAlt(src: string, pathname: string) {
   }
 
   const locale = getRenyiLocale(pathname);
-  const page = getSitePage(pathname);
+  const page = getSitePageMetadata(pathname);
   const pageTitle = getRenyiSeoHeading(patchRenyiTitle(page?.title || DEFAULT_SITE_TITLE), locale);
   const cleanSrc = (src.split('?')[0] ?? src).split('#')[0] ?? src;
   const fileName = cleanSrc.split('/').pop()?.replace(/\.(png|jpe?g|gif|webp|svg)$/i, '') ?? '';
@@ -10861,13 +11079,13 @@ function patchRenyiInternalNewsPathsHtml(html: string) {
   });
 }
 
-function getRenyiTemplatePage(templatePath: string) {
+function getRenyiTemplatePage(sitePages: Record<string, SitePageData>, templatePath: string) {
   const unlocalizedTemplatePath = templatePath.replace(/^\/(?:en|ru|es)(?=\/)/, '');
 
   return sitePages[templatePath] ?? sitePages[unlocalizedTemplatePath] ?? null;
 }
 
-export function getSitePage(pathname: string): SitePageData | null {
+function getSitePageFromPages(sitePages: Record<string, SitePageData>, pathname: string): SitePageData | null {
   const normalizedPath = normalizeSitePath(getRenyiLegacyPathAlias(pathname) ?? pathname);
 
   if (isRenyiRemovedSparePartsPath(normalizedPath)) {
@@ -10877,7 +11095,7 @@ export function getSitePage(pathname: string): SitePageData | null {
   if (isRenyiCasePath(normalizedPath)) {
     const locale = getRenyiLocale(normalizedPath);
     const project = getRenyiCaseProject(normalizedPath);
-    const templatePage = getRenyiTemplatePage(withRenyiLocalePath('/fuwuzhichi/', locale));
+    const templatePage = getRenyiTemplatePage(sitePages, withRenyiLocalePath('/fuwuzhichi/', locale));
     const pageTitle = project?.title[locale] ?? RENYI_CASE_PAGE_COPY[locale].pageTitle;
 
     return templatePage
@@ -10891,7 +11109,7 @@ export function getSitePage(pathname: string): SitePageData | null {
   }
 
   const templatePath = getRenyiSiteTemplatePath(normalizedPath);
-  const templatePage = getRenyiTemplatePage(templatePath);
+  const templatePage = getRenyiTemplatePage(sitePages, templatePath);
   const structuralProductTemplate = getRenyiStructuralProductConfig(normalizedPath) ? templatePage : null;
   const mineralProductTemplate = getRenyiMineralProductConfig(normalizedPath) ? templatePage : null;
   const specialEquipmentProductTemplate = getRenyiSpecialEquipmentProductConfig(normalizedPath) ? templatePage : null;
@@ -10926,14 +11144,46 @@ export function getSitePage(pathname: string): SitePageData | null {
     return page;
   }
 
-  const legalTemplate = sitePages['/faluwenjian/1361/'] ?? sitePages['/'];
+  const locale = getRenyiLocale(normalizedPath);
+  const legalTemplate =
+    sitePages[withRenyiLocalePath('/faluwenjian/1361/', locale)] ??
+    sitePages[withRenyiLocalePath('/', locale)] ??
+    sitePages['/faluwenjian/1361/'] ??
+    sitePages['/'];
 
   return legalTemplate ? createRenyiLegalPageData(legalTemplate, normalizedPath) : null;
 }
 
+export function getSitePageMetadata(pathname: string) {
+  return getSitePageFromPages(sitePageIndex, pathname);
+}
+
+export async function loadSitePage(pathname: string) {
+  const locale = getRenyiLocale(pathname);
+  const module =
+    locale === 'en'
+      ? await import('@/data/site-pages.en.generated')
+      : locale === 'ru'
+        ? await import('@/data/site-pages.ru.generated')
+        : locale === 'es'
+          ? await import('@/data/site-pages.es.generated')
+          : await import('@/data/site-pages.zh.generated');
+
+  const page = getSitePageFromPages(module.sitePages, pathname);
+
+  return page
+    ? {
+        ...page,
+        sourceUrl: getRenyiAbsoluteUrl(pathname),
+        title: patchRenyiTitle(page.title),
+        bodyHtml: patchRenyiHtml(page.bodyHtml, pathname),
+      }
+    : null;
+}
+
 export function getDocumentMetadata(pathname: string) {
   const canonicalPath = getRenyiCanonicalPathname(pathname);
-  const page = getSitePage(canonicalPath);
+  const page = getSitePageMetadata(canonicalPath);
   const raiseBoringProductConfig = getRenyiRaiseBoringTrialProductConfig(canonicalPath);
   const hydraulicProductConfig = getRenyiHydraulicProductConfig(canonicalPath);
   const hydraulicCategoryConfig = getRenyiHydraulicCategoryConfig(canonicalPath);
@@ -10946,7 +11196,8 @@ export function getDocumentMetadata(pathname: string) {
   const isServicePage = isRenyiServicePath(canonicalPath);
   const isRaiseBoringCategoryPage = isRenyiRaiseBoringCategoryPath(canonicalPath);
   const locale = getRenyiLocale(canonicalPath);
-  const title = raiseBoringProductConfig
+  const explicitTitle = getRenyiExplicitSeoTitle(canonicalPath, locale);
+  const title = explicitTitle ?? (raiseBoringProductConfig
     ? `${raiseBoringProductConfig.copy[locale].title} - ${RENYI_COMPANY_NAMES[locale]}`
     : hydraulicProductConfig
       ? `${hydraulicProductConfig.title[locale]} - ${RENYI_COMPANY_NAMES[locale]}`
@@ -10966,15 +11217,90 @@ export function getDocumentMetadata(pathname: string) {
                     ? `${structuralCategoryConfig.copy[locale].title} - ${RENYI_COMPANY_NAMES[locale]}`
                     : isRaiseBoringCategoryPage
                       ? `${RENYI_RAISE_BORING_BANNER_TEXT[locale].title} - ${RENYI_COMPANY_NAMES[locale]}`
-                    : patchRenyiTitle(page?.title || DEFAULT_SITE_TITLE);
+                    : patchRenyiTitle(page?.title || DEFAULT_SITE_TITLE));
   const bodyClass = page?.bodyClass || 'home blog ind';
 
   const seoTitle = cleanRenyiTitleForSeo(patchRenyiNewsPageTitle(title, canonicalPath));
+  const description = getRenyiMetaDescription(canonicalPath, seoTitle, locale);
   const h1 = getRenyiSeoPageType(canonicalPath) === 'home' ? RENYI_COMPANY_NAMES[locale] : getRenyiSeoHeading(seoTitle, locale);
+  const productName =
+    raiseBoringProductConfig?.copy[locale].title ??
+    hydraulicProductConfig?.title[locale] ??
+    mineralProductConfig?.title[locale] ??
+    specialEquipmentProductConfig?.title[locale] ??
+    structuralProductConfig?.copy[locale].title;
+  const productImages =
+    raiseBoringProductConfig?.images ??
+    hydraulicProductConfig?.images ??
+    mineralProductConfig?.images ??
+    specialEquipmentProductConfig?.images ??
+    structuralProductConfig?.images ??
+    [];
+  const productCategory =
+    raiseBoringProductConfig ? RENYI_RAISE_BORING_BANNER_TEXT[locale].title :
+    hydraulicProductConfig?.category[locale] ??
+    mineralProductConfig?.category[locale] ??
+    specialEquipmentProductConfig?.category[locale] ??
+    (structuralProductConfig ? RENYI_STRUCTURAL_CATEGORY_COPY[locale].title : undefined);
+  const canonicalUrl = getRenyiAbsoluteUrl(canonicalPath);
+  const caseProject = getRenyiCaseProject(canonicalPath);
+  const homeLabels: Record<RenyiLocale, string> = { zh: '首页', en: 'Home', ru: 'Главная', es: 'Inicio' };
+  const productLabels: Record<RenyiLocale, string> = { zh: '产品', en: 'Products', ru: 'Продукция', es: 'Productos' };
+  const caseLabels: Record<RenyiLocale, string> = { zh: '案例', en: 'Cases', ru: 'Проекты', es: 'Proyectos' };
+  const breadcrumbItems = [
+    { name: homeLabels[locale], url: getRenyiAbsoluteUrl(withRenyiLocalePath('/', locale)) },
+    ...(productName
+      ? [{ name: productLabels[locale], url: getRenyiAbsoluteUrl(withRenyiLocalePath('/chanpinzhanshi/', locale)) }]
+      : isRenyiCasePath(canonicalPath)
+        ? [{ name: caseLabels[locale], url: getRenyiAbsoluteUrl(withRenyiLocalePath('/anlizhanshi/', locale)) }]
+        : []),
+    ...(canonicalPath === '/' || /^\/(?:en|ru|es)\/$/.test(canonicalPath)
+      ? []
+      : [{ name: caseProject?.title[locale] ?? productName ?? seoTitle, url: canonicalUrl }]),
+  ];
+  const structuredData: Array<Record<string, unknown>> = [];
+
+  if (breadcrumbItems.length > 1) {
+    structuredData.push({
+      '@type': 'BreadcrumbList',
+      '@id': `${canonicalUrl}#breadcrumb`,
+      itemListElement: breadcrumbItems.map((item, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        name: item.name,
+        item: item.url,
+      })),
+    });
+  }
+
+  if (productName) {
+    structuredData.push(
+      {
+        '@type': 'Product',
+        '@id': `${canonicalUrl}#product`,
+        name: productName,
+        description,
+        url: canonicalUrl,
+        image: productImages.map((image) => new URL(image, RENYI_SITE_ORIGIN).href),
+        category: productCategory,
+        brand: { '@type': 'Brand', name: 'Renyi Machinery' },
+        manufacturer: { '@id': `${RENYI_SITE_ORIGIN}/#organization` },
+      },
+      {
+        '@type': 'FAQPage',
+        '@id': `${canonicalUrl}#faq`,
+        mainEntity: RENYI_PRODUCT_FAQ_COPY[locale].items.map(({ question, answer }) => ({
+          '@type': 'Question',
+          name: question,
+          acceptedAnswer: { '@type': 'Answer', text: answer },
+        })),
+      },
+    );
+  }
 
   return {
     title: seoTitle,
-    description: getRenyiMetaDescription(canonicalPath, seoTitle, locale),
+    description,
     keywords: [
       RENYI_COMPANY_NAMES[locale],
       'Renyi Machinery',
@@ -10986,7 +11312,8 @@ export function getDocumentMetadata(pathname: string) {
     ].join(', '),
     h1,
     htmlLang: RENYI_HTML_LANGS[locale],
-    canonicalUrl: getRenyiAbsoluteUrl(canonicalPath),
+    canonicalUrl,
+    structuredData,
     alternates: getRenyiAlternateLinks(canonicalPath),
     bodyClass: raiseBoringProductConfig
       ? `${bodyClass} renyi-raise-boring-product ${raiseBoringProductConfig.bodyClass}`

@@ -50,8 +50,10 @@ const PRODUCT_PATHS = [
   '/anlizhanshi/case-06/',
   '/anlizhanshi/case-07/',
   '/anlizhanshi/case-08/',
-  '/anlizhanshi/case-09/',
   '/anlizhanshi/case-10/',
+  '/anlizhanshi/case-11/',
+  '/anlizhanshi/case-12/',
+  '/anlizhanshi/case-13/',
 ];
 
 const LEGAL_PATHS = ['/faluwenjian/1361/', '/faluwenjian/1362/', '/faluwenjian/1363/'];

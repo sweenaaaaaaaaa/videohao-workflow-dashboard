@@ -14,8 +14,6 @@ type NewsFeed = {
   url: string;
 };
 
-const YAHOO_CAT_NEWS_FEED =
-  'https://feeds.finance.yahoo.com/rss/2.0/headline?s=CAT&region=US&lang=en-US';
 const RECENT_NEWS_DAYS = 45;
 
 function googleNewsFeed(query: string, hl: string, gl: string, ceid: string) {
@@ -27,49 +25,49 @@ function googleNewsFeed(query: string, hl: string, gl: string, ceid: string) {
   return url.toString();
 }
 
-const CAT_NEWS_FEEDS: Record<NewsLocale, NewsFeed[]> = {
+const INDUSTRY_NEWS_FEEDS: Record<NewsLocale, NewsFeed[]> = {
   zh: [
     {
-      source: 'Google News Global',
-      url: googleNewsFeed('global mining equipment construction machinery when:30d', 'en-US', 'US', 'US:en'),
+      source: 'Google News China',
+      url: googleNewsFeed('矿山装备 工程机械 制造 出口 when:30d', 'zh-CN', 'CN', 'CN:zh-Hans'),
     },
     {
       source: 'Google News Global',
-      url: googleNewsFeed('underground mining equipment raise boring machinery when:45d', 'en-US', 'US', 'US:en'),
+      url: googleNewsFeed('"mining equipment" "raise boring" when:45d', 'en-US', 'US', 'US:en'),
     },
     {
       source: 'Google News Global',
-      url: googleNewsFeed('heavy machinery mining equipment manufacturers when:45d', 'en-US', 'US', 'US:en'),
+      url: googleNewsFeed('"underground mining" equipment automation when:45d', 'en-US', 'US', 'US:en'),
     },
     {
       source: 'Google News Global',
-      url: googleNewsFeed('global mining equipment construction machinery export when:30d', 'en-US', 'US', 'US:en'),
+      url: googleNewsFeed('"construction machinery" manufacturing export when:30d', 'en-US', 'US', 'US:en'),
     },
     {
       source: 'Google News Global',
-      url: googleNewsFeed('mining equipment Africa Latin America Middle East when:45d', 'en-US', 'US', 'US:en'),
+      url: googleNewsFeed('"mining equipment" Africa Latin America Middle East when:45d', 'en-US', 'US', 'US:en'),
     },
     {
       source: 'Google News Global',
-      url: googleNewsFeed('Caterpillar Komatsu Epiroc Sandvik mining equipment when:30d', 'en-US', 'US', 'US:en'),
+      url: googleNewsFeed('"heavy equipment" manufacturing technology when:30d', 'en-US', 'US', 'US:en'),
     },
     {
       source: 'Google News Global',
-      url: googleNewsFeed('overseas construction machinery mining equipment export when:45d', 'en-US', 'US', 'US:en'),
+      url: googleNewsFeed('"mining machinery" global export when:45d', 'en-US', 'US', 'US:en'),
     },
   ],
   en: [
     {
       source: 'Google News',
-      url: googleNewsFeed('mining equipment construction machinery manufacturing when:30d', 'en-US', 'US', 'US:en'),
+      url: googleNewsFeed('"mining equipment" manufacturing technology when:30d', 'en-US', 'US', 'US:en'),
     },
     {
       source: 'Google News',
-      url: googleNewsFeed('Caterpillar Komatsu construction mining equipment when:30d', 'en-US', 'US', 'US:en'),
+      url: googleNewsFeed('"raise boring" OR "underground mining equipment" when:45d', 'en-US', 'US', 'US:en'),
     },
     {
-      source: 'Yahoo Finance',
-      url: YAHOO_CAT_NEWS_FEED,
+      source: 'Google News',
+      url: googleNewsFeed('"construction machinery" manufacturing export when:30d', 'en-US', 'US', 'US:en'),
     },
   ],
   ru: [
@@ -109,22 +107,23 @@ const RELEVANCE_TERMS: Record<NewsLocale, string[]> = {
     'earthmoving equipment',
     'mine fleet',
     'manufacturer',
-    'caterpillar',
-    'komatsu',
-    'epiroc',
-    'sandvik',
-    'liebherr',
+    'raise boring',
+    'underground mining',
+    'mine automation',
+    'drilling equipment',
+    'hydraulic equipment',
   ],
   en: [
-    'caterpillar',
-    'komatsu',
-    'deere',
     'mining',
     'equipment',
     'construction',
     'machinery',
     'manufacturing',
     'industrial',
+    'raise boring',
+    'underground',
+    'automation',
+    'hydraulic',
   ],
   ru: ['горн', 'шахт', 'оборуд', 'техник', 'машиностро', 'промышлен'],
   es: ['minería', 'minero', 'equipos', 'maquinaria', 'construcción', 'fabricación', 'industrial'],
@@ -145,8 +144,34 @@ const EXCLUDED_NEWS_TERMS: Record<NewsLocale, string[]> = {
     'blockchain',
     'beer',
     'diageo',
+    'stock',
+    'shares',
+    'dividend',
+    'rating',
+    'analyst',
+    'earnings',
+    'valuation',
+    'price target',
+    'wall street',
+    'nyse:',
+    'ad hoc news',
   ],
-  en: ['stock', 'shares', 'dividend', 'rating', 'analyst', 'cramer', 'zacks', 'invested', 'wall street estimates'],
+  en: [
+    'stock',
+    'shares',
+    'dividend',
+    'rating',
+    'analyst',
+    'earnings',
+    'valuation',
+    'price target',
+    'cramer',
+    'zacks',
+    'invested',
+    'wall street',
+    'nyse:',
+    'ad hoc news',
+  ],
   ru: ['акци', 'дивиденд', 'аналитик'],
   es: ['acciones', 'dividendo', 'analista', 'bolsa'],
 };
@@ -292,7 +317,7 @@ function prepareNewsItems(items: CatNewsItem[], locale: NewsLocale) {
 
 async function handler({ request }: { request: Request }) {
   const locale = getLocaleFromRequest(request);
-  const feeds = CAT_NEWS_FEEDS[locale] ?? CAT_NEWS_FEEDS.zh;
+  const feeds = INDUSTRY_NEWS_FEEDS[locale] ?? INDUSTRY_NEWS_FEEDS.zh;
   const errors: string[] = [];
   const feedResults = await Promise.allSettled(feeds.map((feed) => fetchFeed(feed, locale)));
   const rawItems: CatNewsItem[] = [];
@@ -314,7 +339,7 @@ async function handler({ request }: { request: Request }) {
     return Response.json(
       {
         source: [...new Set(feeds.map((feed) => feed.source))].join(', '),
-        symbol: 'NYSE:CAT',
+          symbol: 'NYSE:CAT',
         locale,
         updatedAt: new Date().toISOString(),
         recentDays: RECENT_NEWS_DAYS,
@@ -331,7 +356,7 @@ async function handler({ request }: { request: Request }) {
   return Response.json(
     {
       source: feeds.map((feed) => feed.source).join(', '),
-      symbol: 'NYSE:CAT',
+        symbol: 'NYSE:CAT',
       locale,
       updatedAt: new Date().toISOString(),
       items: [],

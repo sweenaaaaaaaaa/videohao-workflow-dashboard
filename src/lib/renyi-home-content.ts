@@ -60,10 +60,10 @@ const HOME_PATH_LOCALES: Record<string, Locale> = {
 };
 
 const PRODUCT_CATEGORY_SITE_IMAGE = '/renyi/product-category-raise-boring-site.png?v=20260428';
-const PRODUCT_CATEGORY_SUSPENSION_IMAGE = '/renyi/product-category-hydraulic-suspension-cylinders.png?v=20260429';
-const PRODUCT_CATEGORY_SPECIAL_IMAGE = '/renyi/product-category-special-equipment-yard.png?v=20260429';
-const PRODUCT_CATEGORY_MINERAL_IMAGE = '/renyi/product-category-mineral-processing-fill.png?v=20260429-fill';
-const PRODUCT_CATEGORY_STRUCTURAL_IMAGE = '/renyi/product-category-structural-components-fill.png?v=20260429-fill';
+const PRODUCT_CATEGORY_SUSPENSION_IMAGE = '/renyi/product-category-hydraulic-suspension-cylinders.jpg?v=20260801';
+const PRODUCT_CATEGORY_SPECIAL_IMAGE = '/renyi/product-category-special-equipment-yard.jpg?v=20260801';
+const PRODUCT_CATEGORY_MINERAL_IMAGE = '/renyi/product-category-mineral-processing-fill.jpg?v=20260801';
+const PRODUCT_CATEGORY_STRUCTURAL_IMAGE = '/renyi/product-category-structural-components-fill.jpg?v=20260801';
 const HOME_INTRO_FACTORY_IMAGE = '/renyi/renyi-home-intro-factory.png';
 const SOLUTION_MAP_IMAGE = '/renyi/renyi-ind03-map-changsha-v2.svg';
 const NEWS_MONTH_LABELS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
