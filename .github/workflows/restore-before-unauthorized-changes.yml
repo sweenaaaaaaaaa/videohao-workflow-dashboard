@@ -1,0 +1,28 @@
+name: Restore Renyi site before unauthorized changes
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/restore-before-unauthorized-changes.yml
+
+permissions:
+  contents: write
+
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Restore exact pre-change tree
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm -r .
+          git checkout a5e8ab3f75364afca60bfdfb7149c0f5fb8491cb -- .
+          git commit -m "Restore Renyi website before unauthorized changes"
+          git push origin HEAD:main
