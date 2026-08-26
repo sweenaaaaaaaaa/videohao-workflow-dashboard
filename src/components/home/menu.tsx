@@ -269,7 +269,7 @@ export const Menu = () => {
           className="sub-nav"
           style={{
             backgroundImage:
-              'linear-gradient(90deg, rgba(244, 244, 242, 0.96) 0%, rgba(244, 244, 242, 0.88) 28%, rgba(244, 244, 242, 0.54) 42%, rgba(244, 244, 242, 0.08) 60%, rgba(244, 244, 242, 0) 74%), url("/renyi/renyi-quality-control-lab-banner-imagegen-ad.jpg")',
+              'linear-gradient(90deg, rgba(244, 244, 242, 0.96) 0%, rgba(244, 244, 242, 0.88) 28%, rgba(244, 244, 242, 0.54) 42%, rgba(244, 244, 242, 0.08) 60%, rgba(244, 244, 242, 0) 74%), url("/renyi/cases/case-08/image-01.jpg")',
             backgroundRepeat: 'no-repeat',
             backgroundSize: '100% 100%, 100% 100%',
             backgroundPosition: 'center center',
