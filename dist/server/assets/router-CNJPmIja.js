@@ -1,9 +1,13 @@
 import { useLocation, createRootRoute, Outlet, Scripts, createFileRoute, lazyRouteComponent, redirect, notFound, createRouter } from "@tanstack/react-router";
-import { jsxs, jsx } from "react/jsx-runtime";
+import { jsx, jsxs } from "react/jsx-runtime";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { createTRPCClient, loggerLink, splitLink, httpBatchLink } from "@trpc/client";
+import { observable } from "@trpc/server/observable";
+import superjson from "superjson";
+import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
 import { useEffect } from "react";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { initTRPC } from "@trpc/server";
-import superjson from "superjson";
 import z from "zod";
 const globalCss = `:root {
   --radius: 0.625rem;
@@ -4278,233 +4282,39 @@ body .header-box .top-block .renyi-header-action-icon {
     transition: none;
   }
 }
-/* About qualifications: grouped to keep the long certificate archive scannable. */
-.renyi-qualification-section {
-  background: #f5f5f2;
-}
-
-.renyi-qualification-lead {
-  max-width: 720px;
-  margin: 0 0 28px;
-  color: #4b5563;
-  font-size: 16px;
-  line-height: 1.8;
-}
-
-.renyi-qualification-groups {
-  display: grid;
-  gap: 14px;
-}
-
-.renyi-qualification-group {
-  border: 1px solid #d8d8d2;
-  background: #fff;
-}
-
-.renyi-qualification-group summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  padding: 18px 22px;
-  color: #1f2328;
-  font-size: 18px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.renyi-qualification-group summary span {
-  color: #a56d00;
-  font-size: 14px;
-}
-
-.renyi-qualification-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 18px;
-  padding: 4px 22px 24px;
-}
-
-.renyi-qualification-card {
-  display: grid;
-  gap: 12px;
-  color: #1f2328;
-}
-
-.renyi-qualification-card img {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: contain;
-  border: 1px solid #ecece7;
-  background: #fafaf8;
-}
-
-.renyi-qualification-card strong {
-  font-size: 14px;
-  line-height: 1.55;
-}
-
-.renyi-qualification-card:hover strong,
-.renyi-qualification-card:focus-visible strong {
-  color: #9a6500;
-}
-
-@media (max-width: 991px) {
-  .renyi-qualification-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 575px) {
-  .renyi-qualification-grid {
-    grid-template-columns: 1fr;
-    padding-inline: 14px;
-  }
-
-  .renyi-qualification-group summary {
-    padding-inline: 14px;
-  }
-}
-
-.renyi-acquisition {
-  padding: 76px 0;
-  background: #1d2024;
-  color: #f4f4f1;
-}
-
-.renyi-acquisition-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.25fr);
-  gap: 72px;
-  align-items: start;
-}
-
-.renyi-acquisition-intro h2 {
-  margin: 0 0 18px;
-  max-width: 11em;
-  color: #f4f4f1;
-  font-size: clamp(32px, 4vw, 52px);
-  line-height: 1.12;
-}
-
-.renyi-acquisition-intro p {
-  max-width: 560px;
-  margin: 0;
-  color: #c4c6c8;
-  font-size: 16px;
-  line-height: 1.8;
-}
-
-.renyi-acquisition-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 30px;
-}
-
-.renyi-acquisition-actions a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 48px;
-  padding: 0 22px;
-  border: 1px solid #d99a00;
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-.renyi-acquisition-primary {
-  background: #d99a00;
-  color: #1d2024;
-}
-
-.renyi-acquisition-secondary {
-  color: #f4f4f1;
-}
-
-.renyi-acquisition-list {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0 28px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.renyi-acquisition-list li {
-  display: grid;
-  grid-template-columns: 44px 1fr;
-  gap: 14px;
-  align-items: baseline;
-  min-height: 84px;
-  padding: 20px 0;
-  border-bottom: 1px solid #3b3e42;
-}
-
-.renyi-acquisition-list li:last-child {
-  grid-column: 1 / -1;
-}
-
-.renyi-acquisition-list span {
-  color: #d99a00;
-  font-size: 13px;
-  font-variant-numeric: tabular-nums;
-}
-
-.renyi-acquisition-list strong {
-  color: #f4f4f1;
-  font-size: 18px;
-  line-height: 1.45;
-}
-
-.guestbook .contact-page__form-input-box label {
-  display: block;
-  margin-bottom: 8px;
-  color: #25282b;
-  font-size: 14px;
-  font-weight: 700;
-}
-
-.guestbook .contact-page__form-input-box textarea {
-  width: 100%;
-  min-height: 150px;
-  resize: vertical;
-}
-
-.renyi-inquiry-help {
-  margin: 8px 0 18px;
-  color: #555b61;
-  font-size: 13px;
-  line-height: 1.7;
-}
-
-.renyi-inquiry-help a {
-  color: #8a5b00;
-  font-weight: 700;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-@media (max-width: 767px) {
-  .renyi-acquisition {
-    padding: 52px 0;
-  }
-
-  .renyi-acquisition-layout,
-  .renyi-acquisition-list {
-    grid-template-columns: 1fr;
-    gap: 30px;
-  }
-
-  .renyi-acquisition-list {
-    gap: 0;
-  }
-
-  .renyi-acquisition-list li:last-child {
-    grid-column: auto;
-  }
-}
 `;
 const restoreCss = '/* Restore overrides from valid pre-6/23 Codex threads. */\n\n.renyi-news-center {\n  --renyi-news-blue: #dc8600;\n  --renyi-news-border: rgba(230, 169, 52, 0.46);\n  --renyi-news-red: #ef9b00;\n  position: relative;\n  overflow: hidden;\n  color: #0f172a;\n  background:\n    linear-gradient(115deg, rgba(244, 178, 0, 0.98) 0%, rgba(239, 166, 0, 0.96) 48%, rgba(248, 190, 21, 0.96) 100%),\n    linear-gradient(180deg, #f2ae00 0%, #eda200 100%) !important;\n  font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;\n}\n\n.renyi-news-center::before {\n  content: "";\n  position: absolute;\n  inset: 0;\n  pointer-events: none;\n  background-image:\n    linear-gradient(118deg, rgba(255, 255, 255, 0.18) 0 1px, transparent 1px 150px),\n    linear-gradient(24deg, rgba(255, 255, 255, 0.14) 0 1px, transparent 1px 190px),\n    linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0 1px, transparent 1px 70px),\n    linear-gradient(0deg, rgba(139, 92, 0, 0.08) 0 1px, transparent 1px 70px);\n  background-size: 280px 180px, 340px 220px, 70px 100%, 100% 70px;\n  opacity: 0.72;\n}\n\n.renyi-news-center *,\n.renyi-news-center *::before,\n.renyi-news-center *::after {\n  box-sizing: border-box;\n}\n\n.renyi-news-center a {\n  color: inherit;\n  text-decoration: none;\n}\n\n.renyi-news-shell {\n  position: relative;\n  z-index: 1;\n  width: min(100%, 1360px);\n  margin: 0 auto;\n  padding: 64px 24px 72px !important;\n}\n\n.renyi-news-two-column {\n  display: grid !important;\n  grid-template-columns: minmax(320px, 34%) minmax(0, 66%) !important;\n  gap: 22px !important;\n  align-items: stretch !important;\n}\n\n.renyi-market-card,\n.renyi-news-panel {\n  position: relative;\n  display: flex !important;\n  flex-direction: column !important;\n  min-width: 0;\n  height: 620px !important;\n  overflow: hidden;\n  border: 1px solid var(--renyi-news-border) !important;\n  border-radius: 0 !important;\n  background: rgba(255, 248, 231, 0.94) !important;\n  box-shadow: 0 20px 48px rgba(122, 78, 0, 0.14) !important;\n}\n\n.renyi-market-card-header,\n.renyi-news-heading {\n  flex: 0 0 auto;\n  padding: 18px 20px 14px !important;\n  border-bottom: 1px solid rgba(230, 179, 82, 0.34) !important;\n  background: rgba(255, 251, 240, 0.92) !important;\n}\n\n.renyi-market-card-header p,\n.renyi-market-card-header h2,\n.renyi-news-heading p,\n.renyi-news-heading h2 {\n  margin-right: 0 !important;\n  margin-left: 0 !important;\n  letter-spacing: 0 !important;\n}\n\n.renyi-market-card-header p:first-child,\n.renyi-news-heading p:first-child {\n  margin: 0 !important;\n  color: var(--renyi-news-blue) !important;\n  font-size: 10px !important;\n  font-weight: 700 !important;\n  letter-spacing: 0.18em !important;\n  text-transform: uppercase !important;\n}\n\n.renyi-market-card-header h2,\n.renyi-news-heading h2 {\n  margin: 7px 0 0 !important;\n  color: #111827 !important;\n  font-size: 22px !important;\n  font-weight: 850 !important;\n  line-height: 1.18 !important;\n}\n\n.renyi-market-card-header p:last-child,\n.renyi-news-heading p:last-child {\n  margin: 7px 0 0 !important;\n  color: #5e6673 !important;\n  font-size: 11px !important;\n  line-height: 1.45 !important;\n}\n\n.renyi-tradingview-shell {\n  flex: 1 1 auto !important;\n  min-height: 0 !important;\n  height: auto !important;\n  background: rgba(255, 250, 239, 0.74) !important;\n}\n\n.renyi-cat-chart,\n.renyi-cat-chart .tradingview-widget-container__widget,\n.renyi-cat-chart iframe {\n  width: 100% !important;\n  height: 100% !important;\n  min-height: 0 !important;\n}\n\n.renyi-cat-chart .tradingview-widget-copyright {\n  position: absolute;\n  right: 14px;\n  bottom: 8px;\n  z-index: 2;\n  color: #7d7465;\n  font-size: 11px;\n}\n\n.renyi-news-list {\n  flex: 1 1 auto !important;\n  min-height: 0 !important;\n  margin-top: 0 !important;\n  overflow-y: auto !important;\n  background: rgba(255, 250, 239, 0.74) !important;\n}\n\n.renyi-news-list::-webkit-scrollbar {\n  width: 6px;\n}\n\n.renyi-news-list::-webkit-scrollbar-thumb {\n  border-radius: 999px;\n  background: #e8b342;\n}\n\n.renyi-news-row {\n  border-bottom: 1px solid rgba(230, 179, 82, 0.36) !important;\n  background: transparent !important;\n  transition: background-color 0.24s ease;\n}\n\n.renyi-news-row:hover,\n.renyi-news-row:focus-within {\n  background: rgba(244, 177, 0, 0.12) !important;\n}\n\n.renyi-news-row-link {\n  position: relative;\n  display: flex !important;\n  flex-direction: row !important;\n  align-items: flex-start !important;\n  gap: 14px !important;\n  width: 100% !important;\n  min-height: 86px !important;\n  padding: 9px 20px !important;\n  color: inherit !important;\n  cursor: pointer;\n}\n\n.renyi-news-row-link::before {\n  content: "";\n  position: absolute;\n  left: 20px;\n  top: 22px;\n  width: 6px;\n  height: 6px;\n  border-radius: 999px;\n  background: var(--renyi-news-red);\n  box-shadow: 0 0 0 4px rgba(239, 155, 0, 0.12);\n  transition: opacity 0.2s ease;\n}\n\n.renyi-news-row:hover .renyi-news-row-link::before,\n.renyi-news-row:focus-within .renyi-news-row-link::before {\n  opacity: 0;\n}\n\n.renyi-news-date-badge {\n  flex: 0 0 56px !important;\n  width: 56px !important;\n  min-width: 0 !important;\n  min-height: 54px !important;\n  padding-top: 2px !important;\n  color: var(--renyi-news-red) !important;\n  text-align: center !important;\n  opacity: 0 !important;\n  transform: translateX(-10px);\n  transition: opacity 0.26s ease, transform 0.26s ease;\n  pointer-events: none;\n}\n\n.renyi-news-row:hover .renyi-news-date-badge,\n.renyi-news-row:focus-within .renyi-news-date-badge {\n  opacity: 1 !important;\n  transform: translateX(0);\n}\n\n.renyi-news-date-day {\n  display: block !important;\n  color: var(--renyi-news-red) !important;\n  font-size: 28px !important;\n  font-weight: 900 !important;\n  line-height: 0.95 !important;\n  letter-spacing: 0 !important;\n}\n\n.renyi-news-date-meta {\n  display: block !important;\n  margin-top: 5px !important;\n  color: var(--renyi-news-red) !important;\n  font-size: 8px !important;\n  font-weight: 700 !important;\n  line-height: 1.25 !important;\n  letter-spacing: 0.04em !important;\n  text-transform: uppercase !important;\n}\n\n.renyi-news-copy {\n  flex: 1 1 auto !important;\n  min-width: 0 !important;\n}\n\n.renyi-news-copy h3 {\n  display: -webkit-box !important;\n  overflow: hidden !important;\n  margin: 0 !important;\n  color: #111827 !important;\n  font-size: 14px !important;\n  font-weight: 800 !important;\n  line-height: 1.28 !important;\n  letter-spacing: 0 !important;\n  text-align: left !important;\n  transition: color 0.22s ease;\n  -webkit-box-orient: vertical;\n  -webkit-line-clamp: 2;\n}\n\n.renyi-news-row-link:hover .renyi-news-copy h3,\n.renyi-news-row-link:focus .renyi-news-copy h3 {\n  color: var(--renyi-news-blue) !important;\n}\n\n.renyi-news-copy p {\n  display: -webkit-box !important;\n  overflow: hidden !important;\n  margin: 5px 0 0 !important;\n  color: #5e6673 !important;\n  font-size: 11px !important;\n  line-height: 1.35 !important;\n  text-align: left !important;\n  -webkit-box-orient: vertical;\n  -webkit-line-clamp: 2;\n}\n\n.footer-copy .footer-copy-col1::before {\n  background-color: var(--renyi-industrial-yellow-dark, #dc8600) !important;\n}\n\n.footer-copy .footer-copy-col1 .txt01,\n.footer-copy .footer-copy-col1 .txt01 a,\n.footer-copy .footer-copy-col1 .txt02 {\n  color: var(--renyi-industrial-ink, #111827) !important;\n}\n\n.ind02-btn-box a {\n  color: #fff !important;\n  background-color: #9b6b00 !important;\n}\n\n.ind02-btn-box a.cur,\n.ind02-btn-box a:hover,\n.ind02-btn-box a:focus {\n  color: var(--renyi-industrial-ink, #171717) !important;\n  background-color: #fff8e5 !important;\n}\n\n.ind02-btn-box a.cur .ifa,\n.ind02-btn-box a:hover .ifa,\n.ind02-btn-box a:focus .ifa {\n  color: currentColor !important;\n}\n\n.list-pro-box .item:hover .tit a,\n.list-pro-box .item .tit a:hover,\n.product-ind .item:hover .txtbox .tit a,\n.product-ind .item .txtbox .tit a:hover {\n  color: var(--renyi-industrial-yellow-dark, #d99a00) !important;\n}\n\n.list-pro-box .item:hover .btn-box a,\n.list-pro-box .item .btn-box a:hover {\n  border-color: var(--renyi-industrial-yellow, #f4b000) !important;\n  background-color: var(--renyi-industrial-yellow, #f4b000) !important;\n  color: var(--renyi-industrial-ink, #171717) !important;\n}\n\n.list-pro-box .item .btn-box a:hover {\n  border-color: var(--renyi-industrial-yellow-dark, #d99a00) !important;\n  background-color: var(--renyi-industrial-yellow-dark, #d99a00) !important;\n}\n\n.pro-v-basic .pro-price strong,\n.pro-v-body .pro-v-body-t .item.cur,\n.pro-v-body .pro-v-body-t .item:hover,\n.pro-v-body .pro-v-body-b .item-tit {\n  color: var(--renyi-industrial-yellow-dark, #d99a00) !important;\n}\n\n.pro-v-basic .go-inquiry,\n.pro-v-basic .go-cases {\n  display: inline-flex !important;\n  align-items: center;\n  justify-content: center;\n  vertical-align: top;\n  width: 2.3rem;\n}\n\n.pro-v-basic .go-inquiry {\n  border-color: var(--renyi-industrial-yellow-dark, #d99a00) !important;\n  background-color: var(--renyi-industrial-yellow-dark, #d99a00) !important;\n  color: var(--renyi-industrial-ink, #171717) !important;\n}\n\n.pro-v-basic .go-cases {\n  margin-top: 0.25rem;\n  margin-left: 0.08rem;\n  padding: 0.1rem 0;\n  border: 1px solid var(--renyi-industrial-yellow-dark, #d99a00);\n  border-radius: 0.03rem;\n  color: var(--renyi-industrial-ink, #171717);\n  background: transparent;\n  font-size: 0.18rem;\n  line-height: 1.42857143;\n  text-align: center;\n  text-decoration: none;\n}\n\n.pro-v-basic .go-inquiry:hover,\n.pro-v-basic .go-inquiry:focus {\n  border-color: var(--renyi-industrial-yellow-deep, #b57a00) !important;\n  background-color: var(--renyi-industrial-yellow-deep, #b57a00) !important;\n  color: #fff !important;\n}\n\n.pro-v-basic .go-cases:hover,\n.pro-v-basic .go-cases:focus {\n  border-color: var(--renyi-industrial-yellow-deep, #b57a00);\n  background-color: var(--renyi-industrial-yellow-dark, #d99a00);\n  color: var(--renyi-industrial-ink, #171717);\n}\n\n.pro-v-body .pro-v-body-t {\n  border-top-color: var(--renyi-industrial-yellow-dark, #d99a00) !important;\n}\n\n.pro-contact .button,\n.guestbook .button {\n  background-color: var(--renyi-industrial-yellow-dark, #d99a00) !important;\n  color: var(--renyi-industrial-ink, #171717) !important;\n}\n\n.pro-contact .button:hover,\n.pro-contact .button:focus,\n.guestbook .button:hover,\n.guestbook .button:focus {\n  background-color: var(--renyi-industrial-yellow-deep, #b57a00) !important;\n  color: #fff !important;\n}\n\n.list-pro-box2 .item::before {\n  background-color: rgba(153, 107, 0, 0.72) !important;\n}\n\n@media (min-width: 992px) {\n  body.page-template-page-product .page-content,\n  body.single-post .page-content {\n    padding-top: 1.08rem !important;\n  }\n\n  .header-box .menu-box .menu > li.m-1.has-sub > .sub-nav {\n    background-position: right center !important;\n    background-size: auto 100% !important;\n  }\n\n  .header-box .menu-box .menu > li.m-1.has-sub > .sub-nav .sub-btn2 {\n    display: flex !important;\n    flex-direction: column !important;\n    flex-wrap: wrap !important;\n    align-content: flex-start !important;\n    column-gap: 0.24rem !important;\n    width: 5.86rem !important;\n    height: 3.74rem !important;\n    margin: 0 !important;\n    padding: 0.3rem 0 0 0 !important;\n    list-style: none !important;\n  }\n\n  .header-box .menu-box .menu > li.m-1.has-sub > .sub-nav .sub-btnbox {\n    position: relative !important;\n    left: -0.36rem !important;\n    width: 5.96rem !important;\n    box-sizing: border-box !important;\n  }\n\n  .header-box .menu-box .menu > li.m-1.has-sub > .sub-nav .sub-btn2 > li {\n    float: none !important;\n    display: block !important;\n    margin: 0 !important;\n    padding: 0 !important;\n  }\n\n  .header-box .menu-box .menu > li.m-1.has-sub > .sub-nav .sub-btn2 > li:nth-child(-n + 3) {\n    width: 2.34rem !important;\n  }\n\n  .header-box .menu-box .menu > li.m-1.has-sub > .sub-nav .sub-btn2 > li:nth-child(n + 4) {\n    width: 3.18rem !important;\n  }\n\n  .header-box .menu-box .menu > li.m-1.has-sub > .sub-nav .sub-btn2 > li > a {\n    display: flex !important;\n    align-items: center !important;\n    margin-bottom: 0.07rem !important;\n    min-height: 0.22rem !important;\n    color: #181818 !important;\n    font-size: 0.135rem !important;\n    line-height: 1.28 !important;\n    text-align: left !important;\n    word-break: keep-all !important;\n    overflow-wrap: anywhere !important;\n    white-space: normal !important;\n  }\n\n  .header-box .menu-box .menu > li.m-1.has-sub > .sub-nav .sub-btn2 > li > a {\n    font-weight: 700 !important;\n  }\n\n  .header-box .menu-box .menu > li.m-1.has-sub > .sub-nav .sub-btn2 > li > a .ifa {\n    margin-left: 0.06rem !important;\n    color: var(--renyi-industrial-yellow-dark, #d99a00) !important;\n    font-weight: normal !important;\n  }\n\n  .header-box .menu-box .menu > li.m-1.has-sub > .sub-nav .sub-btn2 > li:hover > a,\n  .header-box .menu-box .menu > li.m-1.has-sub > .sub-nav .sub-btn2 > li > a:hover,\n  .header-box .menu-box .menu > li.m-1.has-sub > .sub-nav .sub-btn2 .sub-btn3 > li > a:hover {\n    color: var(--renyi-industrial-yellow-dark, #d99a00) !important;\n    background: transparent !important;\n    background-color: transparent !important;\n  }\n\n  .header-box .menu-box .menu > li.m-1.has-sub > .sub-nav .sub-btn2 .sub-btn3 {\n    display: block !important;\n    width: 100% !important;\n    margin: 0 !important;\n    padding: 0 !important;\n    list-style: none !important;\n  }\n\n  .header-box .menu-box .menu > li.m-1.has-sub > .sub-nav .sub-btn2 .sub-btn3 > li > a {\n    display: flex !important;\n    margin-bottom: 0.07rem !important;\n    color: #444 !important;\n    font-size: 0.135rem !important;\n    font-weight: 400 !important;\n    line-height: 1.28 !important;\n    text-align: left !important;\n    word-break: keep-all !important;\n    overflow-wrap: anywhere !important;\n    white-space: normal !important;\n  }\n\n  .header-box .menu-box .menu > li.m-1.has-sub > .sub-nav .sub-txtbox h3 {\n    margin: 0 0 0.14rem !important;\n    color: #2a2a2a !important;\n    font-size: 0.28rem !important;\n    font-weight: 700 !important;\n    line-height: 1.2 !important;\n    letter-spacing: 0 !important;\n    text-align: left !important;\n  }\n\n  .header-box .menu-box .menu > li.m-1.has-sub > .sub-nav .sub-txtbox p {\n    margin: 0 !important;\n    width: 100% !important;\n    color: #222 !important;\n    font-size: 0.145rem !important;\n    line-height: 1.64 !important;\n    letter-spacing: 0 !important;\n    text-align: left !important;\n  }\n\n  .header-box .menu-box .menu > li.m-1.has-sub > .sub-nav .sub-txtbox a {\n    background-color: var(--renyi-industrial-yellow-dark, #d99a00) !important;\n    color: var(--renyi-industrial-ink, #171717) !important;\n  }\n\n  .header-box .menu-box .menu > li.m-1.has-sub > .sub-nav .sub-txtbox a:hover,\n  .header-box .menu-box .menu > li.m-1.has-sub > .sub-nav .sub-txtbox a:focus {\n    background-color: var(--renyi-industrial-yellow-deep, #b57a00) !important;\n    color: #fff !important;\n  }\n}\n\n@media (max-width: 768px) {\n  .renyi-news-two-column {\n    grid-template-columns: 1fr !important;\n  }\n\n  .renyi-market-card,\n  .renyi-news-panel {\n    height: auto !important;\n    min-height: 0 !important;\n  }\n\n  .renyi-tradingview-shell {\n    height: 360px !important;\n    min-height: 360px !important;\n  }\n}\n\n@media (max-width: 520px) {\n  .renyi-news-shell {\n    padding: 48px 16px 56px !important;\n  }\n\n  .renyi-news-row-link {\n    gap: 12px !important;\n    padding: 14px 16px !important;\n  }\n\n  .renyi-news-row-link::before {\n    left: 16px;\n  }\n\n  .renyi-news-date-badge {\n    flex-basis: 48px !important;\n    width: 48px !important;\n  }\n}\n\n.renyi-product-faq {\n  padding: 64px 0 72px;\n  background: #f6f6f4;\n}\n\n.renyi-optimized-picture {\n  display: contents;\n}\n\n.renyi-news-page-banner,\n.renyi-about-page-banner,\n.renyi-service-page-banner {\n  width: 100%;\n  aspect-ratio: 1920 / 715;\n}\n\n.renyi-contact-page-banner {\n  width: 100%;\n  aspect-ratio: 1983 / 793;\n}\n\n.renyi-join-page-banner {\n  width: 100%;\n  aspect-ratio: 1920 / 460;\n}\n\n.renyi-raise-boring-page-banner {\n  width: 100%;\n  aspect-ratio: 1920 / 604;\n}\n\n.renyi-hydraulic-page-banner,\n.renyi-mineral-page-banner,\n.renyi-special-equipment-page-banner,\n.renyi-structural-page-banner {\n  aspect-ratio: 1920 / 715;\n}\n\n.renyi-service-quality-page .server01 {\n  overflow-x: hidden;\n}\n\n@media (max-width: 991px) {\n  .pro-v-body-b table {\n    display: block;\n    width: 100% !important;\n    max-width: 100%;\n    overflow-x: auto;\n    -webkit-overflow-scrolling: touch;\n  }\n}\n\n.renyi-product-faq h2 {\n  margin: 0 0 24px;\n  color: #171717;\n  font-size: clamp(28px, 3vw, 42px);\n  font-weight: 700;\n}\n\n.renyi-product-faq__item {\n  border-top: 1px solid #d8d8d2;\n  padding: 18px 0;\n}\n\n.renyi-product-faq__item:last-child {\n  border-bottom: 1px solid #d8d8d2;\n}\n\n.renyi-product-faq__item summary {\n  cursor: pointer;\n  color: #202020;\n  font-size: 18px;\n  font-weight: 650;\n}\n\n.renyi-product-faq__item p {\n  max-width: 900px;\n  margin: 14px 0 0;\n  color: #555;\n  font-size: 16px;\n  line-height: 1.8;\n}\n';
+const queryClient = new QueryClient();
+const lazyServerLink = (runtime) => (ctx) => observable((observer) => {
+  let sub;
+  import("./link-CgILies-.js").then(
+    ({ serverLink }) => sub = serverLink(runtime)(ctx).subscribe(observer),
+    (err) => observer.error(err)
+  );
+  return () => sub?.unsubscribe();
+});
+const trpcClient = createTRPCClient({
+  links: [
+    loggerLink({
+      enabled: (op) => op.direction === "down" && op.result instanceof Error
+    }),
+    splitLink({
+      condition: () => typeof window === "undefined",
+      true: lazyServerLink,
+      false: httpBatchLink({
+        url: "/api/trpc",
+        transformer: superjson
+      })
+    })
+  ]
+});
+createTRPCOptionsProxy({
+  client: trpcClient,
+  queryClient
+});
+function TrpcProvider(props) {
+  return /* @__PURE__ */ jsx(QueryClientProvider, { client: queryClient, children: props.children });
+}
 const sitePageIndex = {
   "/": {
     "path": "/",
@@ -7809,69 +7619,6 @@ const ABOUT_PATH_LOCALES = {
   "/ru/guanyuxingye/": "ru",
   "/es/guanyuxingye/": "es"
 };
-const qualificationCopies = {
-  zh: {
-    title: "资质荣誉与知识产权",
-    lead: "按企业资质、软件著作权和专利技术分类展示。点击证书可查看原图。",
-    groups: ["企业资质与合作荣誉", "软件著作权", "专利技术"]
-  },
-  en: {
-    title: "Qualifications and Intellectual Property",
-    lead: "Corporate qualifications, software copyrights, and patented technologies. Open any document to view it in full.",
-    groups: ["Qualifications and Honors", "Software Copyrights", "Patented Technologies"]
-  },
-  ru: {
-    title: "Квалификации и интеллектуальная собственность",
-    lead: "Документы сгруппированы по квалификациям, авторским правам на ПО и патентам. Нажмите для просмотра.",
-    groups: ["Квалификации и награды", "Авторские права на ПО", "Патентованные технологии"]
-  },
-  es: {
-    title: "Calificaciones y propiedad intelectual",
-    lead: "Documentos agrupados por calificaciones, derechos de software y patentes. Abra cada documento para verlo completo.",
-    groups: ["Calificaciones y reconocimientos", "Derechos de software", "Tecnologías patentadas"]
-  }
-};
-const qualificationGroups = [
-  [
-    { src: "/renyi/renyi-news-high-tech-certificate-web.jpg", zh: "高新技术企业证书", en: "High-tech enterprise certificate" },
-    { src: "/renyi/renyi-news-high-tech-enterprise-plaque-web.jpg", zh: "高新技术企业牌匾", en: "High-tech enterprise plaque" },
-    { src: "/renyi/renyi-news-iso9001-certificate-web.jpg", zh: "ISO 9001 质量管理体系证书", en: "ISO 9001 quality management certificate" },
-    { src: "/renyi/renyi-news-iso9001-certificate-cn-web.jpg", zh: "ISO 9001 中文证书", en: "ISO 9001 Chinese certificate" },
-    { src: "/renyi/renyi-news-at1500-mining-safety-certificate-web.jpg", zh: "AT-1500 矿用产品安全标志证书", en: "AT-1500 mining safety certificate" },
-    { src: "/renyi/renyi-news-at2000-mining-safety-certificate-web.jpg", zh: "AT-2000 矿用产品安全标志证书", en: "AT-2000 mining safety certificate" },
-    { src: "/renyi/renyi-news-jiangxi-copper-localization-award-web.jpg", zh: "江西铜业国产化合作荣誉", en: "Jiangxi Copper localization award" },
-    { src: "/renyi/renyi-news-zega-remanufacturing-authorization-web.jpg", zh: "志高再制造授权", en: "ZEGA remanufacturing authorization" },
-    { src: "/renyi/renyi-news-zega-sales-authorization-web.jpg", zh: "志高经销授权", en: "ZEGA sales authorization" },
-    { src: "/renyi/renyi-news-zega-remanufacturing-center-web.jpg", zh: "志高掘进再制造中心资质", en: "ZEGA remanufacturing center qualification" }
-  ],
-  [
-    { src: "/renyi/renyi-news-mining-truck-remote-fault-detection-software-copyright-web.jpg", zh: "矿用卡车远程故障检测软件著作权", en: "Mining truck remote fault detection software copyright" },
-    { src: "/renyi/renyi-news-hydraulic-cylinder-test-bench-plc-software-copyright-web.jpg", zh: "液压缸试验台 PLC 软件著作权", en: "Hydraulic cylinder test bench PLC software copyright" }
-  ],
-  [
-    { src: "/renyi/renyi-news-wheel-motor-dismantling-machine-swing-mechanism-patent-web.jpg", zh: "轮边马达拆装机摆动机构专利", en: "Wheel motor dismounting machine swing mechanism patent" },
-    { src: "/renyi/renyi-news-wheel-motor-dismantling-machine-floating-tray-patent-web.jpg", zh: "轮边马达拆装机浮动托盘专利", en: "Wheel motor dismounting machine floating tray patent" },
-    { src: "/renyi/renyi-news-wheel-motor-dismantling-machine-patent-web.jpg", zh: "轮边马达拆装机专利", en: "Wheel motor dismounting machine patent" },
-    { src: "/renyi/renyi-news-multi-body-wheel-rim-dismantling-machine-patent-web.jpg", zh: "多体式轮辋拆装机专利", en: "Multi-body wheel rim dismounting machine patent" },
-    { src: "/renyi/renyi-news-flotation-agitator-main-shaft-support-fixing-device-patent-web.jpg", zh: "浮选机搅拌器主轴支撑固定装置专利", en: "Flotation agitator shaft support patent" },
-    { src: "/renyi/renyi-news-center-aeration-flotation-high-speed-rotary-valve-patent-web.jpg", zh: "中心充气浮选机高速旋转阀专利", en: "Center aeration flotation rotary valve patent" },
-    { src: "/renyi/renyi-news-hydraulic-cylinder-inner-wall-rolling-device-patent-web.jpg", zh: "液压缸内壁滚压装置专利", en: "Hydraulic cylinder inner wall rolling device patent" },
-    { src: "/renyi/renyi-news-lathe-shaft-grinding-polishing-head-device-patent-web.jpg", zh: "车床轴类磨削抛光头装置专利", en: "Lathe shaft grinding and polishing device patent" },
-    { src: "/renyi/renyi-news-hydraulic-cylinder-inner-wall-grinding-device-patent-web.jpg", zh: "液压缸内壁磨削装置专利", en: "Hydraulic cylinder inner wall grinding device patent" },
-    { src: "/renyi/renyi-news-flotation-agitator-upper-lower-shaft-positioning-connection-device-patent-web.jpg", zh: "浮选机搅拌器上下轴定位连接装置专利", en: "Flotation agitator shaft positioning connection patent" },
-    { src: "/renyi/renyi-news-large-material-transfer-u-shaped-carriage-patent-web.jpg", zh: "大型物料转运车 U 型车架专利", en: "Large material transfer U-shaped carriage patent" },
-    { src: "/renyi/renyi-news-large-material-transfer-vehicle-patent-web.jpg", zh: "大型物料转运车专利", en: "Large material transfer vehicle patent" },
-    { src: "/renyi/renyi-news-raise-boring-machine-detachable-cleaning-host-patent-web.jpg", zh: "天井钻机可拆洗主机专利", en: "Raise boring machine detachable cleaning host patent" },
-    { src: "/renyi/renyi-news-raise-boring-machine-deformation-resistant-cutterhead-patent-web.jpg", zh: "天井钻机抗变形刀盘专利", en: "Raise boring machine deformation-resistant cutterhead patent" },
-    { src: "/renyi/renyi-news-combinable-wear-resistant-reaming-cutterhead-patent-web.jpg", zh: "组合式耐磨扩孔刀盘专利", en: "Combinable wear-resistant reaming cutterhead patent" },
-    { src: "/renyi/renyi-news-heat-dissipation-stable-pump-station-patent-web.jpg", zh: "散热稳定泵站专利", en: "Heat-dissipation stable pump station patent" },
-    { src: "/renyi/renyi-news-large-vehicle-wheel-tire-dismounting-hoist-plate-patent-web.jpg", zh: "大型车辆轮胎拆装吊板专利", en: "Large vehicle tire dismounting hoist plate patent" },
-    { src: "/renyi/renyi-news-large-tire-wheel-hub-hoisting-dismantling-machine-hook-device-patent-web.jpg", zh: "大型轮胎轮毂吊装拆卸机吊钩装置专利", en: "Large tire hub dismounting hook device patent" },
-    { src: "/renyi/renyi-news-multi-station-large-tire-wheel-hub-hoisting-dismantling-machine-patent-web.jpg", zh: "多工位大型轮胎轮毂吊装拆卸机专利", en: "Multi-station large tire hub dismounting machine patent" },
-    { src: "/renyi/renyi-news-removable-raise-boring-machine-cutter-base-patent-web.jpg", zh: "可拆式天井钻机刀座专利", en: "Removable raise boring machine cutter base patent" },
-    { src: "/renyi/renyi-news-raise-boring-machine-load-transfer-vertical-horizontal-placement-system-patent-web.jpg", zh: "天井钻机载荷转运与立卧放置系统专利", en: "Raise boring machine load transfer and placement system patent" }
-  ]
-];
 const aboutCopies = {
   zh: {
     profileTitle: "公司简介",
@@ -8145,41 +7892,6 @@ function historySection(copy) {
     </section>
   `;
 }
-function qualificationSection(locale) {
-  const copy = qualificationCopies[locale];
-  const itemTitle = (item) => locale === "zh" ? item.zh : item.en;
-  const groups = qualificationGroups.map(
-    (items, groupIndex) => `
-        <details class="renyi-qualification-group"${groupIndex === 0 ? " open" : ""}>
-          <summary>${copy.groups[groupIndex]}<span>${items.length}</span></summary>
-          <div class="renyi-qualification-grid">
-            ${items.map((item) => {
-      const title = itemTitle(item);
-      return `<a class="renyi-qualification-card" href="${item.src}" target="_blank" rel="noopener"><img src="${item.src}" alt="${title}" loading="lazy"><strong>${title}</strong></a>`;
-    }).join("")}
-          </div>
-        </details>`
-  ).join("");
-  return `
-    <div class="maodian"><a name="a3" id="a3"></a></div>
-    <section class="about03 page-col-space wow fadeInUp renyi-qualification-section">
-      <div class="container">
-        <div class="page-tit-box"><h3 class="tit mb20">${copy.title}</h3></div>
-        <p class="renyi-qualification-lead">${copy.lead}</p>
-        <div class="renyi-qualification-groups">${groups}</div>
-      </div>
-    </section>
-  `;
-}
-function insertQualificationSection(html, locale) {
-  if (html.includes('class="about03')) {
-    return html;
-  }
-  return html.replace(
-    '<div class="maodian"><a name="a4"></a></div>',
-    `${qualificationSection(locale)}<div class="maodian"><a name="a4"></a></div>`
-  );
-}
 function replaceAboutSection(html, anchor, replacement) {
   const sectionClass = anchor === "a1" ? "about01" : anchor === "a2" ? "about02" : "about04";
   const pattern = new RegExp(
@@ -8199,17 +7911,14 @@ function patchRenyiAboutHtml(html, pathname) {
     return html;
   }
   const copy = aboutCopies[locale];
-  return insertQualificationSection(
+  return replaceAboutSection(
     replaceAboutSection(
-      replaceAboutSection(
-        replaceAboutSection(replaceMenuLabels(html, locale), "a1", profileSection(copy)),
-        "a2",
-        cultureSection(copy)
-      ),
-      "a4",
-      historySection(copy)
+      replaceAboutSection(replaceMenuLabels(html, locale), "a1", profileSection(copy)),
+      "a2",
+      cultureSection(copy)
     ),
-    locale
+    "a4",
+    historySection(copy)
   );
 }
 function localized(zh, en, ru, es) {
@@ -8850,8 +8559,9 @@ const PRODUCT_CATEGORY_SUSPENSION_IMAGE = "/renyi/product-category-hydraulic-sus
 const PRODUCT_CATEGORY_SPECIAL_IMAGE = "/renyi/product-category-special-equipment-yard.jpg?v=20260801";
 const PRODUCT_CATEGORY_MINERAL_IMAGE = "/renyi/product-category-mineral-processing-fill.jpg?v=20260801";
 const PRODUCT_CATEGORY_STRUCTURAL_IMAGE = "/renyi/product-category-structural-components-fill.jpg?v=20260801";
-const HOME_INTRO_FACTORY_IMAGE = "/renyi/renyi-home-intro-factory.avif";
+const HOME_INTRO_FACTORY_IMAGE = "/renyi/renyi-home-intro-factory.png";
 const SOLUTION_MAP_IMAGE = "/renyi/renyi-ind03-map-changsha-v2.svg";
+const NEWS_MONTH_LABELS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 const homeCaseCopies = {
   zh: {
     eyebrow: "项目实践与交付经验",
@@ -9002,7 +8712,7 @@ const homeIntroCopies = {
     title: "矿山与工程专用设备制造商",
     subtitle: "Specialized machinery for demanding worksites",
     paragraph: "长沙仁毅机械制造有限公司秉持“仁者弘毅”精神，专注专业矿山装备研发制造与工程机械备件国产化。公司拥有勇于开拓创新的研发制造团队，配套大型加工设备和完善检测手段，可提供天井钻机、潜孔钻机、特种油缸、结构件及进口工程机械部件修复改进等产品与服务。",
-    moreText: "提交工况",
+    moreText: "探索更多",
     links: [
       { text: "公司简介", href: "/guanyuxingye/#a1" },
       { text: "企业文化", href: "/guanyuxingye/#a2" },
@@ -9014,7 +8724,7 @@ const homeIntroCopies = {
     title: "Specialized Equipment for Mining & Engineering",
     subtitle: "R&D and manufacturing for demanding worksites",
     paragraph: "Changsha Renyi Machinery Manufacturing Co., Ltd. is a high-tech enterprise guided by perseverance and responsibility. The company focuses on professional mining equipment and localized engineering machinery parts, supported by senior engineers, skilled technicians, large-scale machining equipment, and complete inspection capabilities for demanding industrial worksites.",
-    moreText: "Submit Requirements",
+    moreText: "Explore More",
     links: [
       { text: "Company Profile", href: "/en/guanyuxingye/#a1" },
       { text: "Corporate Culture", href: "/en/guanyuxingye/#a2" },
@@ -9026,7 +8736,7 @@ const homeIntroCopies = {
     title: "Спецоборудование для горных и инженерных работ",
     subtitle: "Разработка и производство для сложных условий эксплуатации",
     paragraph: "Changsha Renyi Machinery Manufacturing Co., Ltd. — высокотехнологичное предприятие, ориентированное на профессиональное горное оборудование и локализацию запасных частей для строительной техники. Команда инженеров и техников, крупное обрабатывающее оборудование и система контроля качества обеспечивают решения для сложных промышленных объектов.",
-    moreText: "Отправить задачу",
+    moreText: "Подробнее",
     links: [
       { text: "О компании", href: "/ru/guanyuxingye/#a1" },
       { text: "Корпоративная культура", href: "/ru/guanyuxingye/#a2" },
@@ -9038,11 +8748,177 @@ const homeIntroCopies = {
     title: "Equipos especializados para minería e ingeniería",
     subtitle: "Investigación y fabricación para trabajos exigentes",
     paragraph: "Changsha Renyi Machinery Manufacturing Co., Ltd. es una empresa de alta tecnología dedicada a equipos mineros profesionales y repuestos localizados para maquinaria de ingeniería. Con ingenieros y técnicos senior, equipos de mecanizado de gran escala y control de calidad completo, ofrece soluciones para entornos industriales exigentes.",
-    moreText: "Enviar requisitos",
+    moreText: "Explorar más",
     links: [
       { text: "Perfil de la empresa", href: "/es/guanyuxingye/#a1" },
       { text: "Cultura corporativa", href: "/es/guanyuxingye/#a2" },
       { text: "Historia de desarrollo", href: "/es/guanyuxingye/#a4" }
+    ]
+  }
+};
+const newsCenterCopies = {
+  zh: {
+    eyebrow: "精铸基石，智联全球",
+    title: "新闻中心",
+    intro: "同步捕捉中国与全球矿山装备、工程机械、资本市场与制造业升级动态，为出口型 B2B 客户提供可检索、可分发的行业信息入口。",
+    marketEyebrow: "MACRO MARKET WATCH",
+    marketTitle: "矿山装备与制造业行情观察",
+    marketSubtitle: "用于嵌入 TradingView Advanced Chart Widget，展示宏观行情与制造业市场走势。",
+    chartPlaceholder: "TradingView Advanced Chart Widget 占位区域",
+    news: [
+      {
+        title: "全球地下矿山项目持续关注天井钻机与竖井装备",
+        datetime: "2026-04-12",
+        summary: "随着深部开采、竖井建设和跨区域矿山投资推进，具备远程控制、全液压驱动和稳定扩孔能力的专用装备正在成为海外项目方关注重点。",
+        href: "/category/renyixinwen/"
+      },
+      {
+        title: "海外工程机械客户更重视交付一致性与质量追溯",
+        datetime: "2026-03-28",
+        summary: "面向跨境采购和复杂工况设备，制造企业正在从单点加工能力转向工艺、检测、追溯一体化管理，帮助客户降低后期维护风险。",
+        href: "/category/renyixinwen/"
+      },
+      {
+        title: "全球矿山设备运营更关注液压系统长期可靠性",
+        datetime: "2026-02-19",
+        summary: "在高载荷、高粉尘和连续作业环境下，油缸、阀组及管路系统的设计与维护能力直接影响海外矿山设备出勤率和项目安全边界。",
+        href: "/category/renyixinwen/"
+      },
+      {
+        title: "工程机械备件国产化为海外矿山维修提供替代选择",
+        datetime: "2026-01-30",
+        summary: "具备制造和修复能力的中国供应商可为海外客户缩短采购周期，并提供更灵活的结构件、油缸及专用设备改进方案。",
+        href: "/category/renyixinwen/"
+      },
+      {
+        title: "智能制造与预测性维护正在影响全球矿山装备服务",
+        datetime: "2025-12-18",
+        summary: "设备联网、运行数据分析和预测性维护正在成为全球矿山客户降低停机风险、提升全生命周期价值的重要抓手。",
+        href: "/category/renyixinwen/"
+      }
+    ]
+  },
+  en: {
+    eyebrow: "Built in China. Serving global worksites.",
+    title: "News Center",
+    intro: "Industry news, equipment insights, and market context for B2B buyers in mining and heavy machinery.",
+    marketEyebrow: "MACRO MARKET WATCH",
+    marketTitle: "Mining Equipment & Manufacturing Market Watch",
+    marketSubtitle: "Reserved for the TradingView Advanced Chart Widget and macro market context.",
+    chartPlaceholder: "TradingView Advanced Chart Widget placeholder",
+    news: [
+      {
+        title: "Raise boring equipment demand expands across underground mining projects",
+        datetime: "2026-04-12",
+        summary: "Deeper mine development and shaft construction are increasing demand for remote-controlled, hydraulic, full-face raise boring solutions.",
+        href: "/en/category/renyixinwen/"
+      },
+      {
+        title: "Digital manufacturing improves heavy machinery consistency and delivery quality",
+        datetime: "2026-03-28",
+        summary: "Manufacturers are connecting machining, inspection, and traceability to help industrial customers reduce maintenance risk.",
+        href: "/en/category/renyixinwen/"
+      },
+      {
+        title: "Hydraulic reliability becomes a key metric for long-cycle mining equipment",
+        datetime: "2026-02-19",
+        summary: "Cylinder, valve, and piping design quality directly affects uptime, safety, and lifecycle service in demanding worksites.",
+        href: "/en/category/renyixinwen/"
+      },
+      {
+        title: "Localized spare parts speed up mining equipment maintenance response",
+        datetime: "2026-01-30",
+        summary: "Localized manufacturing and repair programs shorten lead times while supporting flexible improvement plans for customers.",
+        href: "/en/category/renyixinwen/"
+      },
+      {
+        title: "Smart manufacturing and predictive maintenance reshape mining equipment service",
+        datetime: "2025-12-18",
+        summary: "Connected equipment, operating data, and predictive service programs help mining customers reduce downtime risk across the lifecycle.",
+        href: "/en/category/renyixinwen/"
+      }
+    ]
+  },
+  ru: {
+    eyebrow: "Производство в Китае. Решения для глобальных объектов.",
+    title: "Новости",
+    intro: "Новости отрасли, технические материалы и рыночный контекст для B2B-заказчиков горной и тяжелой техники.",
+    marketEyebrow: "MACRO MARKET WATCH",
+    marketTitle: "Обзор рынка горного оборудования и машиностроения",
+    marketSubtitle: "Зона для виджета TradingView Advanced Chart и рыночного контекста.",
+    chartPlaceholder: "Место для TradingView Advanced Chart Widget",
+    news: [
+      {
+        title: "Спрос на raise boring оборудование растет в подземных горных проектах",
+        datetime: "2026-04-12",
+        summary: "Развитие глубоких рудников и шахтных объектов усиливает потребность в дистанционно управляемом гидравлическом оборудовании.",
+        href: "/ru/category/renyixinwen/"
+      },
+      {
+        title: "Цифровое производство повышает стабильность тяжелого машиностроения",
+        datetime: "2026-03-28",
+        summary: "Интеграция обработки, контроля и прослеживаемости помогает промышленным клиентам снижать риски обслуживания.",
+        href: "/ru/category/renyixinwen/"
+      },
+      {
+        title: "Надежность гидравлики становится ключевым показателем для горной техники",
+        datetime: "2026-02-19",
+        summary: "Качество цилиндров, клапанов и трубопроводов напрямую влияет на готовность оборудования и безопасность объекта.",
+        href: "/ru/category/renyixinwen/"
+      },
+      {
+        title: "Локализация запчастей ускоряет обслуживание горного оборудования",
+        datetime: "2026-01-30",
+        summary: "Местное производство и ремонт сокращают сроки поставки и поддерживают гибкие программы модернизации.",
+        href: "/ru/category/renyixinwen/"
+      },
+      {
+        title: "Умное производство и прогнозное обслуживание обновляют сервис горной техники",
+        datetime: "2025-12-18",
+        summary: "Подключенное оборудование, анализ данных и прогнозное обслуживание помогают снижать риски простоя на всем жизненном цикле.",
+        href: "/ru/category/renyixinwen/"
+      }
+    ]
+  },
+  es: {
+    eyebrow: "Fabricado en China. Para obras globales.",
+    title: "Centro de noticias",
+    intro: "Noticias industriales, análisis técnico y contexto de mercado para compradores B2B de minería y maquinaria pesada.",
+    marketEyebrow: "MACRO MARKET WATCH",
+    marketTitle: "Vista del mercado de equipos mineros y manufactura",
+    marketSubtitle: "Espacio reservado para TradingView Advanced Chart Widget y contexto macro.",
+    chartPlaceholder: "Marcador para TradingView Advanced Chart Widget",
+    news: [
+      {
+        title: "La demanda de equipos raise boring crece en proyectos mineros subterráneos",
+        datetime: "2026-04-12",
+        summary: "El desarrollo de minas profundas y pozos incrementa la demanda de soluciones hidráulicas de sección completa con control remoto.",
+        href: "/es/category/renyixinwen/"
+      },
+      {
+        title: "La fabricación digital mejora la consistencia de maquinaria pesada",
+        datetime: "2026-03-28",
+        summary: "La conexión entre mecanizado, inspección y trazabilidad ayuda a reducir riesgos de mantenimiento para clientes industriales.",
+        href: "/es/category/renyixinwen/"
+      },
+      {
+        title: "La fiabilidad hidráulica es clave para maquinaria minera de largo ciclo",
+        datetime: "2026-02-19",
+        summary: "El diseño de cilindros, válvulas y tuberías impacta directamente en disponibilidad, seguridad y servicio de ciclo de vida.",
+        href: "/es/category/renyixinwen/"
+      },
+      {
+        title: "Los repuestos localizados aceleran la respuesta de mantenimiento minero",
+        datetime: "2026-01-30",
+        summary: "La fabricación y reparación localizadas acortan plazos y permiten programas flexibles de mejora para clientes.",
+        href: "/es/category/renyixinwen/"
+      },
+      {
+        title: "La fabricación inteligente y el mantenimiento predictivo elevan el servicio minero",
+        datetime: "2025-12-18",
+        summary: "Los equipos conectados, los datos operativos y el servicio predictivo ayudan a reducir riesgos de parada durante el ciclo de vida.",
+        href: "/es/category/renyixinwen/"
+      }
     ]
   }
 };
@@ -9068,7 +8944,7 @@ function homeIntroSection(copy, locale) {
                 <div class="txt02">${copy.subtitle}</div>
               </div>
               <p class="ind01-text mb40">${copy.paragraph}</p>
-              <a class="ind01-more go-inquiry" href="${withLocalePath$1("/lianxiwomen/#a2", locale)}"><span>${copy.moreText}</span></a>
+              <a class="ind01-more" href="${copy.links[0]?.href ?? "#"}"><span>${copy.moreText}</span></a>
             </div>
           </div>
           <div class="col-md-12 col-md-offset-1">
@@ -9083,6 +8959,15 @@ function homeIntroSection(copy, locale) {
       </div>
     </div>
   `;
+}
+function newsDateBadge(datetime) {
+  const [year = "", month = "", day = ""] = datetime.split("-");
+  const monthNumber = Number(month);
+  const monthLabel = NEWS_MONTH_LABELS[monthNumber - 1] ?? month;
+  return {
+    day,
+    monthYear: `${monthLabel} / ${year}`
+  };
 }
 function homeCaseMarqueeSection(locale) {
   const copy = homeCaseCopies[locale];
@@ -9127,52 +9012,59 @@ function homeCaseMarqueeSection(locale) {
     </section>
   `;
 }
-function homeAcquisitionSection(locale) {
-  const copies = {
-    zh: {
-      title: "从现场问题开始匹配方案",
-      intro: "不局限于现有产品。提交设备型号、故障或目标工况，我们按设计、制造、修复和现场服务能力评估。",
-      items: ["非标设备与新产品定制", "进口备件国产化", "大型部件修复与再制造", "整车维修与现场维保", "矿山专用拆装与改造装备"],
-      primary: "提交工况",
-      secondary: "查看全部产品"
-    },
-    en: {
-      title: "Start with the worksite problem",
-      intro: "Send the equipment model, failure, or target condition. We assess it across engineering, manufacturing, repair, and field service.",
-      items: ["Custom equipment development", "Localization of imported parts", "Large-component repair and remanufacturing", "Vehicle overhaul and field maintenance", "Dedicated dismantling and retrofit equipment"],
-      primary: "Submit Requirements",
-      secondary: "View All Products"
-    },
-    ru: {
-      title: "Начните с задачи на площадке",
-      intro: "Отправьте модель оборудования, неисправность или условия работы. Мы оценим проектирование, производство, ремонт и сервис.",
-      items: ["Разработка нестандартного оборудования", "Локализация импортных деталей", "Ремонт и восстановление крупных узлов", "Капремонт техники и выездной сервис", "Спецоборудование для демонтажа и модернизации"],
-      primary: "Отправить задачу",
-      secondary: "Вся продукция"
-    },
-    es: {
-      title: "Empiece por el problema de campo",
-      intro: "Envíe el modelo, la avería o la condición objetivo. Evaluamos diseño, fabricación, reparación y servicio en campo.",
-      items: ["Desarrollo de equipos a medida", "Localización de repuestos importados", "Reparación y remanufactura de grandes componentes", "Revisión de vehículos y mantenimiento en campo", "Equipos especiales de desmontaje y modernización"],
-      primary: "Enviar requisitos",
-      secondary: "Ver productos"
-    }
-  };
-  const copy = copies[locale];
+function homeNewsSection(copy, locale) {
+  const liveNewsAttr = ' data-renyi-live-news="cat"';
   return `
-    <section class="renyi-acquisition" aria-labelledby="renyi-acquisition-title">
-      <div class="container renyi-acquisition-layout">
-        <div class="renyi-acquisition-intro">
-          <h2 id="renyi-acquisition-title">${escapeHtmlText$1(copy.title)}</h2>
-          <p>${escapeHtmlText$1(copy.intro)}</p>
-          <div class="renyi-acquisition-actions">
-            <a class="renyi-acquisition-primary go-inquiry" href="${withLocalePath$1("/lianxiwomen/#a2", locale)}">${escapeHtmlText$1(copy.primary)}</a>
-            <a class="renyi-acquisition-secondary" href="${withLocalePath$1("/chanpinzhanshi/", locale)}">${escapeHtmlText$1(copy.secondary)}</a>
-          </div>
+    <section class="renyi-news-center bg-white text-slate-900" aria-labelledby="renyi-news-title">
+      <div class="renyi-news-shell mx-auto max-w-[1360px] px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+        <div class="renyi-news-two-column" style="display:grid;grid-template-columns:minmax(320px,34%) minmax(0,66%);gap:32px;align-items:stretch;">
+          <section class="renyi-news-panel rounded-md border border-[#e5e7eb] bg-white shadow-sm" aria-label="${copy.title}">
+            <div class="renyi-news-heading border-b border-[#e5e7eb]">
+              <p class="text-sm font-semibold uppercase tracking-[0.18em] text-[#003366]">${copy.eyebrow}</p>
+              <h2 id="renyi-news-title" class="mt-3 text-4xl font-bold text-slate-900">${copy.title}</h2>
+              <p class="mt-4 max-w-3xl text-base leading-7 text-slate-600">${copy.intro}</p>
+            </div>
+
+            <div class="renyi-news-list" aria-label="${copy.title}" data-renyi-news-locale="${locale}"${liveNewsAttr} data-renyi-news-limit="5">
+              ${copy.news.map((item) => {
+    const dateBadge = newsDateBadge(item.datetime);
+    return `
+                    <article class="renyi-news-row group flex flex-row border-b border-[#e5e7eb] last:border-b-0">
+                      <a class="renyi-news-row-link" href="${item.href}">
+                        <div class="renyi-news-date-badge w-24 opacity-0 transition-opacity duration-300 group-hover:opacity-100" aria-hidden="true">
+                          <span class="renyi-news-date-day">${dateBadge.day}</span>
+                          <span class="renyi-news-date-meta">${dateBadge.monthYear}</span>
+                        </div>
+                        <div class="renyi-news-copy min-w-0">
+                          <h3 class="text-xl font-bold leading-snug text-slate-900">${item.title}</h3>
+                          <p class="mt-3 text-base leading-7 text-slate-600">${item.summary}</p>
+                        </div>
+                      </a>
+                    </article>
+                  `;
+  }).join("")}
+            </div>
+          </section>
+
+          <aside class="renyi-market-card rounded-md border border-[#e5e7eb] bg-white shadow-sm">
+            <div class="renyi-market-card-header border-b border-[#e5e7eb]">
+              <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#003366]">${copy.marketEyebrow}</p>
+              <h2 class="mt-2 text-2xl font-bold text-slate-900">${copy.marketTitle}</h2>
+              <p class="mt-3 text-sm leading-6 text-slate-500">${copy.marketSubtitle}</p>
+            </div>
+            <div class="renyi-tradingview-shell">
+              <div class="tradingview-widget-container renyi-cat-chart" data-renyi-tradingview-cat="true">
+                <div class="tradingview-widget-container__widget"></div>
+                <div class="tradingview-widget-copyright">
+                  <a href="https://www.tradingview.com/symbols/NYSE-CAT/?utm_source=renyi.local&amp;utm_medium=widget_new&amp;utm_campaign=advanced-chart" rel="noopener nofollow" target="_blank">
+                    <span class="blue-text">CAT stock chart</span>
+                  </a>
+                  <span class="trademark"> by TradingView</span>
+                </div>
+              </div>
+            </div>
+          </aside>
         </div>
-        <ol class="renyi-acquisition-list">
-          ${copy.items.map((item, index) => `<li><span>${String(index + 1).padStart(2, "0")}</span><strong>${escapeHtmlText$1(item)}</strong></li>`).join("")}
-        </ol>
       </div>
     </section>
   `;
@@ -9291,7 +9183,7 @@ function patchNewsCenter(html, locale) {
   return replaceHtmlElement(
     html,
     '<div class="ind04 page-col-space">',
-    homeAcquisitionSection(locale)
+    homeNewsSection(newsCenterCopies[locale], locale)
   );
 }
 function patchHomeCaseMarquee(html, locale) {
@@ -14780,28 +14672,24 @@ const RENYI_HEADER_NAV_ITEMS$1 = [
       zh: [
         ["公司简介", "/guanyuxingye/#a1"],
         ["企业文化", "/guanyuxingye/#a2"],
-        ["资质荣誉", "/guanyuxingye/#a3"],
         ["发展历程", "/guanyuxingye/#a4"],
         ["新闻中心", "/category/renyixinwen/"]
       ],
       en: [
         ["Company Profile", "/guanyuxingye/#a1"],
         ["Corporate Culture", "/guanyuxingye/#a2"],
-        ["Qualifications & Honors", "/guanyuxingye/#a3"],
         ["Development History", "/guanyuxingye/#a4"],
         ["News Center", "/en/category/renyixinwen/"]
       ],
       ru: [
         ["Профиль компании", "/guanyuxingye/#a1"],
         ["Корпоративная культура", "/guanyuxingye/#a2"],
-        ["Сертификаты и награды", "/guanyuxingye/#a3"],
         ["История развития", "/guanyuxingye/#a4"],
         ["Новости", "/ru/category/renyixinwen/"]
       ],
       es: [
         ["Perfil de la empresa", "/guanyuxingye/#a1"],
         ["Cultura corporativa", "/guanyuxingye/#a2"],
-        ["Certificaciones y honores", "/guanyuxingye/#a3"],
         ["Historia de desarrollo", "/guanyuxingye/#a4"],
         ["Noticias", "/es/category/renyixinwen/"]
       ]
@@ -15314,13 +15202,13 @@ const RENYI_HYDRAULIC_CATEGORY_BANNER_IMAGE = "/renyi/product-category-hydraulic
 const RENYI_STRUCTURAL_CATEGORY_BANNER_IMAGE$1 = "/renyi/product-category-structural-components-banner.png?v=20260513-imagegen-sharp-banner";
 const RENYI_MINERAL_CATEGORY_BANNER_IMAGE = "/renyi/product-category-mineral-processing-banner.png?v=20260516-imagegen-full-machine";
 const RENYI_SPECIAL_EQUIPMENT_CATEGORY_BANNER_IMAGE = "/renyi/product-category-special-equipment-banner.png?v=20260516-imagegen-no-shadow";
-const RENYI_QUALITY_CONTROL_BANNER_IMAGE = "/renyi/cases/case-08/image-01.jpg?v=20260826-real-workshop";
-const RENYI_SERVICE_MENU_BACKGROUND_IMAGE = "/renyi/cases/case-08/image-01.jpg?v=20260826-real-workshop";
+const RENYI_QUALITY_CONTROL_BANNER_IMAGE = "/renyi/renyi-quality-control-lab-banner-imagegen-ad.jpg?v=20260517-imagegen-ad";
+const RENYI_SERVICE_MENU_BACKGROUND_IMAGE = "/renyi/renyi-quality-control-lab-banner-imagegen-ad.jpg?v=20260518-service-fog";
 const RENYI_QUALITY_CONTROL_TESTING_IMAGE = "/renyi/renyi-quality-control-hardness-torque-bench-imagegen-ad.jpg?v=20260517-imagegen-ad";
-const RENYI_QUALITY_CONTROL_LAB_IMAGE = "/renyi/cases/case-08/image-02.jpg?v=20260826-real-workshop";
-const RENYI_AFTER_SALES_NDT_IMAGE = "/renyi/cases/case-02/image-01.jpg?v=20260826-real-site";
-const RENYI_AFTER_SALES_CYLINDER_TEST_IMAGE = "/renyi/cases/case-02/image-03.jpg?v=20260826-real-site";
-const RENYI_AFTER_SALES_WELDING_IMAGE = "/renyi/cases/case-08/image-03.jpg?v=20260826-real-workshop";
+const RENYI_QUALITY_CONTROL_LAB_IMAGE = "/renyi/renyi-quality-control-carbon-sulfur-analyzer-imagegen-ad.jpg?v=20260517-imagegen-ad";
+const RENYI_AFTER_SALES_NDT_IMAGE = "/renyi/renyi-after-sales-service-philosophy-imagegen.jpg?v=20260517-imagegen-ads";
+const RENYI_AFTER_SALES_CYLINDER_TEST_IMAGE = "/renyi/renyi-after-sales-service-system-imagegen.jpg?v=20260517-imagegen-ads";
+const RENYI_AFTER_SALES_WELDING_IMAGE = "/renyi/renyi-after-sales-customer-training-imagegen.jpg?v=20260517-imagegen-ads";
 const RENYI_SERVICE_PAGE_PATHS = /* @__PURE__ */ new Set(["/fuwuzhichi/", "/en/fuwuzhichi/", "/ru/fuwuzhichi/", "/es/fuwuzhichi/"]);
 const RENYI_CASE_PAGE_PATHS = /* @__PURE__ */ new Set(["/anlizhanshi/", "/en/anlizhanshi/", "/ru/anlizhanshi/", "/es/anlizhanshi/"]);
 const RENYI_CASE_PAGE_COPY = {
@@ -18646,7 +18534,9 @@ const RENYI_SPECIAL_EQUIPMENT_CATEGORY_CONFIGS = [
     ],
     bodyClass: "renyi-special-equipment-category",
     copy: RENYI_SPECIAL_EQUIPMENT_CATEGORY_COPY,
-    cards: RENYI_SPECIAL_EQUIPMENT_CARDS
+    cards: RENYI_SPECIAL_EQUIPMENT_CARDS.filter(
+      (card) => card.href !== "/zhuanyong-01/" && card.href !== "/zhuanyong-05/"
+    )
   },
   ...RENYI_SPECIAL_EQUIPMENT_CARDS.slice(2).map((card, index) => {
     const legacyPath = RENYI_SPECIAL_EQUIPMENT_LEGACY_CHILD_PATHS[index + 2] ?? "";
@@ -20135,32 +20025,6 @@ function patchRenyiWhatsappFormActionHtml(html) {
     return `<form${patchedAttrs}>`;
   });
 }
-function patchRenyiInquiryFormSemanticsHtml(html, pathname) {
-  const locale = getRenyiLocale(pathname);
-  const labels = {
-    zh: { name: "姓名", email: "邮箱", tel: "电话", message: "工况、设备型号或问题描述", help: "提交后将打开 WhatsApp。图纸和现场照片可在对话中继续发送。", emailLink: "改用邮件提交" },
-    en: { name: "Name", email: "Email", tel: "Phone", message: "Worksite condition, equipment model, or problem", help: "WhatsApp opens after submission. Drawings and site photos can be sent in the conversation.", emailLink: "Send by Email" },
-    ru: { name: "Имя", email: "Эл. почта", tel: "Телефон", message: "Условия, модель оборудования или описание задачи", help: "После отправки откроется WhatsApp. Чертежи и фотографии можно отправить в чате.", emailLink: "Отправить по эл. почте" },
-    es: { name: "Nombre", email: "Correo electrónico", tel: "Teléfono", message: "Condición, modelo del equipo o descripción del problema", help: "Después de enviar se abrirá WhatsApp. Puede enviar planos y fotos en la conversación.", emailLink: "Enviar por correo" }
-  }[locale];
-  return html.replace(/<form\b[\s\S]*?<\/form>/g, (formHtml) => {
-    if (!formHtml.includes("wpcf7-form") || formHtml.includes("data-renyi-semantic-form")) {
-      return formHtml;
-    }
-    let patched = formHtml.replace("<form", '<form data-renyi-semantic-form="true"').replace(/\snovalidate=(['"])novalidate\1/g, "").replace(/<span class="wpcf7-form-control-wrap" data-name="your-name">/, `<label for="renyi-inquiry-name">${labels.name}</label><span class="wpcf7-form-control-wrap" data-name="your-name">`).replace(/<span class="wpcf7-form-control-wrap" data-name="your-email">/, `<label for="renyi-inquiry-email">${labels.email}</label><span class="wpcf7-form-control-wrap" data-name="your-email">`).replace(/<span class="wpcf7-form-control-wrap" data-name="your-tel">/, `<label for="renyi-inquiry-tel">${labels.tel}</label><span class="wpcf7-form-control-wrap" data-name="your-tel">`).replace(/<span class="wpcf7-form-control-wrap" data-name="your-message">/, `<label for="renyi-inquiry-message">${labels.message}</label><span class="wpcf7-form-control-wrap" data-name="your-message">`).replace(/<input\b([^>]*\bname="your-(name|email|tel)"[^>]*)\/>/g, (_match, attrs, field) => {
-      const required = field === "name" || field === "email";
-      return `<input id="renyi-inquiry-${field}"${attrs}${required && !/\srequired(?:\s|=|>)/.test(attrs) ? " required" : ""} />`;
-    }).replace(/<input\b([^>]*\bname="your-message"[^>]*)\/>/g, (_match, attrs) => {
-      const cleanAttrs = attrs.replace(/\s(?:size|maxlength|value|type)=(['"])[\s\S]*?\1/g, "").replace(/\splaceholder=(['"])[\s\S]*?\1/g, "");
-      return `<textarea id="renyi-inquiry-message"${cleanAttrs} rows="6" required></textarea>`;
-    });
-    patched = patched.replace(
-      /<div class="col-md-12 col-md-offset-12">\s*<div class="contact-page__btn-box">/,
-      `<div class="col-md-12"><p class="renyi-inquiry-help">${labels.help} <a href="mailto:info@csrenyi.com">${labels.emailLink}</a></p></div><div class="col-md-12 col-md-offset-12"> <div class="contact-page__btn-box">`
-    );
-    return patched;
-  });
-}
 function patchRenyiContactPageBannerHtml(html, pathname) {
   if (!isRenyiContactPath(pathname)) {
     return html;
@@ -20292,19 +20156,15 @@ const RENYI_STRUCTURAL_SERIES_CHILD_LABELS = {
   "/jiegou-05/": "车斗"
 };
 const RENYI_SPECIAL_EQUIPMENT_CHILD_LABELS = {
-  "/zhuanyong-01/": "多条件式轮辋拆装机",
   "/zhuanyong-02/": "轮辋拆装机（门架式）",
   "/zhuanyong-03/": "马达拆装机",
-  "/zhuanyong-04/": "炮孔填塞机",
-  "/zhuanyong-05/": "大型轮胎拆卸手"
+  "/zhuanyong-04/": "炮孔填塞机"
 };
 const RENYI_RAISE_BORING_SERIES_CHILD_LABELS = {
   "/zuanji-01/": "有轨式天（反）井钻机",
   "/zuanji-02/": "无轨式天（反）井钻机",
   "/zuanji-03/": "钻杆、稳定杆",
-  "/zuanji-04/": "扩孔刀盘",
-  "/zuanji-05/": "滚刀总成",
-  "/zuanji-06/": "牙轮钻头"
+  "/zuanji-04/": "扩孔刀盘"
 };
 const RENYI_MINERAL_PROCESSING_SERIES_CHILD_LABELS = {
   "/xuanji-01/": "充气搅拌式浮选机"
@@ -20323,20 +20183,16 @@ const RENYI_HEADER_PRODUCT_CHILD_LABELS_BY_LOCALE = {
       "/zuanji-01/": "Rail-Mounted Raise Boring Rig",
       "/zuanji-02/": "Trackless Raise Boring Rig",
       "/zuanji-03/": "Drill Rods and Stabilizers",
-      "/zuanji-04/": "Reaming Cutterhead",
-      "/zuanji-05/": "Cutter Assembly",
-      "/zuanji-06/": "Roller Cone Bit"
+      "/zuanji-04/": "Reaming Cutterhead"
     },
     [RENYI_PRODUCT_SERIES_HREFS.hydraulic]: RENYI_HYDRAULIC_SERIES_CHILD_LABELS_BY_LOCALE.en,
     [RENYI_PRODUCT_SERIES_HREFS.mineral]: {
       "/xuanji-01/": "Forced-Air Mechanical Flotation Machine"
     },
     [RENYI_PRODUCT_SERIES_HREFS.special]: {
-      "/zhuanyong-01/": "Multi-Condition Rim Dismounting Machine",
       "/zhuanyong-02/": "Rim Dismounting Machine (Gantry Type)",
       "/zhuanyong-03/": "Motor Dismounting Machine",
-      "/zhuanyong-04/": "Blasthole Stemming Machine",
-      "/zhuanyong-05/": "Large Tire Handler"
+      "/zhuanyong-04/": "Blasthole Stemming Machine"
     },
     [RENYI_PRODUCT_SERIES_HREFS.structural]: {
       "/jiegou-01/": "Rear Axle Housing",
@@ -20349,20 +20205,16 @@ const RENYI_HEADER_PRODUCT_CHILD_LABELS_BY_LOCALE = {
       "/zuanji-01/": "Рельсовая установка восстающего бурения",
       "/zuanji-02/": "Безрельсовая установка восстающего бурения",
       "/zuanji-03/": "Буровые штанги и стабилизаторы",
-      "/zuanji-04/": "Расширительная буровая головка",
-      "/zuanji-05/": "Шарошечный узел",
-      "/zuanji-06/": "Шарошечное долото"
+      "/zuanji-04/": "Расширительная буровая головка"
     },
     [RENYI_PRODUCT_SERIES_HREFS.hydraulic]: RENYI_HYDRAULIC_SERIES_CHILD_LABELS_BY_LOCALE.ru,
     [RENYI_PRODUCT_SERIES_HREFS.mineral]: {
       "/xuanji-01/": "Пневмомеханическая флотационная машина"
     },
     [RENYI_PRODUCT_SERIES_HREFS.special]: {
-      "/zhuanyong-01/": "Многофункциональный станок демонтажа ободов",
       "/zhuanyong-02/": "Станок демонтажа ободов (портальный тип)",
       "/zhuanyong-03/": "Станок демонтажа моторов",
-      "/zhuanyong-04/": "Установка забойки скважин",
-      "/zhuanyong-05/": "Манипулятор для крупных шин"
+      "/zhuanyong-04/": "Установка забойки скважин"
     },
     [RENYI_PRODUCT_SERIES_HREFS.structural]: {
       "/jiegou-01/": "Корпус заднего моста",
@@ -20375,20 +20227,16 @@ const RENYI_HEADER_PRODUCT_CHILD_LABELS_BY_LOCALE = {
       "/zuanji-01/": "Equipo raise boring sobre carriles",
       "/zuanji-02/": "Equipo raise boring sin carriles",
       "/zuanji-03/": "Barras de perforación y estabilizadores",
-      "/zuanji-04/": "Cabezal de escariado",
-      "/zuanji-05/": "Conjunto de cortadores",
-      "/zuanji-06/": "Broca de cono giratorio"
+      "/zuanji-04/": "Cabezal de escariado"
     },
     [RENYI_PRODUCT_SERIES_HREFS.hydraulic]: RENYI_HYDRAULIC_SERIES_CHILD_LABELS_BY_LOCALE.es,
     [RENYI_PRODUCT_SERIES_HREFS.mineral]: {
       "/xuanji-01/": "Máquina de flotación mecánica con aire forzado"
     },
     [RENYI_PRODUCT_SERIES_HREFS.special]: {
-      "/zhuanyong-01/": "Desmontadora de llantas para múltiples condiciones",
       "/zhuanyong-02/": "Desmontadora de llantas (tipo pórtico)",
       "/zhuanyong-03/": "Desmontadora de motores",
-      "/zhuanyong-04/": "Equipo de retacado de barrenos",
-      "/zhuanyong-05/": "Manipulador de neumáticos grandes"
+      "/zhuanyong-04/": "Equipo de retacado de barrenos"
     },
     [RENYI_PRODUCT_SERIES_HREFS.structural]: {
       "/jiegou-01/": "Carcasa de eje trasero",
@@ -21201,7 +21049,6 @@ function patchRenyiHtml(html, pathname) {
   patchedHtml = patchRenyiContactPageHtml(patchedHtml, pathname);
   patchedHtml = patchRenyiLegacyCaptchaHtml(patchedHtml);
   patchedHtml = patchRenyiWhatsappFormActionHtml(patchedHtml);
-  patchedHtml = patchRenyiInquiryFormSemanticsHtml(patchedHtml, pathname);
   patchedHtml = patchRenyiJoinPageBannerHtml(patchedHtml, pathname);
   patchedHtml = patchRenyiJoinTalentConceptHtml(patchedHtml, pathname);
   patchedHtml = patchRenyiJoinTrainingModeImageHtml(patchedHtml, pathname);
@@ -23156,26 +23003,34 @@ function replaceBrandLogo() {
 function replacePromoVideo() {
   const locale = getRenyiLogoCopy(window.location.pathname).locale;
   const videoPath = RENYI_PROMO_VIDEO_PATHS[locale];
+  const connection = navigator.connection;
+  const shouldLoadVideo = !window.matchMedia("(max-width: 767px)").matches && !connection?.saveData;
   document.querySelectorAll("video#banner_video source").forEach((source) => {
     source.dataset.src = videoPath;
-    {
+    if (shouldLoadVideo) {
+      source.src = videoPath;
+    } else {
       source.removeAttribute("src");
     }
   });
   document.querySelectorAll("video#banner_video").forEach((video) => {
     video.muted = true;
     video.loop = false;
-    video.autoplay = false;
+    video.autoplay = true;
     video.playsInline = true;
     video.removeAttribute("loop");
     video.setAttribute("playsinline", "");
-    video.preload = "none";
+    video.preload = shouldLoadVideo ? "metadata" : "none";
     Array.from(video.childNodes).forEach((node) => {
       if (node.nodeType === Node.TEXT_NODE && node.textContent?.includes("video")) {
         node.textContent = RENYI_VIDEO_FALLBACK_TEXT[locale];
       }
     });
-    {
+    if (shouldLoadVideo) {
+      video.load();
+      void video.play().catch(() => {
+      });
+    } else {
       video.pause();
     }
   });
@@ -24526,13 +24381,15 @@ function RootDocument() {
       /* @__PURE__ */ jsx("link", { rel: "icon", href: "/favicon.png?v=renyi-20260426" })
     ] }),
     /* @__PURE__ */ jsxs("body", { className: bodyClass, children: [
-      /* @__PURE__ */ jsx(Outlet, {}),
-      /* @__PURE__ */ jsx(SiteRuntime, {}),
+      /* @__PURE__ */ jsxs(TrpcProvider, { children: [
+        /* @__PURE__ */ jsx(Outlet, {}),
+        /* @__PURE__ */ jsx(SiteRuntime, {})
+      ] }),
       /* @__PURE__ */ jsx(Scripts, {})
     ] })
   ] });
 }
-const $$splitComponentImporter$1 = () => import("./_-uOiYiDrb.js");
+const $$splitComponentImporter$1 = () => import("./_-tLHCQQSu.js");
 const Route$3 = createFileRoute("/$")({
   loader: async ({
     params
@@ -24556,7 +24413,7 @@ const Route$3 = createFileRoute("/$")({
   },
   component: lazyRouteComponent($$splitComponentImporter$1, "component")
 });
-const $$splitComponentImporter = () => import("./index-CfncrGB1.js");
+const $$splitComponentImporter = () => import("./index-CHquCYH5.js");
 const Route$2 = createFileRoute("/")({
   loader: async () => {
     const page = await loadSitePage("/");
@@ -24996,5 +24853,7 @@ const router = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProper
 export {
   Route$3 as R,
   Route$2 as a,
+  appRouter as b,
+  createTRPCContext as c,
   router as r
 };

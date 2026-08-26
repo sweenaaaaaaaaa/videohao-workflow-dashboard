@@ -1,0 +1,1 @@
+import{R as r,j as t}from"./main-Bmn4gtTr.js";import{S as e}from"./site-mirror-page-CSUsqGaP.js";function i(){const{canonicalPath:a,page:o}=r.useLoaderData();return t.jsx(e,{page:o,path:a})}export{i as component};

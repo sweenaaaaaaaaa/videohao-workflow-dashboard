@@ -22,73 +22,6 @@ const ABOUT_PATH_LOCALES: Record<string, Locale> = {
   '/es/guanyuxingye/': 'es',
 };
 
-const qualificationCopies: Record<Locale, { title: string; lead: string; groups: [string, string, string] }> = {
-  zh: {
-    title: '资质荣誉与知识产权',
-    lead: '按企业资质、软件著作权和专利技术分类展示。点击证书可查看原图。',
-    groups: ['企业资质与合作荣誉', '软件著作权', '专利技术'],
-  },
-  en: {
-    title: 'Qualifications and Intellectual Property',
-    lead: 'Corporate qualifications, software copyrights, and patented technologies. Open any document to view it in full.',
-    groups: ['Qualifications and Honors', 'Software Copyrights', 'Patented Technologies'],
-  },
-  ru: {
-    title: 'Квалификации и интеллектуальная собственность',
-    lead: 'Документы сгруппированы по квалификациям, авторским правам на ПО и патентам. Нажмите для просмотра.',
-    groups: ['Квалификации и награды', 'Авторские права на ПО', 'Патентованные технологии'],
-  },
-  es: {
-    title: 'Calificaciones y propiedad intelectual',
-    lead: 'Documentos agrupados por calificaciones, derechos de software y patentes. Abra cada documento para verlo completo.',
-    groups: ['Calificaciones y reconocimientos', 'Derechos de software', 'Tecnologías patentadas'],
-  },
-};
-
-type QualificationItem = { src: string; zh: string; en: string };
-
-const qualificationGroups: QualificationItem[][] = [
-  [
-    { src: '/renyi/renyi-news-high-tech-certificate-web.jpg', zh: '高新技术企业证书', en: 'High-tech enterprise certificate' },
-    { src: '/renyi/renyi-news-high-tech-enterprise-plaque-web.jpg', zh: '高新技术企业牌匾', en: 'High-tech enterprise plaque' },
-    { src: '/renyi/renyi-news-iso9001-certificate-web.jpg', zh: 'ISO 9001 质量管理体系证书', en: 'ISO 9001 quality management certificate' },
-    { src: '/renyi/renyi-news-iso9001-certificate-cn-web.jpg', zh: 'ISO 9001 中文证书', en: 'ISO 9001 Chinese certificate' },
-    { src: '/renyi/renyi-news-at1500-mining-safety-certificate-web.jpg', zh: 'AT-1500 矿用产品安全标志证书', en: 'AT-1500 mining safety certificate' },
-    { src: '/renyi/renyi-news-at2000-mining-safety-certificate-web.jpg', zh: 'AT-2000 矿用产品安全标志证书', en: 'AT-2000 mining safety certificate' },
-    { src: '/renyi/renyi-news-jiangxi-copper-localization-award-web.jpg', zh: '江西铜业国产化合作荣誉', en: 'Jiangxi Copper localization award' },
-    { src: '/renyi/renyi-news-zega-remanufacturing-authorization-web.jpg', zh: '志高再制造授权', en: 'ZEGA remanufacturing authorization' },
-    { src: '/renyi/renyi-news-zega-sales-authorization-web.jpg', zh: '志高经销授权', en: 'ZEGA sales authorization' },
-    { src: '/renyi/renyi-news-zega-remanufacturing-center-web.jpg', zh: '志高掘进再制造中心资质', en: 'ZEGA remanufacturing center qualification' },
-  ],
-  [
-    { src: '/renyi/renyi-news-mining-truck-remote-fault-detection-software-copyright-web.jpg', zh: '矿用卡车远程故障检测软件著作权', en: 'Mining truck remote fault detection software copyright' },
-    { src: '/renyi/renyi-news-hydraulic-cylinder-test-bench-plc-software-copyright-web.jpg', zh: '液压缸试验台 PLC 软件著作权', en: 'Hydraulic cylinder test bench PLC software copyright' },
-  ],
-  [
-    { src: '/renyi/renyi-news-wheel-motor-dismantling-machine-swing-mechanism-patent-web.jpg', zh: '轮边马达拆装机摆动机构专利', en: 'Wheel motor dismounting machine swing mechanism patent' },
-    { src: '/renyi/renyi-news-wheel-motor-dismantling-machine-floating-tray-patent-web.jpg', zh: '轮边马达拆装机浮动托盘专利', en: 'Wheel motor dismounting machine floating tray patent' },
-    { src: '/renyi/renyi-news-wheel-motor-dismantling-machine-patent-web.jpg', zh: '轮边马达拆装机专利', en: 'Wheel motor dismounting machine patent' },
-    { src: '/renyi/renyi-news-multi-body-wheel-rim-dismantling-machine-patent-web.jpg', zh: '多体式轮辋拆装机专利', en: 'Multi-body wheel rim dismounting machine patent' },
-    { src: '/renyi/renyi-news-flotation-agitator-main-shaft-support-fixing-device-patent-web.jpg', zh: '浮选机搅拌器主轴支撑固定装置专利', en: 'Flotation agitator shaft support patent' },
-    { src: '/renyi/renyi-news-center-aeration-flotation-high-speed-rotary-valve-patent-web.jpg', zh: '中心充气浮选机高速旋转阀专利', en: 'Center aeration flotation rotary valve patent' },
-    { src: '/renyi/renyi-news-hydraulic-cylinder-inner-wall-rolling-device-patent-web.jpg', zh: '液压缸内壁滚压装置专利', en: 'Hydraulic cylinder inner wall rolling device patent' },
-    { src: '/renyi/renyi-news-lathe-shaft-grinding-polishing-head-device-patent-web.jpg', zh: '车床轴类磨削抛光头装置专利', en: 'Lathe shaft grinding and polishing device patent' },
-    { src: '/renyi/renyi-news-hydraulic-cylinder-inner-wall-grinding-device-patent-web.jpg', zh: '液压缸内壁磨削装置专利', en: 'Hydraulic cylinder inner wall grinding device patent' },
-    { src: '/renyi/renyi-news-flotation-agitator-upper-lower-shaft-positioning-connection-device-patent-web.jpg', zh: '浮选机搅拌器上下轴定位连接装置专利', en: 'Flotation agitator shaft positioning connection patent' },
-    { src: '/renyi/renyi-news-large-material-transfer-u-shaped-carriage-patent-web.jpg', zh: '大型物料转运车 U 型车架专利', en: 'Large material transfer U-shaped carriage patent' },
-    { src: '/renyi/renyi-news-large-material-transfer-vehicle-patent-web.jpg', zh: '大型物料转运车专利', en: 'Large material transfer vehicle patent' },
-    { src: '/renyi/renyi-news-raise-boring-machine-detachable-cleaning-host-patent-web.jpg', zh: '天井钻机可拆洗主机专利', en: 'Raise boring machine detachable cleaning host patent' },
-    { src: '/renyi/renyi-news-raise-boring-machine-deformation-resistant-cutterhead-patent-web.jpg', zh: '天井钻机抗变形刀盘专利', en: 'Raise boring machine deformation-resistant cutterhead patent' },
-    { src: '/renyi/renyi-news-combinable-wear-resistant-reaming-cutterhead-patent-web.jpg', zh: '组合式耐磨扩孔刀盘专利', en: 'Combinable wear-resistant reaming cutterhead patent' },
-    { src: '/renyi/renyi-news-heat-dissipation-stable-pump-station-patent-web.jpg', zh: '散热稳定泵站专利', en: 'Heat-dissipation stable pump station patent' },
-    { src: '/renyi/renyi-news-large-vehicle-wheel-tire-dismounting-hoist-plate-patent-web.jpg', zh: '大型车辆轮胎拆装吊板专利', en: 'Large vehicle tire dismounting hoist plate patent' },
-    { src: '/renyi/renyi-news-large-tire-wheel-hub-hoisting-dismantling-machine-hook-device-patent-web.jpg', zh: '大型轮胎轮毂吊装拆卸机吊钩装置专利', en: 'Large tire hub dismounting hook device patent' },
-    { src: '/renyi/renyi-news-multi-station-large-tire-wheel-hub-hoisting-dismantling-machine-patent-web.jpg', zh: '多工位大型轮胎轮毂吊装拆卸机专利', en: 'Multi-station large tire hub dismounting machine patent' },
-    { src: '/renyi/renyi-news-removable-raise-boring-machine-cutter-base-patent-web.jpg', zh: '可拆式天井钻机刀座专利', en: 'Removable raise boring machine cutter base patent' },
-    { src: '/renyi/renyi-news-raise-boring-machine-load-transfer-vertical-horizontal-placement-system-patent-web.jpg', zh: '天井钻机载荷转运与立卧放置系统专利', en: 'Raise boring machine load transfer and placement system patent' },
-  ],
-];
-
 const aboutCopies: Record<Locale, AboutCopy> = {
   zh: {
     profileTitle: '公司简介',
@@ -372,49 +305,6 @@ function historySection(copy: AboutCopy) {
   `;
 }
 
-function qualificationSection(locale: Locale) {
-  const copy = qualificationCopies[locale];
-  const itemTitle = (item: QualificationItem) => (locale === 'zh' ? item.zh : item.en);
-  const groups = qualificationGroups
-    .map(
-      (items, groupIndex) => `
-        <details class="renyi-qualification-group"${groupIndex === 0 ? ' open' : ''}>
-          <summary>${copy.groups[groupIndex]}<span>${items.length}</span></summary>
-          <div class="renyi-qualification-grid">
-            ${items
-              .map((item) => {
-                const title = itemTitle(item);
-                return `<a class="renyi-qualification-card" href="${item.src}" target="_blank" rel="noopener"><img src="${item.src}" alt="${title}" loading="lazy"><strong>${title}</strong></a>`;
-              })
-              .join('')}
-          </div>
-        </details>`,
-    )
-    .join('');
-
-  return `
-    <div class="maodian"><a name="a3" id="a3"></a></div>
-    <section class="about03 page-col-space wow fadeInUp renyi-qualification-section">
-      <div class="container">
-        <div class="page-tit-box"><h3 class="tit mb20">${copy.title}</h3></div>
-        <p class="renyi-qualification-lead">${copy.lead}</p>
-        <div class="renyi-qualification-groups">${groups}</div>
-      </div>
-    </section>
-  `;
-}
-
-function insertQualificationSection(html: string, locale: Locale) {
-  if (html.includes('class="about03')) {
-    return html;
-  }
-
-  return html.replace(
-    '<div class="maodian"><a name="a4"></a></div>',
-    `${qualificationSection(locale)}<div class="maodian"><a name="a4"></a></div>`,
-  );
-}
-
 function replaceAboutSection(html: string, anchor: 'a1' | 'a2' | 'a4', replacement: string) {
   const sectionClass = anchor === 'a1' ? 'about01' : anchor === 'a2' ? 'about02' : 'about04';
   const pattern = new RegExp(
@@ -437,16 +327,13 @@ export function patchRenyiAboutHtml(html: string, pathname: string) {
   }
 
   const copy = aboutCopies[locale];
-  return insertQualificationSection(
+  return replaceAboutSection(
     replaceAboutSection(
-      replaceAboutSection(
-        replaceAboutSection(replaceMenuLabels(html, locale), 'a1', profileSection(copy)),
-        'a2',
-        cultureSection(copy),
-      ),
-      'a4',
-      historySection(copy),
+      replaceAboutSection(replaceMenuLabels(html, locale), 'a1', profileSection(copy)),
+      'a2',
+      cultureSection(copy),
     ),
-    locale,
+    'a4',
+    historySection(copy),
   );
 }

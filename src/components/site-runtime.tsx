@@ -1070,7 +1070,8 @@ function replaceBrandLogo() {
 function replacePromoVideo() {
   const locale = getRenyiLogoCopy(window.location.pathname).locale;
   const videoPath = RENYI_PROMO_VIDEO_PATHS[locale];
-  const shouldLoadVideo = false;
+  const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+  const shouldLoadVideo = !window.matchMedia('(max-width: 767px)').matches && !connection?.saveData;
 
   document.querySelectorAll<HTMLSourceElement>('video#banner_video source').forEach((source) => {
     source.dataset.src = videoPath;
@@ -1084,7 +1085,7 @@ function replacePromoVideo() {
   document.querySelectorAll<HTMLVideoElement>('video#banner_video').forEach((video) => {
     video.muted = true;
     video.loop = false;
-    video.autoplay = false;
+    video.autoplay = true;
     video.playsInline = true;
     video.removeAttribute('loop');
     video.setAttribute('playsinline', '');

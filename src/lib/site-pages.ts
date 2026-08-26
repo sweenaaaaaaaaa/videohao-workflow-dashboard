@@ -2253,28 +2253,24 @@ const RENYI_HEADER_NAV_ITEMS = [
       zh: [
         ['公司简介', '/guanyuxingye/#a1'],
         ['企业文化', '/guanyuxingye/#a2'],
-        ['资质荣誉', '/guanyuxingye/#a3'],
         ['发展历程', '/guanyuxingye/#a4'],
         ['新闻中心', '/category/renyixinwen/'],
       ],
       en: [
         ['Company Profile', '/guanyuxingye/#a1'],
         ['Corporate Culture', '/guanyuxingye/#a2'],
-        ['Qualifications & Honors', '/guanyuxingye/#a3'],
         ['Development History', '/guanyuxingye/#a4'],
         ['News Center', '/en/category/renyixinwen/'],
       ],
       ru: [
         ['Профиль компании', '/guanyuxingye/#a1'],
         ['Корпоративная культура', '/guanyuxingye/#a2'],
-        ['Сертификаты и награды', '/guanyuxingye/#a3'],
         ['История развития', '/guanyuxingye/#a4'],
         ['Новости', '/ru/category/renyixinwen/'],
       ],
       es: [
         ['Perfil de la empresa', '/guanyuxingye/#a1'],
         ['Cultura corporativa', '/guanyuxingye/#a2'],
-        ['Certificaciones y honores', '/guanyuxingye/#a3'],
         ['Historia de desarrollo', '/guanyuxingye/#a4'],
         ['Noticias', '/es/category/renyixinwen/'],
       ],
@@ -2947,13 +2943,13 @@ const RENYI_HYDRAULIC_CATEGORY_BANNER_IMAGE = '/renyi/product-category-hydraulic
 const RENYI_STRUCTURAL_CATEGORY_BANNER_IMAGE = '/renyi/product-category-structural-components-banner.png?v=20260513-imagegen-sharp-banner';
 const RENYI_MINERAL_CATEGORY_BANNER_IMAGE = '/renyi/product-category-mineral-processing-banner.png?v=20260516-imagegen-full-machine';
 const RENYI_SPECIAL_EQUIPMENT_CATEGORY_BANNER_IMAGE = '/renyi/product-category-special-equipment-banner.png?v=20260516-imagegen-no-shadow';
-export const RENYI_QUALITY_CONTROL_BANNER_IMAGE = '/renyi/cases/case-08/image-01.jpg?v=20260826-real-workshop';
-export const RENYI_SERVICE_MENU_BACKGROUND_IMAGE = '/renyi/cases/case-08/image-01.jpg?v=20260826-real-workshop';
+export const RENYI_QUALITY_CONTROL_BANNER_IMAGE = '/renyi/renyi-quality-control-lab-banner-imagegen-ad.jpg?v=20260517-imagegen-ad';
+export const RENYI_SERVICE_MENU_BACKGROUND_IMAGE = '/renyi/renyi-quality-control-lab-banner-imagegen-ad.jpg?v=20260518-service-fog';
 const RENYI_QUALITY_CONTROL_TESTING_IMAGE = '/renyi/renyi-quality-control-hardness-torque-bench-imagegen-ad.jpg?v=20260517-imagegen-ad';
-const RENYI_QUALITY_CONTROL_LAB_IMAGE = '/renyi/cases/case-08/image-02.jpg?v=20260826-real-workshop';
-const RENYI_AFTER_SALES_NDT_IMAGE = '/renyi/cases/case-02/image-01.jpg?v=20260826-real-site';
-const RENYI_AFTER_SALES_CYLINDER_TEST_IMAGE = '/renyi/cases/case-02/image-03.jpg?v=20260826-real-site';
-const RENYI_AFTER_SALES_WELDING_IMAGE = '/renyi/cases/case-08/image-03.jpg?v=20260826-real-workshop';
+const RENYI_QUALITY_CONTROL_LAB_IMAGE = '/renyi/renyi-quality-control-carbon-sulfur-analyzer-imagegen-ad.jpg?v=20260517-imagegen-ad';
+const RENYI_AFTER_SALES_NDT_IMAGE = '/renyi/renyi-after-sales-service-philosophy-imagegen.jpg?v=20260517-imagegen-ads';
+const RENYI_AFTER_SALES_CYLINDER_TEST_IMAGE = '/renyi/renyi-after-sales-service-system-imagegen.jpg?v=20260517-imagegen-ads';
+const RENYI_AFTER_SALES_WELDING_IMAGE = '/renyi/renyi-after-sales-customer-training-imagegen.jpg?v=20260517-imagegen-ads';
 const RENYI_SERVICE_PAGE_PATHS = new Set(['/fuwuzhichi/', '/en/fuwuzhichi/', '/ru/fuwuzhichi/', '/es/fuwuzhichi/']);
 const RENYI_CASE_PAGE_PATHS = new Set(['/anlizhanshi/', '/en/anlizhanshi/', '/ru/anlizhanshi/', '/es/anlizhanshi/']);
 
@@ -6652,7 +6648,9 @@ const RENYI_SPECIAL_EQUIPMENT_CATEGORY_CONFIGS: RenyiHydraulicCategoryConfig[] =
     ],
     bodyClass: 'renyi-special-equipment-category',
     copy: RENYI_SPECIAL_EQUIPMENT_CATEGORY_COPY,
-    cards: RENYI_SPECIAL_EQUIPMENT_CARDS,
+    cards: RENYI_SPECIAL_EQUIPMENT_CARDS.filter(
+      (card) => card.href !== '/zhuanyong-01/' && card.href !== '/zhuanyong-05/',
+    ),
   },
   ...RENYI_SPECIAL_EQUIPMENT_CARDS.slice(2).map((card, index) => {
     const legacyPath = RENYI_SPECIAL_EQUIPMENT_LEGACY_CHILD_PATHS[index + 2] ?? '';
@@ -8489,46 +8487,6 @@ function patchRenyiWhatsappFormActionHtml(html: string) {
   });
 }
 
-function patchRenyiInquiryFormSemanticsHtml(html: string, pathname: string) {
-  const locale = getRenyiLocale(pathname);
-  const labels = {
-    zh: { name: '姓名', email: '邮箱', tel: '电话', message: '工况、设备型号或问题描述', help: '提交后将打开 WhatsApp。图纸和现场照片可在对话中继续发送。', emailLink: '改用邮件提交' },
-    en: { name: 'Name', email: 'Email', tel: 'Phone', message: 'Worksite condition, equipment model, or problem', help: 'WhatsApp opens after submission. Drawings and site photos can be sent in the conversation.', emailLink: 'Send by Email' },
-    ru: { name: 'Имя', email: 'Эл. почта', tel: 'Телефон', message: 'Условия, модель оборудования или описание задачи', help: 'После отправки откроется WhatsApp. Чертежи и фотографии можно отправить в чате.', emailLink: 'Отправить по эл. почте' },
-    es: { name: 'Nombre', email: 'Correo electrónico', tel: 'Teléfono', message: 'Condición, modelo del equipo o descripción del problema', help: 'Después de enviar se abrirá WhatsApp. Puede enviar planos y fotos en la conversación.', emailLink: 'Enviar por correo' },
-  }[locale];
-
-  return html.replace(/<form\b[\s\S]*?<\/form>/g, (formHtml) => {
-    if (!formHtml.includes('wpcf7-form') || formHtml.includes('data-renyi-semantic-form')) {
-      return formHtml;
-    }
-
-    let patched = formHtml
-      .replace('<form', '<form data-renyi-semantic-form="true"')
-      .replace(/\snovalidate=(['"])novalidate\1/g, '')
-      .replace(/<span class="wpcf7-form-control-wrap" data-name="your-name">/, `<label for="renyi-inquiry-name">${labels.name}</label><span class="wpcf7-form-control-wrap" data-name="your-name">`)
-      .replace(/<span class="wpcf7-form-control-wrap" data-name="your-email">/, `<label for="renyi-inquiry-email">${labels.email}</label><span class="wpcf7-form-control-wrap" data-name="your-email">`)
-      .replace(/<span class="wpcf7-form-control-wrap" data-name="your-tel">/, `<label for="renyi-inquiry-tel">${labels.tel}</label><span class="wpcf7-form-control-wrap" data-name="your-tel">`)
-      .replace(/<span class="wpcf7-form-control-wrap" data-name="your-message">/, `<label for="renyi-inquiry-message">${labels.message}</label><span class="wpcf7-form-control-wrap" data-name="your-message">`)
-      .replace(/<input\b([^>]*\bname="your-(name|email|tel)"[^>]*)\/>/g, (_match, attrs: string, field: string) => {
-        const required = field === 'name' || field === 'email';
-        return `<input id="renyi-inquiry-${field}"${attrs}${required && !/\srequired(?:\s|=|>)/.test(attrs) ? ' required' : ''} />`;
-      })
-      .replace(/<input\b([^>]*\bname="your-message"[^>]*)\/>/g, (_match, attrs: string) => {
-        const cleanAttrs = attrs
-          .replace(/\s(?:size|maxlength|value|type)=(['"])[\s\S]*?\1/g, '')
-          .replace(/\splaceholder=(['"])[\s\S]*?\1/g, '');
-        return `<textarea id="renyi-inquiry-message"${cleanAttrs} rows="6" required></textarea>`;
-      });
-
-    patched = patched.replace(
-      /<div class="col-md-12 col-md-offset-12">\s*<div class="contact-page__btn-box">/,
-      `<div class="col-md-12"><p class="renyi-inquiry-help">${labels.help} <a href="mailto:info@csrenyi.com">${labels.emailLink}</a></p></div><div class="col-md-12 col-md-offset-12"> <div class="contact-page__btn-box">`,
-    );
-    return patched;
-  });
-}
-
 function patchRenyiContactPageBannerHtml(html: string, pathname: string) {
   if (!isRenyiContactPath(pathname)) {
     return html;
@@ -8769,19 +8727,15 @@ const RENYI_STRUCTURAL_SERIES_CHILD_LABELS: Record<string, string> = {
 };
 
 const RENYI_SPECIAL_EQUIPMENT_CHILD_HREFS = [
-  '/zhuanyong-01/',
   '/zhuanyong-02/',
   '/zhuanyong-03/',
   '/zhuanyong-04/',
-  '/zhuanyong-05/',
 ] as const;
 
 const RENYI_SPECIAL_EQUIPMENT_CHILD_LABELS: Record<string, string> = {
-  '/zhuanyong-01/': '多条件式轮辋拆装机',
   '/zhuanyong-02/': '轮辋拆装机（门架式）',
   '/zhuanyong-03/': '马达拆装机',
   '/zhuanyong-04/': '炮孔填塞机',
-  '/zhuanyong-05/': '大型轮胎拆卸手',
 };
 
 const RENYI_RAISE_BORING_SERIES_CHILD_LABELS: Record<string, string> = {
@@ -8789,8 +8743,6 @@ const RENYI_RAISE_BORING_SERIES_CHILD_LABELS: Record<string, string> = {
   '/zuanji-02/': '无轨式天（反）井钻机',
   '/zuanji-03/': '钻杆、稳定杆',
   '/zuanji-04/': '扩孔刀盘',
-  '/zuanji-05/': '滚刀总成',
-  '/zuanji-06/': '牙轮钻头',
 };
 
 const RENYI_MINERAL_PROCESSING_SERIES_CHILD_LABELS: Record<string, string> = {
@@ -8812,19 +8764,15 @@ const RENYI_HEADER_PRODUCT_CHILD_LABELS_BY_LOCALE: Record<RenyiLocale, Record<st
       '/zuanji-02/': 'Trackless Raise Boring Rig',
       '/zuanji-03/': 'Drill Rods and Stabilizers',
       '/zuanji-04/': 'Reaming Cutterhead',
-      '/zuanji-05/': 'Cutter Assembly',
-      '/zuanji-06/': 'Roller Cone Bit',
     },
     [RENYI_PRODUCT_SERIES_HREFS.hydraulic]: RENYI_HYDRAULIC_SERIES_CHILD_LABELS_BY_LOCALE.en,
     [RENYI_PRODUCT_SERIES_HREFS.mineral]: {
       '/xuanji-01/': 'Forced-Air Mechanical Flotation Machine',
     },
     [RENYI_PRODUCT_SERIES_HREFS.special]: {
-      '/zhuanyong-01/': 'Multi-Condition Rim Dismounting Machine',
       '/zhuanyong-02/': 'Rim Dismounting Machine (Gantry Type)',
       '/zhuanyong-03/': 'Motor Dismounting Machine',
       '/zhuanyong-04/': 'Blasthole Stemming Machine',
-      '/zhuanyong-05/': 'Large Tire Handler',
     },
     [RENYI_PRODUCT_SERIES_HREFS.structural]: {
       '/jiegou-01/': 'Rear Axle Housing',
@@ -8838,19 +8786,15 @@ const RENYI_HEADER_PRODUCT_CHILD_LABELS_BY_LOCALE: Record<RenyiLocale, Record<st
       '/zuanji-02/': 'Безрельсовая установка восстающего бурения',
       '/zuanji-03/': 'Буровые штанги и стабилизаторы',
       '/zuanji-04/': 'Расширительная буровая головка',
-      '/zuanji-05/': 'Шарошечный узел',
-      '/zuanji-06/': 'Шарошечное долото',
     },
     [RENYI_PRODUCT_SERIES_HREFS.hydraulic]: RENYI_HYDRAULIC_SERIES_CHILD_LABELS_BY_LOCALE.ru,
     [RENYI_PRODUCT_SERIES_HREFS.mineral]: {
       '/xuanji-01/': 'Пневмомеханическая флотационная машина',
     },
     [RENYI_PRODUCT_SERIES_HREFS.special]: {
-      '/zhuanyong-01/': 'Многофункциональный станок демонтажа ободов',
       '/zhuanyong-02/': 'Станок демонтажа ободов (портальный тип)',
       '/zhuanyong-03/': 'Станок демонтажа моторов',
       '/zhuanyong-04/': 'Установка забойки скважин',
-      '/zhuanyong-05/': 'Манипулятор для крупных шин',
     },
     [RENYI_PRODUCT_SERIES_HREFS.structural]: {
       '/jiegou-01/': 'Корпус заднего моста',
@@ -8864,19 +8808,15 @@ const RENYI_HEADER_PRODUCT_CHILD_LABELS_BY_LOCALE: Record<RenyiLocale, Record<st
       '/zuanji-02/': 'Equipo raise boring sin carriles',
       '/zuanji-03/': 'Barras de perforación y estabilizadores',
       '/zuanji-04/': 'Cabezal de escariado',
-      '/zuanji-05/': 'Conjunto de cortadores',
-      '/zuanji-06/': 'Broca de cono giratorio',
     },
     [RENYI_PRODUCT_SERIES_HREFS.hydraulic]: RENYI_HYDRAULIC_SERIES_CHILD_LABELS_BY_LOCALE.es,
     [RENYI_PRODUCT_SERIES_HREFS.mineral]: {
       '/xuanji-01/': 'Máquina de flotación mecánica con aire forzado',
     },
     [RENYI_PRODUCT_SERIES_HREFS.special]: {
-      '/zhuanyong-01/': 'Desmontadora de llantas para múltiples condiciones',
       '/zhuanyong-02/': 'Desmontadora de llantas (tipo pórtico)',
       '/zhuanyong-03/': 'Desmontadora de motores',
       '/zhuanyong-04/': 'Equipo de retacado de barrenos',
-      '/zhuanyong-05/': 'Manipulador de neumáticos grandes',
     },
     [RENYI_PRODUCT_SERIES_HREFS.structural]: {
       '/jiegou-01/': 'Carcasa de eje trasero',
@@ -10083,7 +10023,6 @@ export function patchRenyiHtml(html: string, pathname: string) {
   patchedHtml = patchRenyiContactPageHtml(patchedHtml, pathname);
   patchedHtml = patchRenyiLegacyCaptchaHtml(patchedHtml);
   patchedHtml = patchRenyiWhatsappFormActionHtml(patchedHtml);
-  patchedHtml = patchRenyiInquiryFormSemanticsHtml(patchedHtml, pathname);
   patchedHtml = patchRenyiJoinPageBannerHtml(patchedHtml, pathname);
   patchedHtml = patchRenyiJoinTalentConceptHtml(patchedHtml, pathname);
   patchedHtml = patchRenyiJoinTrainingModeImageHtml(patchedHtml, pathname);

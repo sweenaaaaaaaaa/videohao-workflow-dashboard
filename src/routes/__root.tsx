@@ -2,6 +2,7 @@
 import { Outlet, Scripts, createRootRoute, useLocation } from '@tanstack/react-router';
 import globalCss from '@/styles/global.css?raw';
 import restoreCss from '@/styles/renyi-restore.css?raw';
+import { TrpcProvider } from '@/client/trpc/provider';
 import { SiteRuntime } from '@/components/site-runtime';
 import { getDocumentMetadata, RENYI_COMPANY_NAME, RENYI_SITE_ORIGIN } from '@/lib/site-pages';
 
@@ -132,8 +133,10 @@ function RootDocument() {
         <link rel="icon" href="/favicon.png?v=renyi-20260426" />
       </head>
       <body className={bodyClass}>
-        <Outlet />
-        <SiteRuntime />
+        <TrpcProvider>
+          <Outlet />
+          <SiteRuntime />
+        </TrpcProvider>
         <Scripts />
       </body>
     </html>
