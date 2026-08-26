@@ -64,7 +64,7 @@ const PRODUCT_CATEGORY_SUSPENSION_IMAGE = '/renyi/product-category-hydraulic-sus
 const PRODUCT_CATEGORY_SPECIAL_IMAGE = '/renyi/product-category-special-equipment-yard.jpg?v=20260801';
 const PRODUCT_CATEGORY_MINERAL_IMAGE = '/renyi/product-category-mineral-processing-fill.jpg?v=20260801';
 const PRODUCT_CATEGORY_STRUCTURAL_IMAGE = '/renyi/product-category-structural-components-fill.jpg?v=20260801';
-const HOME_INTRO_FACTORY_IMAGE = '/renyi/renyi-home-intro-factory.png';
+const HOME_INTRO_FACTORY_IMAGE = '/renyi/renyi-home-intro-factory.avif';
 const SOLUTION_MAP_IMAGE = '/renyi/renyi-ind03-map-changsha-v2.svg';
 const NEWS_MONTH_LABELS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -234,7 +234,7 @@ const homeIntroCopies: Record<Locale, HomeIntroCopy> = {
     subtitle: 'Specialized machinery for demanding worksites',
     paragraph:
       '长沙仁毅机械制造有限公司秉持“仁者弘毅”精神，专注专业矿山装备研发制造与工程机械备件国产化。公司拥有勇于开拓创新的研发制造团队，配套大型加工设备和完善检测手段，可提供天井钻机、潜孔钻机、特种油缸、结构件及进口工程机械部件修复改进等产品与服务。',
-    moreText: '探索更多',
+    moreText: '提交工况',
     links: [
       { text: '公司简介', href: '/guanyuxingye/#a1' },
       { text: '企业文化', href: '/guanyuxingye/#a2' },
@@ -247,7 +247,7 @@ const homeIntroCopies: Record<Locale, HomeIntroCopy> = {
     subtitle: 'R&D and manufacturing for demanding worksites',
     paragraph:
       'Changsha Renyi Machinery Manufacturing Co., Ltd. is a high-tech enterprise guided by perseverance and responsibility. The company focuses on professional mining equipment and localized engineering machinery parts, supported by senior engineers, skilled technicians, large-scale machining equipment, and complete inspection capabilities for demanding industrial worksites.',
-    moreText: 'Explore More',
+    moreText: 'Submit Requirements',
     links: [
       { text: 'Company Profile', href: '/en/guanyuxingye/#a1' },
       { text: 'Corporate Culture', href: '/en/guanyuxingye/#a2' },
@@ -260,7 +260,7 @@ const homeIntroCopies: Record<Locale, HomeIntroCopy> = {
     subtitle: 'Разработка и производство для сложных условий эксплуатации',
     paragraph:
       'Changsha Renyi Machinery Manufacturing Co., Ltd. — высокотехнологичное предприятие, ориентированное на профессиональное горное оборудование и локализацию запасных частей для строительной техники. Команда инженеров и техников, крупное обрабатывающее оборудование и система контроля качества обеспечивают решения для сложных промышленных объектов.',
-    moreText: 'Подробнее',
+    moreText: 'Отправить задачу',
     links: [
       { text: 'О компании', href: '/ru/guanyuxingye/#a1' },
       { text: 'Корпоративная культура', href: '/ru/guanyuxingye/#a2' },
@@ -273,7 +273,7 @@ const homeIntroCopies: Record<Locale, HomeIntroCopy> = {
     subtitle: 'Investigación y fabricación para trabajos exigentes',
     paragraph:
       'Changsha Renyi Machinery Manufacturing Co., Ltd. es una empresa de alta tecnología dedicada a equipos mineros profesionales y repuestos localizados para maquinaria de ingeniería. Con ingenieros y técnicos senior, equipos de mecanizado de gran escala y control de calidad completo, ofrece soluciones para entornos industriales exigentes.',
-    moreText: 'Explorar más',
+    moreText: 'Enviar requisitos',
     links: [
       { text: 'Perfil de la empresa', href: '/es/guanyuxingye/#a1' },
       { text: 'Cultura corporativa', href: '/es/guanyuxingye/#a2' },
@@ -493,7 +493,7 @@ function homeIntroSection(copy: HomeIntroCopy, locale: Locale) {
                 <div class="txt02">${copy.subtitle}</div>
               </div>
               <p class="ind01-text mb40">${copy.paragraph}</p>
-              <a class="ind01-more" href="${copy.links[0]?.href ?? '#'}"><span>${copy.moreText}</span></a>
+              <a class="ind01-more go-inquiry" href="${withLocalePath('/lianxiwomen/#a2', locale)}"><span>${copy.moreText}</span></a>
             </div>
           </div>
           <div class="col-md-12 col-md-offset-1">
@@ -624,6 +624,58 @@ function homeNewsSection(copy: NewsCenterCopy, locale: Locale) {
             </div>
           </aside>
         </div>
+      </div>
+    </section>
+  `;
+}
+
+function homeAcquisitionSection(locale: Locale) {
+  const copies = {
+    zh: {
+      title: '从现场问题开始匹配方案',
+      intro: '不局限于现有产品。提交设备型号、故障或目标工况，我们按设计、制造、修复和现场服务能力评估。',
+      items: ['非标设备与新产品定制', '进口备件国产化', '大型部件修复与再制造', '整车维修与现场维保', '矿山专用拆装与改造装备'],
+      primary: '提交工况',
+      secondary: '查看全部产品',
+    },
+    en: {
+      title: 'Start with the worksite problem',
+      intro: 'Send the equipment model, failure, or target condition. We assess it across engineering, manufacturing, repair, and field service.',
+      items: ['Custom equipment development', 'Localization of imported parts', 'Large-component repair and remanufacturing', 'Vehicle overhaul and field maintenance', 'Dedicated dismantling and retrofit equipment'],
+      primary: 'Submit Requirements',
+      secondary: 'View All Products',
+    },
+    ru: {
+      title: 'Начните с задачи на площадке',
+      intro: 'Отправьте модель оборудования, неисправность или условия работы. Мы оценим проектирование, производство, ремонт и сервис.',
+      items: ['Разработка нестандартного оборудования', 'Локализация импортных деталей', 'Ремонт и восстановление крупных узлов', 'Капремонт техники и выездной сервис', 'Спецоборудование для демонтажа и модернизации'],
+      primary: 'Отправить задачу',
+      secondary: 'Вся продукция',
+    },
+    es: {
+      title: 'Empiece por el problema de campo',
+      intro: 'Envíe el modelo, la avería o la condición objetivo. Evaluamos diseño, fabricación, reparación y servicio en campo.',
+      items: ['Desarrollo de equipos a medida', 'Localización de repuestos importados', 'Reparación y remanufactura de grandes componentes', 'Revisión de vehículos y mantenimiento en campo', 'Equipos especiales de desmontaje y modernización'],
+      primary: 'Enviar requisitos',
+      secondary: 'Ver productos',
+    },
+  } as const;
+  const copy = copies[locale];
+
+  return `
+    <section class="renyi-acquisition" aria-labelledby="renyi-acquisition-title">
+      <div class="container renyi-acquisition-layout">
+        <div class="renyi-acquisition-intro">
+          <h2 id="renyi-acquisition-title">${escapeHtmlText(copy.title)}</h2>
+          <p>${escapeHtmlText(copy.intro)}</p>
+          <div class="renyi-acquisition-actions">
+            <a class="renyi-acquisition-primary go-inquiry" href="${withLocalePath('/lianxiwomen/#a2', locale)}">${escapeHtmlText(copy.primary)}</a>
+            <a class="renyi-acquisition-secondary" href="${withLocalePath('/chanpinzhanshi/', locale)}">${escapeHtmlText(copy.secondary)}</a>
+          </div>
+        </div>
+        <ol class="renyi-acquisition-list">
+          ${copy.items.map((item, index) => `<li><span>${String(index + 1).padStart(2, '0')}</span><strong>${escapeHtmlText(item)}</strong></li>`).join('')}
+        </ol>
       </div>
     </section>
   `;
@@ -789,7 +841,7 @@ function patchNewsCenter(html: string, locale: Locale) {
   return replaceHtmlElement(
     html,
     '<div class="ind04 page-col-space">',
-    homeNewsSection(newsCenterCopies[locale], locale),
+    homeAcquisitionSection(locale),
   );
 }
 
