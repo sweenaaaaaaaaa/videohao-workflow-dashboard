@@ -1,0 +1,1 @@
+import{R as r,j as t}from"./main-CFquDJ6c.js";import{S as e}from"./site-mirror-page-DVLRSzDM.js";function i(){const{canonicalPath:a,page:o}=r.useLoaderData();return t.jsx(e,{page:o,path:a})}export{i as component};
