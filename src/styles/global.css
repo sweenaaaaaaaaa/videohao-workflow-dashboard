@@ -2508,11 +2508,15 @@ color: var(--renyi-industrial-ink) !important;
   .header-box .menu-box .menu > li.m-5.has-sub > .sub-nav .container {
     position: relative !important;
     justify-content: flex-start !important;
+    align-items: flex-start !important;
   }
 
   .header-box .menu-box .menu > li.m-3.has-sub > .sub-nav .sub-btnbox,
   .header-box .menu-box .menu > li.m-5.has-sub > .sub-nav .sub-btnbox {
+    align-self: flex-start !important;
     width: 2.2rem !important;
+    height: auto !important;
+    min-height: 0 !important;
     margin-bottom: 0 !important;
     padding-bottom: 0 !important;
     background: rgba(238, 238, 238, 0.96) !important;
@@ -3677,11 +3681,15 @@ body .header-box .top-block .renyi-header-action-icon {
   .header-box .menu-box .menu > li.m-5.has-sub > .sub-nav .container {
     position: relative !important;
     justify-content: flex-start !important;
+    align-items: flex-start !important;
   }
 
   .header-box .menu-box .menu > li.m-3.has-sub > .sub-nav .sub-btnbox,
   .header-box .menu-box .menu > li.m-5.has-sub > .sub-nav .sub-btnbox {
+    align-self: flex-start !important;
     width: 2.2rem !important;
+    height: auto !important;
+    min-height: 0 !important;
     margin-bottom: 0 !important;
     padding-bottom: 0 !important;
     background: rgba(238, 238, 238, 0.96) !important;
